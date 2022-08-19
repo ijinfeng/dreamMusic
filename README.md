@@ -1,6 +1,6 @@
 # dream_music
 
-A new Flutter project.
+一款基于网易云音乐API创建的音乐项目.
 
 ## Getting Started
 
