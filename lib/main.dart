@@ -1,23 +1,18 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:window_manager/window_manager.dart';
+import 'src/components/router/page_routers.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  WindowOptions options = const WindowOptions(
-    size: Size(800, 600),
-    minimumSize: Size(800, 600),
-    center: true,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.normal
-  ); 
-
-  windowManager.waitUntilReadyToShow(options, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
-
   runApp(const MyApp());
+
+  doWhenWindowReady(() {
+    const initialSize = Size(900, 700);
+    appWindow.minSize = initialSize;
+    appWindow.size = initialSize;
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -28,9 +23,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'DreamMusic',
       debugShowCheckedModeBanner: false,
+      onGenerateRoute: PageRouters.generateRoute,
+      themeMode: ThemeMode.light,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      home: HomePage(),
     );
   }
 }

@@ -1,16 +1,7 @@
-# dream_music
+# DreamMusic
 
 一款基于网易云音乐API创建的音乐项目.
 
-## Getting Started
+## API接口文档
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* [Github](https://github.com/Binaryify/NeteaseCloudMusicApi)
