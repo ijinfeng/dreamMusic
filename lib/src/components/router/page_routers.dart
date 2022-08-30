@@ -10,7 +10,7 @@ class PageRouters {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final name = settings.name;
     final args = settings.arguments;
-    debugPrint("name=$name, args=$args");
+    debugPrint("open route -----> name=$name, args=$args");
     switch (name) {
       case login:
         return ModelRoute(child: LoginPage());

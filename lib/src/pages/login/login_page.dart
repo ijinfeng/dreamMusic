@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
             child: TextButton(onPressed: () async {
               final res = await network.get('/login/cellphone', queryParameters: {
                 "phone": "15215990299",
-                "password": "a14781478"
+                "captcha": "2911"
               });
               print(res.response?.data);
                 }, child: Text('登录')),
