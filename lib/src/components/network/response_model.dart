@@ -15,10 +15,12 @@ import 'package:dio/dio.dart';
 class ResponseModel<T> {
   Response? response;
   String? message;
+  /// http code
   int code = 0;
   T? data;
-
   List<T>? datas;
+
+  dynamic get responseData => response?.data;
 
   ResponseModel.empty();
 
