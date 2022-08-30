@@ -1,11 +1,8 @@
 
 class RequestConfig {
-  // https://shequ-dev.xinc818.com
-  // https://shequ-gray.xinc818.com
-  //https://shequ-daily.xinc818.com
   static String get baseUrl {
     String host;
-    host = '';
+    host = 'https://netease-cloud-music-api-eight-kappa-18.vercel.app';
     return host;
   }
 

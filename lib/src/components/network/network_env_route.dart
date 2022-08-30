@@ -146,5 +146,5 @@ class NetworkEnv with ChangeNotifier {
   String get current => _env;
 
   String get _defaultEnv => 'mock';
-  bool get _defaultProxy => true;
+  bool get _defaultProxy => false;
 }

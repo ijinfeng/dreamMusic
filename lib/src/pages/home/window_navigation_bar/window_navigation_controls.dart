@@ -1,5 +1,6 @@
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/pages/home/window_navigation_bar/window_buttons.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +17,11 @@ class WindowNavigationControls extends StatelessWidget {
       child: WindowTitleBarBox(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            WindowButtons(),
-            Text('我是导航控制')
+          children: [
+            const WindowButtons(),
+            TextButton(onPressed: () {
+              Navigator.pushNamed(context, PageRouters.login);
+            },  child: const Text('导航控制'))
           ],
         ),
       ),
