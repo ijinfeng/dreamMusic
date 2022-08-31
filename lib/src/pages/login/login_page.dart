@@ -1,7 +1,9 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dream_music/src/components/basic/movable_navigation_bar.dart';
 import 'package:dream_music/src/components/network/network.dart';
+import 'package:dream_music/src/pages/login/request/login_request.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -9,23 +11,37 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          MovableNavigationBar(child: Align(
+          MovableNavigationBar(
+              rightItem: Align(
             alignment: Alignment.centerRight,
-            child: TextButton.icon(onPressed: () {
-    Navigator.pop(context);
-            }, icon: Image.asset('assets/ic_close.png'), label: Text('返回')),
+            child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Image.asset('assets/ic_close.png', width: 23, height: 23,)),
           )),
-          Expanded(child: Center(
-            child: TextButton(onPressed: () async {
-              final res = await network.get('/login/cellphone', queryParameters: {
-                "phone": "15215990299",
-                "captcha": "2911"
-              });
-              print(res.response?.data);
-                }, child: Text('登录')),
-          ))
+          Expanded(
+              child: _LoginPageBody())
         ],
       ),
+    );
+  }
+}
+
+class _LoginPageBody extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _LoginPageBodyState();
+  }
+}
+
+class _LoginPageBodyState extends State<_LoginPageBody> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        
+      ],
     );
   }
 }

@@ -23,19 +23,7 @@ abstract class ResponseSerializer {
       var data = rootKey != null ? resData[rootKey] : resData;
 
       // 路径搜索，从指定路径下开始解析数据
-      if (searchKeyPath != null && searchKeyPath.isNotEmpty && data is Map) {
-        List<String> keys = searchKeyPath.split('.');
-        for (var key in keys) {
-          if (data is Map) {
-            data = data[key];
-          } else {
-            // error，搜索路径和响应数据的格式不匹配，无法解析下去
-            data = null;
-            debugPrint("[$searchKeyPath] parse error! current search key=$key, data=$data");
-            break;
-          }
-        }
-      }
+      data = parseSearchKey(data, searchKeyPath);
 
       if (data is Map<String, dynamic>) {
         final model = builder(data);
@@ -63,6 +51,31 @@ abstract class ResponseSerializer {
       res.data = resData;
     }
   }
+
+  dynamic parseSearchKey(dynamic data, String? searchKeyPath) {
+    var result = data;
+    // 路径搜索，从指定路径下开始解析数据
+    if (searchKeyPath != null && searchKeyPath.isNotEmpty) {
+      if (result is Map) {
+        List<String> keys = searchKeyPath.split('.');
+        for (var key in keys) {
+          if (data is Map) {
+            data = data[key];
+          } else {
+            // error，搜索路径和响应数据的格式不匹配，无法解析下去
+            data = null;
+            debugPrint(
+                "[$searchKeyPath] parse error! current search key=$key, data=$data");
+            break;
+          }
+        }
+      } else {
+        result = null;
+        debugPrint("[$searchKeyPath] parse error! data is not Map type");
+      }
+    }
+    return result;
+  }
 }
 
 class DefaultResponserSerializer extends ResponseSerializer {
@@ -77,6 +90,8 @@ class DefaultResponserSerializer extends ResponseSerializer {
     if (builder != null) {
       final resData = response.data;
       parseJson(resData, res, builder, null, searchKeyPath);
+    } else {
+      res.data = parseSearchKey(response.data, searchKeyPath);
     }
 
     return res;

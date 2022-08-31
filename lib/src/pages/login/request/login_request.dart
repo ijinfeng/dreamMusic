@@ -15,4 +15,35 @@ class LoginRequest {
     return res;
   }
 
+
+  /// 发送验证码
+  static Future<ResponseModel> sentCode(String phone) {
+    final res = network.get('/captcha/sent', queryParameters: {
+      "phone": phone
+    });
+    return res;
+  }
+
+  /// 验证验证码
+  static Future<ResponseModel> verifyCode(String phone, String code) {
+    final res = network.get('/captcha/verify', queryParameters: {
+      "phone": phone,
+      "captcha": code
+    });
+    return res;
+  }
+
+  /// 登录二维码key生成
+  static Future<ResponseModel> qrkey() {
+    final res = network.get('/login/qr/key', searchKeyPath: 'unikey');
+    return res;
+  }
+
+  static Future<ResponseModel> qrcreate(String qrkey) {
+    final res = network.get('/login/qr/create', queryParameters: {
+      "key": qrkey,
+      "qrimg": true
+    });
+    return res;
+  }
 }

@@ -3,13 +3,19 @@ import 'package:dream_music/src/config/global_constant.dart';
 import 'package:flutter/material.dart';
 
 class MovableNavigationBar extends StatelessWidget {
-  final Widget child;
-  final double? height;
+  final double height;
+  final Widget? centerItem;
+  final Widget? leftItem;
+  final Widget? rightItem;
+  final EdgeInsetsGeometry padding;
 
   const MovableNavigationBar({
     Key? key,
-    required this.child,
-    this.height = kWindowNavigationBarHeight
+    this.height = kWindowNavigationBarHeight,
+    this.centerItem,
+    this.leftItem,
+    this.rightItem,
+    this.padding = const EdgeInsets.symmetric(horizontal: 12)
   }) : super(key: key);
 
   @override
@@ -20,7 +26,18 @@ class MovableNavigationBar extends StatelessWidget {
       ),
       height: height,
       child: WindowTitleBarBox(
-        child: MoveWindow(child: child,),
+        child: MoveWindow(child: Padding(
+          padding: padding,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ...[leftItem ?? const Spacer()],
+              ...[centerItem ?? const Spacer()],
+              ...[rightItem ?? const Spacer()]
+            ],
+          ),
+        ),),
       ),
     );
   }
