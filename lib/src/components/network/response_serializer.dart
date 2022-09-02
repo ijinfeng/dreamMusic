@@ -20,7 +20,7 @@ abstract class ResponseSerializer {
       dynamic decodeData = jsonDecode(resData);
       parseJson(decodeData, res, builder, rootKey, searchKeyPath);
     } else if (resData is Map) {
-      var data = rootKey != null ? resData[rootKey] : resData;
+      var data = parseRootKey(resData, rootKey);
 
       // 路径搜索，从指定路径下开始解析数据
       data = parseSearchKey(data, searchKeyPath);
@@ -59,11 +59,11 @@ abstract class ResponseSerializer {
       if (result is Map) {
         List<String> keys = searchKeyPath.split('.');
         for (var key in keys) {
-          if (data is Map) {
-            data = data[key];
+          if (result is Map) {
+            result = result[key];
           } else {
             // error，搜索路径和响应数据的格式不匹配，无法解析下去
-            data = null;
+            result = null;
             debugPrint(
                 "[$searchKeyPath] parse error! current search key=$key, data=$data");
             break;
@@ -76,6 +76,16 @@ abstract class ResponseSerializer {
     }
     return result;
   }
+
+  dynamic parseRootKey(dynamic data, String? rootKey) {
+    if (rootKey == null) {
+      return data;
+    }
+    if (data is Map && data[rootKey] != null) {
+      return data[rootKey];
+    }
+    return data;
+  }
 }
 
 class DefaultResponserSerializer extends ResponseSerializer {
@@ -87,11 +97,13 @@ class DefaultResponserSerializer extends ResponseSerializer {
     res.code = response.statusCode ?? 0;
     res.message = response.statusMessage;
 
+    const String rootKey = 'data';
+
     if (builder != null) {
       final resData = response.data;
-      parseJson(resData, res, builder, null, searchKeyPath);
+      parseJson(resData, res, builder, rootKey, searchKeyPath);
     } else {
-      res.data = parseSearchKey(response.data, searchKeyPath);
+      res.data = parseSearchKey(parseRootKey(response.data, rootKey), searchKeyPath);
     }
 
     return res;

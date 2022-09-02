@@ -8,6 +8,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {
+          Navigator.pushNamed(context, PageRouters.networkEnv);
+      }, child: const Icon(Icons.help),),
       body: Column(
         children: [
           WindowNavigationBar(),

@@ -1,11 +1,11 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'src/components/router/page_routers.dart';
 
 void main() async {
   runApp(const MyApp());
-
   doWhenWindowReady(() {
     const initialSize = Size(900, 700);
     appWindow.minSize = initialSize;
@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: HomePage(),
+      builder: EasyLoading.init(),
     );
   }
 }

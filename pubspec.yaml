@@ -20,7 +20,7 @@ dependencies:
   provider: ^6.0.3
   shared_preferences: ^2.0.15
   crypto: ^3.0.2
-  extended_image: ^6.2.1
+  flutter_easyloading: ^3.0.5
 
 dev_dependencies:
   flutter_test:

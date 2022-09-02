@@ -32,9 +32,9 @@ class MovableNavigationBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ...[leftItem ?? const Spacer()],
-              ...[centerItem ?? const Spacer()],
-              ...[rightItem ?? const Spacer()]
+              ...[leftItem ?? const SizedBox.shrink()],
+              ...[centerItem ?? const SizedBox.shrink()],
+              ...[rightItem ?? const SizedBox.shrink()]
             ],
           ),
         ),),

@@ -1,9 +1,11 @@
+import 'package:dream_music/src/components/network/network_env_route.dart';
 import 'package:dream_music/src/pages/login/login_page.dart';
 import 'package:dream_music/src/pages/setting/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'custom_routes.dart';
 
 class PageRouters {
+  static const String networkEnv = "networkEnv";
   static const String login = "login";
   static const String setting = "setting";
 
@@ -16,6 +18,8 @@ class PageRouters {
         return ModelRoute(child: LoginPage());
       case setting:
         return ModelRoute(child: SettingPage());
+      case networkEnv:
+        return ModelRoute(child: NetworkEnvPage());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

@@ -1,65 +1,149 @@
-import 'dart:io';
+import 'dart:convert';
 
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_music/src/components/extension/string_extension.dart';
 
-class ImageView extends StatelessWidget {
-  const ImageView({
-    Key? key,
-    required this.src,
-    this.width,
-    this.height,
-    this.placeholder,
-    this.fit,
-    this.radius
-  }) : super(key: key);
+enum ImageLoadType {
+  asset,
+  network,
+  base64,
+}
 
+class ImageView extends StatelessWidget {
+  const ImageView.asset(
+      {Key? key,
+      required this.src,
+      this.width,
+      this.height,
+      this.placeholder,
+      this.fit,
+      this.color,
+      this.radius,
+      this.padding})
+      : loadType = ImageLoadType.asset,
+        super(key: key);
+
+  const ImageView.network(
+      {Key? key,
+      required this.src,
+      this.width,
+      this.height,
+      this.placeholder,
+      this.fit,
+      this.color,
+      this.radius,
+      this.padding})
+      : loadType = ImageLoadType.network,
+        super(key: key);
+
+  const ImageView.base64(
+      {Key? key,
+      required this.src,
+      this.width,
+      this.height,
+      this.placeholder,
+      this.fit,
+      this.color,
+      this.radius,
+      this.padding})
+      : loadType = ImageLoadType.base64,
+        super(key: key);
 
   final String? src;
   final double? width;
   final double? height;
-  final String? placeholder;
+  final Widget? placeholder;
   final BoxFit? fit;
   final double? radius;
+  final Color? color;
+  final EdgeInsetsGeometry? padding;
+  final ImageLoadType loadType;
 
   @override
   Widget build(BuildContext context) {
     Widget? image;
+    final borderRadius = radius != null
+        ? BorderRadius.all(Radius.circular(radius!))
+        : BorderRadius.zero;
+    Widget defaultPlaceholderImage = placeholder ??
+        Image.asset(
+          'assets/ic_image_placeholder.png',
+          color: const Color(0xffcccccc),
+          width: width,
+          height: height,
+        );
+
     if (src != null) {
       final nonullSrc = src!;
-      try {
-      if (nonullSrc.isHTTPUrl()) {
-        image = ExtendedImage.network(nonullSrc);
-      } else if (nonullSrc.isFileUrl()) {
-        image = ExtendedImage.file(File(nonullSrc));
-      } else {
-        image = ExtendedImage.asset(
+      Widget eximage;
+      if (loadType == ImageLoadType.network) {
+        eximage = Image.network(
           nonullSrc,
           width: width,
           height: height,
           fit: fit,
-          borderRadius: radius != null ? BorderRadius.all(Radius.circular(radius!)) : null,
-          loadStateChanged: (state) {
-            try {
-              if (state.extendedImageLoadState == LoadState.loading) {
-                return Image.asset('assets/ic_image_placeholder.png', width: width, height: height,);
-              } else if (state.extendedImageLoadState == LoadState.failed) {
-                return Image.asset('assets/ic_image_failed.png', width: width, height: height,);
-              } else {
-                return null;
-              }   
-            } catch (e) {
-              debugPrint('load placeholder image error: $e');
-            } 
-            return Container();
+          color: color,
+          loadingBuilder: (context, child, loadingProgress) {
+            return defaultPlaceholderImage;
           },
-          );
+        );
+      } else if (loadType == ImageLoadType.asset) {
+        eximage = Image.asset(
+          nonullSrc,
+          width: width,
+          height: height,
+          fit: fit,
+          color: color,
+          errorBuilder: (context, error, stackTrace) {
+            return defaultPlaceholderImage;
+          },
+        );
+      } else if (loadType == ImageLoadType.base64) {
+        String base64;
+        if (nonullSrc.contains(",")) {
+          base64 = nonullSrc.split(",").last;
+        } else {
+          base64 = nonullSrc;
+        }
+        final bytes = const Base64Decoder().convert(base64);
+        eximage = Image.memory(
+          bytes,
+          width: width,
+          height: height,
+          fit: fit,
+          gaplessPlayback: true,
+          errorBuilder: (context, error, stackTrace) {
+            return defaultPlaceholderImage;
+          },
+        );
+      } else {
+        eximage = defaultPlaceholderImage;
       }
-      } catch(e) {
-        debugPrint('load image[src=$nonullSrc] error: $e');
-      } 
+      if (eximage is Image) {
+        final stream = eximage.image.resolve(ImageConfiguration.empty);
+        stream.addListener(ImageStreamListener((image, synchronousCall) {},
+            onError: ((exception, stackTrace) {
+          debugPrint('load image[src=$nonullSrc] error: $exception');
+        })));
+      }
+      image = eximage;
     }
-    return image ?? Image.asset('assets/ic_image_placeholder.png', width: width, height: height,);
+    image ??= defaultPlaceholderImage;
+    image = SizedBox(
+        width: width,
+        height: height,
+        child: image,
+      );
+      image = ClipRRect(
+        borderRadius: borderRadius,
+        child: image,
+      );
+      if (padding != null) {
+        image = Padding(
+          padding: padding!,
+          child: image,
+        );
+      }
+    return image;
   }
 }
