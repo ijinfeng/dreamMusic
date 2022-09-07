@@ -10,7 +10,19 @@ class LoginRequest {
   static Future<ResponseModel<LoginModel>> phoneLogin(
       String phone, String password) {
     final res = network.get('/login/cellphone',
+    headers: {
+
+    },
         queryParameters: {"phone": phone, "md5_password": password.toMD5()},
+        builder: (json) {
+      return LoginModel.fromJson(json);
+    });
+    return res;
+  }
+
+  static Future<ResponseModel<LoginModel>> codeLogin(String phone, String code) {
+      final res = network.get('/login/cellphone',
+        queryParameters: {"phone": phone, "captcha": code},
         builder: (json) {
       return LoginModel.fromJson(json);
     });

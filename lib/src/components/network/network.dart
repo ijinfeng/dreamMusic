@@ -6,13 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'request_config.dart';
 import 'response_model.dart';
 import 'response_serializer.dart';
-import 'exception.dart';
 import 'network_env_route.dart';
 
 Network network = Network();
 
 typedef NetworkJSONModelBuilder<T> = T Function(Map<String, dynamic> json);
-typedef NetworkOnError = void Function(NetworkException e);
+typedef NetworkOnError = void Function(ResponseModel model);
 
 class Network {
   late Dio _dio;
@@ -55,7 +54,7 @@ class Network {
     /// * [searchKeyPath] 可以使用[.]连接表示层级，如 ‘list.person’ ，表示解析[list]下的[person]字典json，
     /// 这个json将在[builder]中返回
     String? searchKeyPath,
-    void Function(NetworkException)? onError,
+    void Function(ResponseModel<T>)? onError,
   }) async {
     try {
       Options options = Options()
@@ -66,14 +65,26 @@ class Network {
           queryParameters: queryParameters, data: data, options: options);
       return _handleResponse(response, builder, serializer, searchKeyPath);
     } catch (e) {
-      var exception = NetworkException.from(url, e);
-      if (kDebugMode) print(exception);
-      if (onError != null) {
-        onError.call(exception);
+      ResponseModel<T> failModel;
+      if (e is DioError) {
+        final dioError = e;
+        failModel = ResponseModel.fail(dioError.response);
+      } else {
+        final res = ResponseModel<T>.error(url, e);
+        if (onError != null) {
+          onError(res);
+        }
+        failModel = res;
       }
+      if (kDebugMode) print(failModel);
+      return failModel;
     }
+  }
 
-    return ResponseModel.empty();
+  Map<String, dynamic>? _combine(Map<String, dynamic>? m1, Map<String, dynamic>? m2) {
+    if (m1 == null) return m2;
+    if (m2 == null) return m1;
+    return m1..addAll(m2);
   }
 
   Future<ResponseModel<T>> get<T>(
@@ -86,7 +97,7 @@ class Network {
     NetworkOnError? onError,
   }) {
     return request(url,
-        queryParameters: queryParameters,
+        queryParameters: _combine(queryParameters, RequestConfig.getRequestCommonParams),
         headers: headers,
         builder: builder,
         serializer: serializer,
@@ -106,8 +117,8 @@ class Network {
   }) {
     return request(url,
         method: "POST",
-        queryParameters: queryParameters,
-        data: body,
+        queryParameters: _combine(queryParameters, RequestConfig.postRequestCommonParams),
+        data: _combine(body, RequestConfig.postRequestCommonParams),
         headers: headers,
         builder: builder,
         serializer: serializer,
@@ -144,11 +155,7 @@ class Network {
     if (response.statusCode == 200) {
       return useSerializer.serialize(response, builder, searchKeyPath);
     } else {
-      var exception = NetworkException(
-          response.requestOptions.baseUrl + response.requestOptions.path,
-          response.statusCode,
-          NetworkException.unknownException);
-      throw exception;
+      return ResponseModel.fail(response);
     }
   }
 

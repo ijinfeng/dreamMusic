@@ -96,6 +96,12 @@ class DefaultResponserSerializer extends ResponseSerializer {
     res.response = response;
     res.code = response.statusCode ?? 0;
     res.message = response.statusMessage;
+    if (response.data is Map) {
+      res.businessCode = response.data['code'];
+      if (response.data['message'] != null) {
+        res.message = response.data['message'];
+      }
+    }
 
     const String rootKey = 'data';
 

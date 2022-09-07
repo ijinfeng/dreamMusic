@@ -3,6 +3,7 @@ import 'package:dream_music/src/pages/home/window_navigation_bar/window_navigati
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
@@ -19,6 +20,7 @@ class NetworkEnv with ChangeNotifier {
   set openProxy(bool value) {
     if (_openProxy == value) return;
     _openProxy = value;
+    notifyListeners();
     SharedPreferences.getInstance().then((pre) {
       pre.setBool(_networkProxyKey, _openProxy);
     });
@@ -159,33 +161,35 @@ class NetworkEnvPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      title: "网络配置",
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              '本地代理',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-            StatefulBuilder(
-              builder: (context, setState) {
-                return Switch(
-                  value: NetworkEnv().openProxy,
-                  onChanged: (value) {
-                    setState(() {
-                      NetworkEnv().openProxy = value;
-                      EasyLoading.showToast(value ? '开启代理' : '关闭代理',
-                          duration: const Duration(seconds: 2),
-                          toastPosition: EasyLoadingToastPosition.bottom);
-                    });
-                  },
-                );
-              },
-            )
-          ],
-        ),
-      ),
-    );
+        title: "网络配置",
+        body: ChangeNotifierProvider.value(
+          value: NetworkEnv(),
+          builder: (context, child) {
+            return Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    '本地代理',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                  Consumer<NetworkEnv>(
+                    builder: (context, value, child) {
+                      return Switch(
+                        value: value.openProxy,
+                        onChanged: (value) {
+                          NetworkEnv().openProxy = value;
+                          EasyLoading.showToast(value ? '开启代理' : '关闭代理',
+                              duration: const Duration(seconds: 2),
+                              toastPosition: EasyLoadingToastPosition.bottom);
+                        },
+                      );
+                    },
+                  )
+                ],
+              ),
+            );
+          },
+        ));
   }
 }

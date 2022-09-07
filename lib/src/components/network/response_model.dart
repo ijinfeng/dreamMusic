@@ -17,6 +17,8 @@ class ResponseModel<T> {
   String? message;
   /// http code
   int code = 0;
+  /// 业务码
+  int businessCode = 0;
   T? data;
   List<T>? datas;
 
@@ -53,9 +55,38 @@ class ResponseModel<T> {
     return false;
   }
 
+  factory ResponseModel.fail(Response? response) {
+    final model = ResponseModel<T>.empty();
+    model.response = response;
+    model.code = response?.statusCode ?? -1;
+    model.message = response?.statusMessage;
+    if (response?.data != null && response?.data is Map) {
+      model.businessCode = response?.data['code'];
+      if (response?.data['message'] != null) {
+        model.message = response?.data['message'];
+      }
+    }
+    return model;
+  }
+
+  String? _url;
+  factory ResponseModel.error(String? url, dynamic e) {
+    final model = ResponseModel<T>.empty();
+    model.code = 0;
+    model._url = url;
+    if (e is Error) {
+      model.message = e.toString();
+    } 
+    if (model.message?.isEmpty == true) {
+      model.message = '未知错误';
+    }
+    return model;
+  } 
+
   @override
   String toString() {
-    return '''===================== response model:
+    return '''===================== response model[${success ? 'SUCCESS':'FAIL'}] =====================
+[url]: ${response?.realUri ?? _url}
 [code]: $code,
 [message]: $message,
 [data]: ${data ?? datas},
@@ -70,4 +101,11 @@ class ResponseModel<T> {
 
 ''';
   }
+
+  /*
+     @override
+  String toString() {
+    return '\n==========Network Error======================\n|| url: $requestUrl,\n|| codeL $code,\n|| message: $message,\n|| stackInfo: $stackInfo\n======================================';
+  }
+  */
 }

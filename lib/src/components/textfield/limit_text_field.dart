@@ -1,88 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LimitedTextField extends StatelessWidget {
+class LimitedTextField extends StatefulWidget {
   const LimitedTextField({
     Key? key,
     this.text,
     this.textStyle,
-    this.borderRadius,
     this.backgroundColor,
     this.highlightColor,
     this.placeholder = '请输入',
-    this.placeholderStyle,
-    this.maxLength = 20,
-    this.showCounter = true,
-    this.onSubmited,
-    this.onTextChanged,
-    this.margin,
-    this.padding = const EdgeInsets.symmetric(horizontal: 12),
-    this.height = 52.0,
-    this.width,
-    this.keyboardType,
-    this.showClearButtonWhenEdit = true,
-    this.border,
-    this.focusNode,
-  }) : super(key: key);
-
-  final String? text;
-  final TextStyle? textStyle;
-  final BorderRadius? borderRadius;
-  final Color? backgroundColor;
-  final Color? highlightColor;
-  final String? placeholder;
-  final TextStyle? placeholderStyle;
-  final int maxLength;
-  final ValueChanged<String>? onSubmited;
-  final ValueChanged<String>? onTextChanged;
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-  final double? height;
-  final double? width;
-  final TextInputType? keyboardType;
-  final bool showClearButtonWhenEdit;
-  final bool showCounter;
-  final BoxBorder? border;
-  final FocusNode? focusNode;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      margin: margin,
-      height: height,
-      width: width,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: borderRadius,
-          border: border,
-          color: backgroundColor ?? Colors.white),
-      child: _LimitedTextField(
-        text: text,
-        textStyle: textStyle,
-        backgroundColor: backgroundColor,
-        highlightColor: highlightColor,
-        placeholder: placeholder,
-        placeholderStyle: placeholderStyle,
-        maxLength: maxLength,
-        showCounter: showCounter,
-        onSubmited: onSubmited,
-        onTextChanged: onTextChanged,
-        keyboardType: keyboardType,
-        showClearButtonWhenEdit: showClearButtonWhenEdit,
-        focusNode: focusNode,
-      ),
-    );
-  }
-}
-
-class _LimitedTextField extends StatefulWidget {
-  const _LimitedTextField({
-    Key? key,
-    this.text,
-    this.textStyle,
-    this.backgroundColor,
-    this.highlightColor,
-    this.placeholder,
     this.placeholderStyle,
     this.maxLength,
     this.showCounter,
@@ -91,6 +16,17 @@ class _LimitedTextField extends StatefulWidget {
     this.keyboardType,
     this.showClearButtonWhenEdit,
     this.focusNode,
+    this.width,
+    this.height = 40,
+    this.padding = const EdgeInsets.symmetric(horizontal: 12),
+    this.margin,
+    this.borderRadius,
+    this.border,
+    this.left,
+    this.right,
+    this.leftSpace = 10,
+    this.rightSpace = 10,
+    this.obscureText = false,
   }) : super(key: key);
 
   final String? text;
@@ -106,6 +42,17 @@ class _LimitedTextField extends StatefulWidget {
   final TextInputType? keyboardType;
   final bool? showClearButtonWhenEdit;
   final FocusNode? focusNode;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final double? height;
+  final double? width;
+  final BorderRadius? borderRadius;
+  final BoxBorder? border;
+  final Widget? left;
+  final double? leftSpace;
+  final Widget? right;
+  final double? rightSpace;
+  final bool obscureText;
 
   @override
   State<StatefulWidget> createState() {
@@ -113,23 +60,29 @@ class _LimitedTextField extends StatefulWidget {
   }
 }
 
-class _LimitedTextFieldState extends State<_LimitedTextField> {
+class _LimitedTextFieldState extends State<LimitedTextField> {
   late final TextEditingController _editingController;
+  late final FocusNode _focusNode;
 
   @override
   void dispose() {
     _editingController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    _focusNode = widget.focusNode ?? FocusNode();
+    _focusNode.addListener(() {
+      setState(() {});
+    });
     _editingController = TextEditingController(text: widget.text);
     _editingController.addListener(() {
       if (mounted) {
         String text = _editingController.value.text;
-        if (text.runes.length > widget.maxLength!) {
+        if (widget.maxLength != null && text.runes.length > widget.maxLength!) {
           int currentOffset = _editingController.value.selection.baseOffset;
           final runs = text.runes;
           final lastChar = String.fromCharCode(runs.last);
@@ -162,20 +115,40 @@ class _LimitedTextFieldState extends State<_LimitedTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    Color? fillColor = widget.backgroundColor ?? Colors.white;
+    if (widget.highlightColor != null && _focusNode.hasPrimaryFocus) {
+      fillColor = widget.highlightColor;
+    }
+
+    return Container(
+      padding: widget.padding,
+      margin: widget.margin,
+      height: widget.height,
+      width: widget.width,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          borderRadius: widget.borderRadius,
+          border: widget.border,
+          color: fillColor,),
+      child: Row(
       children: [
+        if (widget.left != null) widget.left!,
+        if (widget.left != null && widget.leftSpace != null) SizedBox(width: widget.leftSpace,),
         Expanded(
           child: TextField(
-              focusNode: widget.focusNode,
+              focusNode: _focusNode,
               controller: _editingController,
               onSubmitted: widget.onSubmited,
               onChanged: widget.onTextChanged,
+              onTap: null, // 每次点击textField都会触发
+              onEditingComplete: null, // 点击enter的时候调用
               style: widget.textStyle,
+              obscureText: widget.obscureText,
               cursorColor: widget.textStyle?.color ?? const Color(0xff333333),
               keyboardType: widget.keyboardType,
               decoration: InputDecoration(
-                hoverColor: widget.backgroundColor ?? Colors.white,
-                fillColor: widget.backgroundColor ?? Colors.white,
+                hoverColor: fillColor,
+                fillColor: fillColor,
                 filled: true,
                 hintText: widget.placeholder,
                 hintStyle: widget.placeholderStyle ??
@@ -218,8 +191,11 @@ class _LimitedTextFieldState extends State<_LimitedTextField> {
                         fontWeight: FontWeight.w400,
                         color: Color(0xff999999))),
               ]))
-        ]
+        ],
+        if (widget.right != null && widget.rightSpace != null) SizedBox(width: widget.rightSpace,),
+        if (widget.right != null) widget.right!,
       ],
+    ),
     );
   }
 }
