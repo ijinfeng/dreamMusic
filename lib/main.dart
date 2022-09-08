@@ -1,7 +1,9 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
+import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'src/components/router/page_routers.dart';
 
 void main() async {
@@ -20,16 +22,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'DreamMusic',
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: PageRouters.generateRoute,
-      themeMode: ThemeMode.light,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-      builder: EasyLoading.init(),
+    return ChangeNotifierProvider(
+      create: (context) {
+        return HomeStateModel();
+      },
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'DreamMusic',
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: PageRouters.generateRoute,
+          themeMode: ThemeMode.light,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: child,
+          builder: EasyLoading.init(),
+        );
+      },
+      child: const HomePage(),
     );
   }
 }

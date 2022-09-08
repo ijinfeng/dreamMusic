@@ -1,5 +1,5 @@
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 abstract class ProviderStatefulWidget
@@ -11,7 +11,7 @@ abstract class ProviderStatefulWidget
 }
 
 abstract class ProviderState<T extends ChangeNotifier>
-    extends State<ProviderStatefulWidget> {
+    extends State<ProviderStatefulWidget> with EasyInterface {
 
   T? viewModel;
 
@@ -34,36 +34,17 @@ abstract class ProviderState<T extends ChangeNotifier>
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        viewModel = createViewModel();
+    viewModel = createViewModel();
+    if (viewModel == null) {
+      return buildProviderChild(context, reuseChild(context));
+    } else {
+      return ChangeNotifierProvider(
+      create: (context) {  
         return viewModel;
       },
       builder: buildProviderChild,
       child: reuseChild(context),
     );
-  }
-
-  Widget heightSpace(double value) => SizedBox(height: value,);
-  Widget widthSpace(double value) => SizedBox(width: value,);
-
-  void showToast(String? text) {
-    if (text == null || text.isEmpty) return;
-    EasyLoading.showToast(
-      text,
-      duration: const Duration(seconds: 2),
-      toastPosition: EasyLoadingToastPosition.bottom
-    );
-  }
-
-  void showLoading(String? text) {
-    EasyLoading.show(
-      status: text,
-      dismissOnTap: false
-    );
-  }
-
-  void dismissLoading() {
-    EasyLoading.dismiss();
+    }
   }
 }

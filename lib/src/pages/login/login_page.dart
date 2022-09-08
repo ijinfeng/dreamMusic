@@ -8,6 +8,8 @@ import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/textfield/text_field.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
+import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/model/login_qrstatus_model.dart';
 import 'package:dream_music/src/pages/login/model/login_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
@@ -136,6 +138,12 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
     }
   }
 
+  void _loginSuccess() {
+    debugPrint('登录成功');
+    Provider.of<HomeStateModel>(context, listen: false).refreshByLogin();
+    Navigator.pop(context);
+  }
+
   void _requestLoginQrcode() async {
     final qrkeyRes = await LoginRequest.qrkey();
     if (qrkeyRes.success) {
@@ -151,18 +159,8 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
 
   void _checkQrcodeStatus() {
     if (viewModel?.loginType != LoginType.qrcode || viewModel?.qrkey == null) {
-      assert(() {
-        if (viewModel?.loginType != LoginType.qrcode) {
-          debugPrint('logType=[${viewModel?.loginType}]');
-        }
-        if (viewModel?.qrkey == null) {
-          debugPrint('qrkey=[${viewModel?.qrkey}]');
-        }
-        return true;
-      }());
       return;
     }
-    debugPrint('LoginType | qrkey 检测通过，开始检测二维码状态');
     _createQrcodeStatusTimer();
   }
 
@@ -179,15 +177,10 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
         _cancelTimer();
         if (model.code == 803) {
           AppSharedManager().cookie = model.cookie;
+          AppSharedManager().loginType = AppLoginType.user;
+          _loginSuccess();
         }
       }
-    }
-  }
-
-  void _getUserAccount() async {
-    final res = await UserRequest.accountInfo();
-    if (res.success) {
-      print("获取用户账号----> ${res.data}");
     }
   }
 
@@ -335,6 +328,7 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
                   if (res.success) {
                     showToast('登录成功');
                     AppSharedManager().loginModel = res.data;
+                    _loginSuccess();
                   }
                 }
               }
@@ -401,8 +395,7 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
                   if (res.success) {
                     showToast('登录成功');
                     AppSharedManager().loginModel = res.data;
-                    //TODO: 测试
-                    _getUserAccount();
+                    _loginSuccess();
                   }
                 }
               }

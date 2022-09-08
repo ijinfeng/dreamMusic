@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
+import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/home/window_navigation_bar/window_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -17,9 +18,17 @@ class RightContent extends StatelessWidget {
             body: Builder(
               builder: (context) {
                 return Center(
-                  child: TextButton(onPressed: () {
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        AppSharedManager().loginType.name
+                      ),
+                      TextButton(onPressed: () {
                     Navigator.pushNamed(context, PageRouters.setting);
-                  }, child: Text('按钮'),),
+                  }, child: Text('按钮'),)
+                    ],
+                  ),
                 );
               }
             ),

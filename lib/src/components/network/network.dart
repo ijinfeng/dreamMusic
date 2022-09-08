@@ -81,12 +81,6 @@ class Network {
     }
   }
 
-  Map<String, dynamic>? _combine(Map<String, dynamic>? m1, Map<String, dynamic>? m2) {
-    if (m1 == null) return m2;
-    if (m2 == null) return m1;
-    return m1..addAll(m2);
-  }
-
   Future<ResponseModel<T>> get<T>(
     String url, {
     Map<String, dynamic>? queryParameters,
@@ -97,7 +91,7 @@ class Network {
     NetworkOnError? onError,
   }) {
     return request(url,
-        queryParameters: _combine(queryParameters, RequestConfig.getRequestCommonParams),
+        queryParameters: queryParameters,
         headers: headers,
         builder: builder,
         serializer: serializer,
@@ -117,8 +111,8 @@ class Network {
   }) {
     return request(url,
         method: "POST",
-        queryParameters: _combine(queryParameters, RequestConfig.postRequestCommonParams),
-        data: _combine(body, RequestConfig.postRequestCommonParams),
+        queryParameters: queryParameters,
+        data: body,
         headers: headers,
         builder: builder,
         serializer: serializer,
