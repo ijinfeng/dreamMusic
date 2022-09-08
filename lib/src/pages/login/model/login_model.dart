@@ -1,3 +1,5 @@
+import 'package:dream_music/src/pages/user/model/user_model.dart';
+
 ///
 ///2022-8-2 2022/8/30
 ///
@@ -471,5 +473,14 @@ class LoginModel {
     }
     data['cookie'] = cookie;
     return data;
+  }
+
+
+  UserModel? get userModel {
+    UserModel m = UserModel(
+      account: account,
+      profile: profile
+    );
+    return m;
   }
 }

@@ -1,5 +1,6 @@
 
 import 'package:dream_music/src/pages/login/model/login_model.dart';
+import 'package:dream_music/src/pages/user/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,12 +47,12 @@ class AppSharedManager {
 
   VoidCallback? initializedCallback;
 
-  LoginModel? _loginModel;
-  set loginModel(LoginModel? value) {
-    _loginModel = value;
-    cookie = value?.cookie;
+  UserModel? _userModel;
+  set userModel(UserModel? value) {
+    _userModel = value;
     loginType = AppLoginType.user;
   }
+  UserModel? get userModel => _userModel;
 
   String? _cookie;
   set cookie(String? value) {
@@ -64,7 +65,7 @@ class AppSharedManager {
       }
     });
   }
-  String? get cookie => _cookie ?? _loginModel?.cookie;
+  String? get cookie => _cookie;
 
   AppLoginType _loginType = AppLoginType.none;
   set loginType(AppLoginType value) {

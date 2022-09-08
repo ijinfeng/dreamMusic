@@ -327,7 +327,8 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
                   dismissLoading();
                   if (res.success) {
                     showToast('登录成功');
-                    AppSharedManager().loginModel = res.data;
+                    AppSharedManager().userModel = res.data?.userModel;
+                    AppSharedManager().cookie = res.data?.cookie;
                     _loginSuccess();
                   }
                 }
@@ -394,7 +395,8 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
                   dismissLoading();
                   if (res.success) {
                     showToast('登录成功');
-                    AppSharedManager().loginModel = res.data;
+                    AppSharedManager().userModel = res.data?.userModel;
+                    AppSharedManager().cookie = res.data?.cookie;
                     _loginSuccess();
                   }
                 }

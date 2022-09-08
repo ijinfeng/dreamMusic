@@ -73,7 +73,8 @@ class _HomeBodyState extends ProviderState<HomeStateModel> {
     debugPrint('用户已登录，开始获取账号信息');
     final res = await UserRequest.accountInfo();
     if (res.success) {
-      debugPrint("获取用户账号----> ${res.data}");
+      debugPrint('已成功获取到用户账号信息: ${res.data}');
+      AppSharedManager().userModel = res.data;
       homeState?.needRefresh();
     }
   }
