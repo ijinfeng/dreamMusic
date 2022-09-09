@@ -1,5 +1,6 @@
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
-import 'package:dream_music/src/pages/home/window_navigation_bar/window_navigation_bar.dart';
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
+import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -155,7 +156,7 @@ class NetworkEnv with ChangeNotifier {
   bool get _defaultProxy => true;
 }
 
-class NetworkEnvPage extends StatelessWidget {
+class NetworkEnvPage extends StatelessWidget with EasyInterface {
   const NetworkEnvPage({Key? key}) : super(key: key);
 
   @override
@@ -166,7 +167,7 @@ class NetworkEnvPage extends StatelessWidget {
           value: NetworkEnv(),
           builder: (context, child) {
             return Center(
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
@@ -185,7 +186,13 @@ class NetworkEnvPage extends StatelessWidget {
                         },
                       );
                     },
-                  )
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        AppSharedManager().clearAccount();
+                        showToast('清理账号成功');
+                      },
+                      child: const Text('清除缓存cookie'))
                 ],
               ),
             );

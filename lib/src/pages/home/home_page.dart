@@ -64,7 +64,7 @@ class _HomeBodyState extends ProviderState<HomeStateModel> {
         AppSharedManager().cookie = res.data?.cookie;
         AppSharedManager().loginType = AppLoginType.anonimous;
         debugPrint('游客登录成功');
-        homeState?.needRefresh();
+        homeState?.refreshByLogin();
       }
     });
   }
@@ -90,7 +90,9 @@ class _HomeBodyState extends ProviderState<HomeStateModel> {
       },
       builder: (context, value, child) {
         // 每次账号登录都获取下用户信息
-        _getUserAccount();
+        if (value > 0) {
+          _getUserAccount();
+        }
         return Selector<HomeStateModel, int>(
           selector: (p0, p1) {
             return p1.uiRefreshCode;

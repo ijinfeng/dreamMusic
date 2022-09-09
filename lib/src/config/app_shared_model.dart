@@ -47,12 +47,7 @@ class AppSharedManager {
 
   VoidCallback? initializedCallback;
 
-  UserModel? _userModel;
-  set userModel(UserModel? value) {
-    _userModel = value;
-    loginType = AppLoginType.user;
-  }
-  UserModel? get userModel => _userModel;
+  UserModel? userModel;
 
   String? _cookie;
   set cookie(String? value) {
@@ -75,4 +70,14 @@ class AppSharedManager {
     });
   }
   AppLoginType get loginType => _loginType;
+
+  void clearAccount() {
+    _loginType = AppLoginType.none;
+    _cookie = null;
+    userModel = null;
+    SharedPreferences.getInstance().then((pre) {
+      pre.remove(kCookieLocalKey);
+      pre.remove(kAppLoginTypeKey);
+    });
+  }
 }

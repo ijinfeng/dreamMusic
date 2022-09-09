@@ -44,6 +44,7 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
   void dispose() {
     super.dispose();
     _cancelTimer();
+    
   }
 
   @override
@@ -140,6 +141,7 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
 
   void _loginSuccess() {
     debugPrint('登录成功');
+    AppSharedManager().loginType = AppLoginType.user;
     Provider.of<HomeStateModel>(context, listen: false).refreshByLogin();
     Navigator.pop(context);
   }
@@ -177,7 +179,6 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
         _cancelTimer();
         if (model.code == 803) {
           AppSharedManager().cookie = model.cookie;
-          AppSharedManager().loginType = AppLoginType.user;
           _loginSuccess();
         }
       }

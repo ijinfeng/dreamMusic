@@ -84,6 +84,7 @@ class LoginRequest {
   static Future<ResponseModel<AnonimousModel>> anonimousLogin() {
     final res = neRequest.get(
       '/register/anonimous',
+      queryParameters: neRequest.timestampParams,
       builder: (json) {
         return AnonimousModel.fromJson(json);
       },

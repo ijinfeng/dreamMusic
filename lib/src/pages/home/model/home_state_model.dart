@@ -16,6 +16,7 @@ class HomeStateModel extends ChangeNotifier {
   // 登录后调用
   void refreshByLogin() {
     loginRefreshCode += 1;
+    uiRefreshCode += 1;
     notifyListeners();
   }
 

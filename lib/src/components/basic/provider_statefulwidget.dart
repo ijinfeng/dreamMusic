@@ -15,11 +15,11 @@ abstract class ProviderState<T extends ChangeNotifier>
 
   T? viewModel;
 
-  T? createViewModel();
+  T? createViewModel() => null;
 
   Widget buildProviderChild(BuildContext context, Widget? reuseChild);
 
-  Widget? reuseChild(BuildContext context) { return null; }
+  Widget? reuseChild(BuildContext context) => null;
 
   @override
   void dispose() {

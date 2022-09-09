@@ -14,3 +14,8 @@ const Color kTextDisableColor = Color(0xff666666);
 
 /// 失效淡灰色，#EEEEEE
 const Color kDisableColor = Color(0xFFEEEEEE);
+
+/*
+  侧边栏背景色
+*/
+const Color kSideMenuBackgroundColor = Color(0xFFE8E8E8);
