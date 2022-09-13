@@ -1,6 +1,5 @@
 import 'package:dream_music/src/components/network/network.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
-import 'package:dream_music/src/config/app_shared_model.dart';
 
 NeteaseRequest neRequest = NeteaseRequest();
 /// 这是根据业务二次封装的网络请求类，做一些业务相关处理
@@ -12,7 +11,6 @@ class NeteaseRequest {
       String? searchKeyPath}) {
     return network.get(url,
         queryParameters: _combine(queryParameters, getRequestCommonParams),
-        headers: _combine(headers, cookies),
         builder: builder,
         searchKeyPath: searchKeyPath);
   }
@@ -26,15 +24,8 @@ class NeteaseRequest {
     return network.post(url,
         queryParameters: _combine(queryParameters, postRequestCommonParams),
         body: _combine(body, postRequestCommonParams),
-        headers: _combine(headers, cookies),
         builder: builder,
         searchKeyPath: searchKeyPath);
-  }
-
-  Map<String, dynamic>? get cookies {
-    return {
-      "cookie": AppSharedManager().cookie 
-    };
   }
 
   Map<String, dynamic>? get commomParams {

@@ -1,7 +1,11 @@
+import 'dart:io';
 
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'request_config.dart';
 import 'response_model.dart';
@@ -20,7 +24,16 @@ class Network {
     _dio = Dio(BaseOptions(
         baseUrl: baseUrl ?? RequestConfig.baseUrl,
         connectTimeout: RequestConfig.connectTimeout));
+    _managerCookies(_dio);
     setLocalProxyIfNeeded();
+  }
+
+  void _managerCookies(Dio dio) async {
+    Directory docDir = await getApplicationDocumentsDirectory();
+    CookieJar cj = PersistCookieJar(
+      storage: FileStorage(docDir.path)
+    );
+    dio.interceptors.add(CookieManager(cj));
   }
 
   void resetBaseUrl({String? baseUrl}) {
@@ -66,16 +79,23 @@ class Network {
       return _handleResponse(response, builder, serializer, searchKeyPath);
     } catch (e) {
       ResponseModel<T> failModel;
-      if (e is DioError) {
-        final dioError = e;
-        failModel = ResponseModel.fail(dioError.response);
-      } else {
-        final res = ResponseModel<T>.error(url, e);
-        if (onError != null) {
-          onError(res);
-        }
-        failModel = res;
+      var absoluteUrl = _dio.options.baseUrl + url;
+      if (method == 'GET' && queryParameters != null) {
+        absoluteUrl += '?';
+        int c = queryParameters.length;
+        queryParameters.forEach((key, value) {
+          c -= 1;
+          absoluteUrl += "$key=$value";
+          if (c > 0) {
+            absoluteUrl += '&';
+          }
+        });
       }
+      final res = ResponseModel<T>.error(absoluteUrl, e);
+      if (onError != null) {
+        onError(res);
+      }
+      failModel = res;
       if (kDebugMode) print(failModel);
       return failModel;
     }
@@ -145,11 +165,12 @@ class Network {
       NetworkJSONModelBuilder<T>? builder,
       ResponseSerializer? serializer,
       String? searchKeyPath) {
-    ResponseSerializer useSerializer = serializer ?? DefaultResponserSerializer();
+    ResponseSerializer useSerializer =
+        serializer ?? DefaultResponserSerializer();
     if (response.statusCode == 200) {
       return useSerializer.serialize(response, builder, searchKeyPath);
     } else {
-      return ResponseModel.fail(response);
+      return ResponseModel.failResponse(response);
     }
   }
 

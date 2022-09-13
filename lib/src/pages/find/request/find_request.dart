@@ -1,0 +1,17 @@
+import 'package:dream_music/src/components/network/netease_request.dart';
+import 'package:dream_music/src/components/network/response_model.dart';
+import 'package:dream_music/src/pages/find/model/find_recommend_model.dart';
+
+class FindRequest {
+  /// 每日推荐歌单
+  static Future<ResponseModel<FindRecommendModel>> recommendResource() {
+    final res = neRequest.get(
+      '/recommend/resource',
+      searchKeyPath: 'recommend',
+      builder: (json) {
+        return FindRecommendModel.fromJson(json);
+      },
+    );
+    return res;
+  }
+}

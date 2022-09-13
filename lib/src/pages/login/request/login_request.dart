@@ -91,4 +91,12 @@ class LoginRequest {
     );
     return res;
   }
+
+  // 退出登录
+  static Future<ResponseModel> logout() {
+    final res = neRequest.get(
+      '/logout',
+    );
+    return res;
+  }
 }

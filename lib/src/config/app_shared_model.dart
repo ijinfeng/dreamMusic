@@ -1,10 +1,8 @@
 
-import 'package:dream_music/src/pages/login/model/login_model.dart';
 import 'package:dream_music/src/pages/user/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const kCookieLocalKey = 'local-set-cookie-key';
 const kAppLoginTypeKey = 'app-login-type-key';
 
 enum AppLoginType {
@@ -23,19 +21,14 @@ class AppSharedManager {
 
   AppSharedManager._instance() {
     SharedPreferences.getInstance().then((pre) {
-      // 初始化cookie
-      if (cookie == null) {
-        cookie = pre.getString(kCookieLocalKey);
-        debugPrint('初始化本地cookie');
-      }
       // 初始化登录状态
       final loginTypeStr = pre.getString(kAppLoginTypeKey);
       if (loginTypeStr == 'anonimous') {
-        loginType = AppLoginType.anonimous;
+        _loginType = AppLoginType.anonimous;
       } else if (loginTypeStr == 'user') {
-        loginType = AppLoginType.user;
+        _loginType = AppLoginType.user;
       } else {
-        loginType = AppLoginType.none;
+        _loginType = AppLoginType.none;
       }
       debugPrint('初始化登录状态: $loginType');
 
@@ -49,19 +42,6 @@ class AppSharedManager {
 
   UserModel? userModel;
 
-  String? _cookie;
-  set cookie(String? value) {
-    _cookie = value;
-    SharedPreferences.getInstance().then((pre) {
-      if (value == null) {
-        pre.remove(kCookieLocalKey);
-      } else {
-        pre.setString(kCookieLocalKey, value);
-      }
-    });
-  }
-  String? get cookie => _cookie;
-
   AppLoginType _loginType = AppLoginType.none;
   set loginType(AppLoginType value) {
     _loginType = value;
@@ -73,11 +53,10 @@ class AppSharedManager {
 
   void clearAccount() {
     _loginType = AppLoginType.none;
-    _cookie = null;
     userModel = null;
     SharedPreferences.getInstance().then((pre) {
-      pre.remove(kCookieLocalKey);
       pre.remove(kAppLoginTypeKey);
+      debugPrint("loginType=${pre.getString(kAppLoginTypeKey)}");
     });
   }
 }

@@ -1,15 +1,17 @@
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
-import 'package:dream_music/src/pages/home/left_menu/model/left_menu_state_model.dart';
 import 'package:dream_music/src/pages/home/left_menu/view/menu_cell_widget.dart';
 import 'package:dream_music/src/pages/home/left_menu/view/user_info_card.dart';
+import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LeftMenu extends StatelessWidget {
-  const LeftMenu({Key? key}) : super(key: key);
+  // ignore: prefer_const_constructors_in_immutables
+  LeftMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +30,20 @@ class _LeftMenuBody extends ProviderStatefulWidget {
   }
 }
 
-class _LeftMenuBodyState extends ProviderState<LeftMenuStateModel> {
-  @override
-  LeftMenuStateModel? createViewModel() {
-    return LeftMenuStateModel();
-  }
-
+class _LeftMenuBodyState extends ProviderState with EasyInterface {
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     return Column(
       children: [
-        const UserInfoCard(),
+        UserInfoCard(),
         Expanded(
-          child: Consumer<LeftMenuStateModel>(
+          child: Selector<HomeStateModel, int>(
+            selector: (p0, p1) {
+              return p1.selectedIndex;
+            },
+            shouldRebuild: (previous, next) {
+              return previous != next;
+            },
             builder: (context, value, child) {
               return FFListView(
                 itemBuilder: (context, section, index) {
@@ -48,25 +51,25 @@ class _LeftMenuBodyState extends ProviderState<LeftMenuStateModel> {
                     color: kSideMenuBackgroundColor,
                     child: InkWell(
                       onTap: () {
-                        viewModel?.selectedIndex = index;
+                        getHomeState(context).selectedIndex = index;
                       },
                       hoverColor: kMainThemeColor,
                       highlightColor: kMainThemeColor,
                       child: MenuCellWidegt(
-                        model: viewModel?.itemModels[index],
-                        selected: viewModel?.selectedIndex == index,
+                        model: getHomeState(context).itemModels[index],
+                        selected: getHomeState(context).selectedIndex == index,
                       ),
                     ),
                   );
                 },
                 indexCountBuilder: (context, section) {
-                  return viewModel?.itemModels.length ?? 0;
+                  return getHomeState(context).itemModels.length;
                 },
                 sectionCount: 1,
               );
             },
           ),
-        )
+        ),
       ],
     );
   }

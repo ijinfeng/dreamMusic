@@ -1,3 +1,4 @@
+import 'package:dream_music/src/pages/home/left_menu/model/left_menu_item_model.dart';
 import 'package:flutter/material.dart';
 
 class HomeStateModel extends ChangeNotifier {
@@ -5,8 +6,6 @@ class HomeStateModel extends ChangeNotifier {
   int uiRefreshCode = 0;
   // 每次登录后刷新
   int loginRefreshCode = 0;
-  // 每次获取账号信息后刷新
-  int accountRefreshCode = 0;
 
   void needRefresh() {
     uiRefreshCode += 1;
@@ -20,8 +19,28 @@ class HomeStateModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void refreshByGetAccountInfo() {
-    accountRefreshCode += 1;
+  /// *********************** Left content
+  List<LeftMenuItemModel> get itemModels => [
+    LeftMenuItemModel(
+      icon: 'assets/leftmenu/my_icn_radio_unselected.png',
+      selIcon: 'assets/leftmenu/my_icn_radio_selected.png', 
+      title: '发现音乐'),
+    LeftMenuItemModel(
+      icon: 'assets/leftmenu/my_icn_fm_unselected.png',
+      selIcon: 'assets/leftmenu/my_icn_fm_selected.png',
+       title: '私人FM'),
+    LeftMenuItemModel(
+      icon: 'assets/leftmenu/my_icn_fav_unselected.png', 
+      selIcon: 'assets/leftmenu/my_icn_fav_selected.png',
+      title: '我的收藏'),
+  ];
+  /// 选中了left content侧边栏第几个栏目
+  int _selectedIndex = 0;
+  set selectedIndex(int value) {
+    if (value == _selectedIndex) return;
+    _selectedIndex = value;
     notifyListeners();
   }
+
+  int get selectedIndex => _selectedIndex;
 }

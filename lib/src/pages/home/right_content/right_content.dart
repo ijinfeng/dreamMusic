@@ -1,40 +1,104 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dream_music/src/components/basic/common_scaffold.dart';
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
+import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
+import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
+import 'package:dream_music/src/pages/find/find_page.dart';
+import 'package:dream_music/src/pages/home/model/home_state_model.dart';
+import 'package:dream_music/src/pages/home/right_content/model/right_content_state_model.dart';
 import 'package:dream_music/src/pages/home/window_navigation_bar/window_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class RightContent extends StatelessWidget {
+  const RightContent({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      child: Container(
-        color: Colors.greenAccent,
-        child: MaterialApp(
-          onGenerateRoute: PageRouters.generateRoute,
-          home: Scaffold(
-            appBar: AppBar(title: Text('右边'),),
-            body: Builder(
-              builder: (context) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        AppSharedManager().loginType.name
-                      ),
-                      TextButton(onPressed: () {
-                    Navigator.pushNamed(context, PageRouters.setting);
-                  }, child: Text('按钮'),)
-                    ],
-                  ),
-                );
-              }
-            ),
-          ),
+      child: MaterialApp(
+        onGenerateRoute: PageRouters.generateRoute,
+        debugShowCheckedModeBanner: false,
+        home: CommonScaffold(
+          hideNavigationBar: true,
+          body: _RightContentBody(),
         ),
       ),
     );
+  }
+}
+
+class _RightContentBody extends ProviderStatefulWidget {
+  @override
+  ProviderState<ChangeNotifier> createState() {
+    return _RightContentBodyState();
+  }
+}
+
+class _RightContentBodyState extends ProviderState<RightContentStateModel> with EasyInterface {
+
+  late final PageController _pageController;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  Widget _buildChildPage(BuildContext context, int index) {
+if (index == 0) {
+          return const FindPage();
+        } 
+        return Center(
+          child: MainButton(title: '$index'),
+        );
+  }
+
+  @override
+  Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
+    return Selector<HomeStateModel, int>(
+      selector: (p0, p1) {
+        return p1.selectedIndex;
+      },
+      shouldRebuild: (previous, next) {
+        return previous != next;
+      },
+      builder: (context, value, child) {
+        return Center(
+          child: Container(
+            constraints: const BoxConstraints(
+              maxWidth: 850
+            ),
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+            child: _buildChildPage(context, value),
+            ),
+        );
+      },
+    );
+    // return PageView.builder(
+    //   controller: _pageController,
+    //   itemCount: getHomeState(context).itemModels.length,
+    //   itemBuilder:(context, index) {
+    //     if (index == 0) {
+    //       return const FindPage();
+    //     }
+    //     return Center(
+    //       child: MainButton(title: '$index'),
+    //     );
+    // },);
+  }
+
+  @override
+  RightContentStateModel? createViewModel() {
+    return RightContentStateModel();
   }
 }

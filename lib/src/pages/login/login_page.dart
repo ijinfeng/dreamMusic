@@ -178,7 +178,6 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
       if (model.code == 803 || model.code == 800) {
         _cancelTimer();
         if (model.code == 803) {
-          AppSharedManager().cookie = model.cookie;
           _loginSuccess();
         }
       }
@@ -329,7 +328,6 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
                   if (res.success) {
                     showToast('登录成功');
                     AppSharedManager().userModel = res.data?.userModel;
-                    AppSharedManager().cookie = res.data?.cookie;
                     _loginSuccess();
                   }
                 }
@@ -397,7 +395,6 @@ class _LoginPageBodyState extends ProviderState<LoginStateModel> {
                   if (res.success) {
                     showToast('登录成功');
                     AppSharedManager().userModel = res.data?.userModel;
-                    AppSharedManager().cookie = res.data?.cookie;
                     _loginSuccess();
                   }
                 }

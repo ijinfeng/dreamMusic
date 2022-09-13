@@ -15,7 +15,7 @@ class ImageView extends StatelessWidget {
       this.width,
       this.height,
       this.placeholder,
-      this.fit,
+      this.fit = BoxFit.cover,
       this.color,
       this.radius,
       this.padding})
@@ -28,7 +28,7 @@ class ImageView extends StatelessWidget {
       this.width,
       this.height,
       this.placeholder,
-      this.fit,
+      this.fit = BoxFit.cover,
       this.color,
       this.radius,
       this.padding})
@@ -41,7 +41,7 @@ class ImageView extends StatelessWidget {
       this.width,
       this.height,
       this.placeholder,
-      this.fit,
+      this.fit = BoxFit.cover,
       this.color,
       this.radius,
       this.padding})
@@ -83,7 +83,10 @@ class ImageView extends StatelessWidget {
           fit: fit,
           color: color,
           loadingBuilder: (context, child, loadingProgress) {
-            return defaultPlaceholderImage;
+            if (loadingProgress == null) {
+               return child;
+            }
+            return loadingProgress.cumulativeBytesLoaded < (loadingProgress.expectedTotalBytes ?? 0) ? defaultPlaceholderImage : child;
           },
         );
       } else if (loadType == ImageLoadType.asset) {

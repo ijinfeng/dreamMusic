@@ -55,7 +55,7 @@ class ResponseModel<T> {
     return false;
   }
 
-  factory ResponseModel.fail(Response? response) {
+  factory ResponseModel.failResponse(Response? response) {
     final model = ResponseModel<T>.empty();
     model.response = response;
     model.code = response?.statusCode ?? -1;
@@ -76,7 +76,9 @@ class ResponseModel<T> {
     model._url = url;
     if (e is Error) {
       model.message = e.toString();
-    } 
+    } else if (e is DioError) {
+      model.message = e.message;
+    }
     if (model.message?.isEmpty == true) {
       model.message = '未知错误';
     }

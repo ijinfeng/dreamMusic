@@ -59,9 +59,10 @@ class _HomeBodyState extends ProviderState<HomeStateModel> {
   }
 
   void _requestAnonimousLogin() {
+    showLoading('游客身份登录中...');
     LoginRequest.anonimousLogin().then((res) {
+      dismissLoading();
       if (res.success) {
-        AppSharedManager().cookie = res.data?.cookie;
         AppSharedManager().loginType = AppLoginType.anonimous;
         debugPrint('游客登录成功');
         homeState?.refreshByLogin();
@@ -91,7 +92,8 @@ class _HomeBodyState extends ProviderState<HomeStateModel> {
       builder: (context, value, child) {
         // 每次账号登录都获取下用户信息
         if (value > 0) {
-          _getUserAccount();
+          //TODO:jifeng
+          // _getUserAccount();
         }
         return Selector<HomeStateModel, int>(
           selector: (p0, p1) {

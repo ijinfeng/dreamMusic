@@ -33,7 +33,7 @@ class AvatarView extends StatelessWidget {
     );
     Widget current = src.isHTTPUrl()
         ? ImageView.network(
-            src: src.appendQuerys({"param": '${width}y$width'}),
+            src: src.appendQuerys({"param": '${width.toInt()}y${width.toInt()}'}),
             width: width,
             height: width,
             placeholder: placeholder,
@@ -44,10 +44,14 @@ class AvatarView extends StatelessWidget {
             height: width,
             placeholder: placeholder,
           );
+    final radius = (borderWidth != null ? (width + borderWidth! * 2) : width) / 2;
     return CircleAvatar(
-      radius: (borderWidth != null ? (width + borderWidth! * 2) : width) / 2,
+      radius: radius,
       backgroundColor: borderColor ?? const Color(0xFFF5F5F5),
-      child: current,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(width / 2)),
+        child: current,
+      ),
     );
   }
 }

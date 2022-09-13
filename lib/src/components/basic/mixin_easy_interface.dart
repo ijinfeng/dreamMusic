@@ -1,5 +1,7 @@
+import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 
 mixin EasyInterface {
   Widget heightSpace(double value) => SizedBox(
@@ -22,5 +24,9 @@ mixin EasyInterface {
 
   void dismissLoading() {
     EasyLoading.dismiss();
+  }
+
+  HomeStateModel getHomeState(BuildContext context) {
+    return Provider.of<HomeStateModel>(context, listen: false);
   }
 }
