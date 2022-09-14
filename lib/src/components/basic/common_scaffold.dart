@@ -9,6 +9,7 @@ class CommonScaffold extends StatelessWidget {
   final Widget body;
   final bool hideNavigationBar;
   final Widget? floatingActionButton;
+  final Color? backgroundColor;
 
   const CommonScaffold({
     Key? key,
@@ -19,6 +20,7 @@ class CommonScaffold extends StatelessWidget {
     this.rightItem,
     this.hideNavigationBar = false,
     this.floatingActionButton,
+    this.backgroundColor
   }) : super(key: key);
 
   @override
@@ -40,6 +42,7 @@ class CommonScaffold extends StatelessWidget {
 
     return Scaffold(
       floatingActionButton: floatingActionButton,
+      backgroundColor: backgroundColor ?? Colors.white,
       body: showNavigationbar
           ? Column(
               children: [

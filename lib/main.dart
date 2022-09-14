@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:flutter/material.dart';

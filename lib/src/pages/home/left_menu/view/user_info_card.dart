@@ -26,8 +26,6 @@ class UserInfoCard extends StatelessWidget with EasyInterface {
     } else {
       nickname = '未登录';
     }
-    debugPrint('身份信息刷新：${AppSharedManager().loginType}, nickname=$nickname');
-
 
    return GestureDetector(
     onTap: () {
@@ -62,12 +60,16 @@ class UserInfoCard extends StatelessWidget with EasyInterface {
                   width: 40,
                 ),
                 widthSpace(10),
-                Text(
-                  nickname,
-                  style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      color: kTextBlackColor),
+                Expanded(
+                  child: Text(
+                    nickname,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: kTextBlackColor),
+                  ),
                 ),
                 widthSpace(5),
                 const ImageView.asset(
@@ -76,7 +78,7 @@ class UserInfoCard extends StatelessWidget with EasyInterface {
                   height: 15,
                 )
               ],
-            ),
+                        ),
             )
           ],
         ),

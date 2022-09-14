@@ -5,12 +5,14 @@ import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
+import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/collection/my_collection_page.dart';
 import 'package:dream_music/src/pages/find/find_page.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/home/right_content/model/right_content_state_model.dart';
 import 'package:dream_music/src/pages/home/window_navigation_bar/window_buttons.dart';
+import 'package:dream_music/src/pages/privateFM/private_fm_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class RightContent extends StatelessWidget {
@@ -22,6 +24,10 @@ class RightContent extends StatelessWidget {
       child: MaterialApp(
         onGenerateRoute: PageRouters.generateRoute,
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          hoverColor: kMainThemeColor,
+          splashColor: kMainThemeColor,
+        ),
         home: CommonScaffold(
           hideNavigationBar: true,
           body: _RightContentBody(),
@@ -33,12 +39,12 @@ class RightContent extends StatelessWidget {
 
 class _RightContentBody extends ProviderStatefulWidget {
   @override
-  ProviderState<ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
     return _RightContentBodyState();
   }
 }
 
-class _RightContentBodyState extends ProviderState<RightContentStateModel> with EasyInterface {
+class _RightContentBodyState extends ProviderState<_RightContentBody, RightContentStateModel> with EasyInterface {
 
   late final PageController _pageController;
 
@@ -57,10 +63,16 @@ class _RightContentBodyState extends ProviderState<RightContentStateModel> with 
   Widget _buildChildPage(BuildContext context, int index) {
 if (index == 0) {
           return const FindPage();
+        } else if (index == 1) {
+          return const PrivateFMPage();  
         } 
-        return Center(
-          child: MainButton(title: '$index'),
-        );
+        else if (index == 2) {
+          return const MyCollectionPage();
+        } else {
+          return const Center(
+            child: MainButton(title: '正在搭建'),
+          );
+        }
   }
 
   @override

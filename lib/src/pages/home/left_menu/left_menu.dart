@@ -25,7 +25,7 @@ class LeftMenu extends StatelessWidget {
 
 class _LeftMenuBody extends ProviderStatefulWidget {
   @override
-  ProviderState<ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
     return _LeftMenuBodyState();
   }
 }

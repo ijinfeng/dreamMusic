@@ -64,3 +64,16 @@ class ModelRoute extends PageRouteBuilder {
               );
             });
 }
+
+class NoneAnimateRoute extends PageRouteBuilder {
+  final Widget child;
+
+  NoneAnimateRoute({
+    required this.child,
+  }) : super(
+            pageBuilder: (context, animation, secondaryAnimation) => child,
+            transitionDuration: Duration.zero,
+            transitionsBuilder: (context, from, to, child) {
+              return child;
+            });
+}

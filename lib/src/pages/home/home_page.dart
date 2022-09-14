@@ -31,12 +31,12 @@ class HomeBody extends ProviderStatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
 
   @override
-  ProviderState<ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
     return _HomeBodyState();
   }
 }
 
-class _HomeBodyState extends ProviderState<HomeStateModel> {
+class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
   @override
   void initState() {
     super.initState();

@@ -8,9 +8,11 @@ class NeteaseRequest {
       {Map<String, dynamic>? queryParameters,
       Map<String, dynamic>? headers,
       NetworkJSONModelBuilder<T>? builder,
+      bool addTimestamp = false,
       String? searchKeyPath}) {
+      final querys = _combine(queryParameters, getRequestCommonParams);
     return network.get(url,
-        queryParameters: _combine(queryParameters, getRequestCommonParams),
+        queryParameters: addTimestamp ? _combine(querys, timestampParams) : querys,
         builder: builder,
         searchKeyPath: searchKeyPath);
   }

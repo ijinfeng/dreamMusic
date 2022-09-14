@@ -31,12 +31,12 @@ class LoginPage extends StatelessWidget {
 
 class _LoginPageBody extends ProviderStatefulWidget {
   @override
-  ProviderState<ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
     return _LoginPageBodyState();
   }
 }
 
-class _LoginPageBodyState extends ProviderState<LoginStateModel> {
+class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel> {
   Timer? _timer;
   final double width = 280;
 

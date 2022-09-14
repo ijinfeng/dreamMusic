@@ -8,6 +8,7 @@ class FindRequest {
     final res = neRequest.get(
       '/recommend/resource',
       searchKeyPath: 'recommend',
+      addTimestamp: true,
       builder: (json) {
         return FindRecommendModel.fromJson(json);
       },

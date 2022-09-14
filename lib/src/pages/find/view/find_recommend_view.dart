@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/pages/find/model/find_recommend_model.dart';
 import 'package:dream_music/src/pages/find/view/find_recommend_item_cell.dart';
 import 'package:flutter/material.dart';
@@ -15,16 +16,22 @@ class FindRecommendView extends StatelessWidget {
         mainAxisSpacing: 20,
         crossAxisSpacing: 20,
         childAspectRatio: 0.7,
-        ), 
-        itemCount: models == null ? 0 : models!.length,
-      itemBuilder:(context, index) {
+      ),
+      itemCount: models == null ? 0 : models!.length,
+      itemBuilder: (context, index) {
         if (index == 0) {
           return Container(
             color: Colors.redAccent,
           );
         } else {
-          return FindRecommendItemCell(model: models![index - 1]);
+          return FindRecommendItemCell(
+            model: models![index - 1],
+            onTap: (model) {
+              Navigator.pushNamed(context, PageRouters.songlist, arguments: model.id);
+            },
+          );
         }
-      },);
+      },
+    );
   }
 }

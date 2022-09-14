@@ -2,17 +2,15 @@ import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-abstract class ProviderStatefulWidget
-    extends StatefulWidget {
+abstract class ProviderStatefulWidget extends StatefulWidget {
   const ProviderStatefulWidget({Key? key}) : super(key: key);
 
   @override
   ProviderState createState();
 }
 
-abstract class ProviderState<T extends ChangeNotifier>
-    extends State<ProviderStatefulWidget> with EasyInterface {
-
+abstract class ProviderState<P extends ProviderStatefulWidget,
+    T extends ChangeNotifier> extends State<P> with EasyInterface {
   T? viewModel;
 
   T? createViewModel() => null;
@@ -24,27 +22,26 @@ abstract class ProviderState<T extends ChangeNotifier>
   @override
   void dispose() {
     super.dispose();
+    viewModel?.dispose();
     dismissLoading();
   }
 
   @override
   void initState() {
     super.initState();
+    viewModel = createViewModel();
   }
 
   @override
   Widget build(BuildContext context) {
-    viewModel = createViewModel();
     if (viewModel == null) {
       return buildProviderChild(context, reuseChild(context));
     } else {
-      return ChangeNotifierProvider(
-      create: (context) {  
-        return viewModel;
-      },
-      builder: buildProviderChild,
-      child: reuseChild(context),
-    );
+      return ChangeNotifierProvider.value(
+        value: viewModel,
+        builder: buildProviderChild,
+        child: reuseChild(context),
+      );
     }
   }
 }
