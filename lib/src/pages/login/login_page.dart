@@ -311,7 +311,7 @@ class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel>
           return previous != next;
         },
         builder: (context, value, child) {
-          return MainButton(
+          return MainButton.title(
             title: '登录',
             enable: value,
             width: width,
@@ -378,7 +378,7 @@ class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel>
           return previous != next;
         },
         builder: (context, value, child) {
-          return MainButton(
+          return MainButton.title(
             title: '登录',
             enable: value,
             width: width,

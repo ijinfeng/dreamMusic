@@ -14,7 +14,7 @@ class SettingPage extends StatelessWidget with EasyInterface {
       body: Center(
         child: Column(
           children: [
-            MainButton(
+            MainButton.title(
               title: '退出登录', 
               width: 120,
               height: 40,

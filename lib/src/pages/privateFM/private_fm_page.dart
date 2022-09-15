@@ -1,6 +1,9 @@
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
+import 'package:dream_music/src/pages/songlist/view/songlist_header_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/change_notifier.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -19,27 +22,22 @@ class PrivateFMPageState extends ProviderState {
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     return CommonScaffold(
-      body: Center(
-        child: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.redAccent,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              // BoxShadow(
-              //   color: Colors.black12,
-              //   offset: Offset(0, 5),
-              //   blurRadius: 5
-              // ),
-              BoxShadow(
-                color: Colors.black12,
-                offset: Offset(0, 10),
-                blurRadius: 5
-              )
-            ]
-          ),
-        ),
+      body: Column(
+        children: [
+          SonglistHeaderView(model: SonglistDetailModel(
+            name: '车载导航大变态车载导航大变态车载导航大变态车载导航大变态',
+            creator: SonlistDetailModelCreator(
+              nickname: '鱼饼真好吃啊',
+            ),
+            updateTime: 1542541525351,
+            tags: [
+              '摇滚',
+              '名族风'
+            ],
+            description: '喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。',
+            coverImgUrl: 'https://p1.music.126.net/u7DETnqPs4YGrSxFrlrbyQ==/109951167051410965.jpg'
+          ),),
+        ],
       )
       );
   }

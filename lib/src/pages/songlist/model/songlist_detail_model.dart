@@ -1246,6 +1246,7 @@ class SonglistDetailModel {
   String? officialPlaylistType;
   bool? copied;
   List<SonlistDetailModelSubscribers?>? subscribers;
+  // 是否收藏
   bool? subscribed;
   SonlistDetailModelCreator? creator;
   List<SonlistDetailModelTracks?>? tracks;

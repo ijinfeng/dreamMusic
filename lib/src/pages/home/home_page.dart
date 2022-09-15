@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
+import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/left_menu/left_menu.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/home/right_content/right_content.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kPageBackgroundColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, PageRouters.networkEnv);
@@ -83,19 +85,6 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     return Selector<HomeStateModel, int>(
-      selector: (p0, p1) {
-        return p1.loginRefreshCode;
-      },
-      shouldRebuild: (previous, next) {
-        return previous != next;
-      },
-      builder: (context, value, child) {
-        // 每次账号登录都获取下用户信息
-        if (value > 0) {
-          //TODO:jifeng
-          // _getUserAccount();
-        }
-        return Selector<HomeStateModel, int>(
           selector: (p0, p1) {
             return p1.uiRefreshCode;
           },
@@ -113,8 +102,6 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
             );
           },
         );
-      },
-    );
   }
 
   @override

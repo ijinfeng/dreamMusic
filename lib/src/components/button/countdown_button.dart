@@ -70,7 +70,7 @@ class _CountdownButtonState extends State<CountdownButton> {
 
   @override
   Widget build(BuildContext context) {
-    return MainButton(
+    return MainButton.title(
       title: _timing ? "$_countdown秒" : widget.title,
       onTap: _timing
           ? null

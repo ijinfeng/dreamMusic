@@ -19,3 +19,5 @@ const Color kDisableColor = Color(0xFFEEEEEE);
   侧边栏背景色
 */
 const Color kSideMenuBackgroundColor = Color(0xFFF4F5F6);
+/// 页面通用背景色
+const Color kPageBackgroundColor = Color(0xFFFFFFFF);

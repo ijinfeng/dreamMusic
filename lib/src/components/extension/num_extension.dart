@@ -15,3 +15,20 @@ extension NumberShow on num {
     }
   }
 }
+
+const int kDaySeconds = 86400;
+const int kHourSeconds = 3600;
+const int kMinuteSeconds = 60;
+
+extension Time on num {
+  /// 将时间戳转换为完整的时间格式
+  String get formatFullTime {
+    var timestamp = toInt();
+    final length = timestamp.toString().length;
+    if (length <= 10) {
+      timestamp = timestamp * 1000;
+    } 
+    final time = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    return "${time.year}年${time.month}月${time.day}日";
+  }
+}

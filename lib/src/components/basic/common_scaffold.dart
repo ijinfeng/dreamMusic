@@ -10,6 +10,7 @@ class CommonScaffold extends StatelessWidget {
   final bool hideNavigationBar;
   final Widget? floatingActionButton;
   final Color? backgroundColor;
+  final EdgeInsetsGeometry? padding;
 
   const CommonScaffold({
     Key? key,
@@ -20,7 +21,8 @@ class CommonScaffold extends StatelessWidget {
     this.rightItem,
     this.hideNavigationBar = false,
     this.floatingActionButton,
-    this.backgroundColor
+    this.backgroundColor,
+    this.padding
   }) : super(key: key);
 
   @override
@@ -60,7 +62,7 @@ class CommonScaffold extends StatelessWidget {
                             height: 23,
                           )),
                 ),
-                Expanded(child: body)
+                Expanded(child: padding != null ? Padding(padding: padding!, child: body,) : body)
               ],
             )
           : body,

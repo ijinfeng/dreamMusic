@@ -21,16 +21,24 @@ class RightContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      child: MaterialApp(
-        onGenerateRoute: PageRouters.generateRoute,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          hoverColor: kMainThemeColor,
-          splashColor: kMainThemeColor,
-        ),
-        home: CommonScaffold(
-          hideNavigationBar: true,
-          body: _RightContentBody(),
+      child: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 850),
+          color: kPageBackgroundColor,
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+          child: MaterialApp(
+            onGenerateRoute: PageRouters.generateRoute,
+            debugShowCheckedModeBanner: false,
+            color: kPageBackgroundColor,
+            theme: ThemeData(
+              hoverColor: kMainThemeColor,
+              splashColor: kMainThemeColor,
+            ),
+            home: CommonScaffold(
+              hideNavigationBar: true,
+              body: _RightContentBody(),
+            ),
+          ),
         ),
       ),
     );
@@ -44,8 +52,9 @@ class _RightContentBody extends ProviderStatefulWidget {
   }
 }
 
-class _RightContentBodyState extends ProviderState<_RightContentBody, RightContentStateModel> with EasyInterface {
-
+class _RightContentBodyState
+    extends ProviderState<_RightContentBody, RightContentStateModel>
+    with EasyInterface {
   late final PageController _pageController;
 
   @override
@@ -61,18 +70,17 @@ class _RightContentBodyState extends ProviderState<_RightContentBody, RightConte
   }
 
   Widget _buildChildPage(BuildContext context, int index) {
-if (index == 0) {
-          return const FindPage();
-        } else if (index == 1) {
-          return const PrivateFMPage();  
-        } 
-        else if (index == 2) {
-          return const MyCollectionPage();
-        } else {
-          return const Center(
-            child: MainButton(title: '正在搭建'),
-          );
-        }
+    if (index == 0) {
+      return const FindPage();
+    } else if (index == 1) {
+      return const PrivateFMPage();
+    } else if (index == 2) {
+      return const MyCollectionPage();
+    } else {
+      return const Center(
+        child: MainButton.title(title: '正在搭建'),
+      );
+    }
   }
 
   @override
@@ -85,15 +93,7 @@ if (index == 0) {
         return previous != next;
       },
       builder: (context, value, child) {
-        return Center(
-          child: Container(
-            constraints: const BoxConstraints(
-              maxWidth: 850
-            ),
-            padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-            child: _buildChildPage(context, value),
-            ),
-        );
+        return _buildChildPage(context, value);
       },
     );
     // return PageView.builder(

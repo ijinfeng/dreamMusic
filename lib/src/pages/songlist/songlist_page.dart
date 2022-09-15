@@ -30,7 +30,7 @@ class _SonglistState extends ProviderState<SonglistPage, SonglistStateModel> {
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     return CommonScaffold(
-        // hideNavigationBar: true,
+        padding: const EdgeInsets.all(20),
         body: Column(
           children: [
             Selector<SonglistStateModel, SonglistDetailModel?>(

@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           onGenerateRoute: PageRouters.generateRoute,
           themeMode: ThemeMode.light,
+          color: kPageBackgroundColor,
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
@@ -40,7 +41,15 @@ class MyApp extends StatelessWidget {
           builder: EasyLoading.init(),
         );
       },
-      child: const HomePage(),
+      child: Selector<HomeStateModel, int>(
+        selector:(p0, p1) {
+          return p1.loginRefreshCode;
+        },
+        shouldRebuild: (previous, next) => previous != next,
+        builder: (context, value, child) {
+          return const HomePage();
+        },
+      ),
     );
   }
 }
