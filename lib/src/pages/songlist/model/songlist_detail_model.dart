@@ -392,6 +392,7 @@ class SonlistDetailModelTracks {
   int? v;
   String? crbt;
   String? cf;
+  ///专辑
   SonlistDetailModelTracksAl? al;
   int? dt;
   SonlistDetailModelTracksH? h;
@@ -474,13 +475,13 @@ class SonlistDetailModelTracks {
     id = int.tryParse(json['id']?.toString() ?? '');
     pst = int.tryParse(json['pst']?.toString() ?? '');
     t = int.tryParse(json['t']?.toString() ?? '');
-  if (json['ar'] != null && (json['ar'] is List)) {
-  final v = json['ar'];
-  final arr0 = <SonlistDetailModelTracksAr>[];
-  v.forEach((v) {
-  arr0.add(SonlistDetailModelTracksAr.fromJson(v));
-  });
-    ar = arr0;
+    if (json['ar'] != null && (json['ar'] is List)) {
+      final v = json['ar'];
+      final arr0 = <SonlistDetailModelTracksAr>[];
+      v.forEach((v) {
+        arr0.add(SonlistDetailModelTracksAr.fromJson(v));
+      });
+      ar = arr0;
     }
     pop = int.tryParse(json['pop']?.toString() ?? '');
     st = int.tryParse(json['st']?.toString() ?? '');
@@ -489,12 +490,22 @@ class SonlistDetailModelTracks {
     v = int.tryParse(json['v']?.toString() ?? '');
     crbt = json['crbt']?.toString();
     cf = json['cf']?.toString();
-    al = (json['al'] != null && (json['al'] is Map)) ? SonlistDetailModelTracksAl.fromJson(json['al']) : null;
+    al = (json['al'] != null && (json['al'] is Map))
+        ? SonlistDetailModelTracksAl.fromJson(json['al'])
+        : null;
     dt = int.tryParse(json['dt']?.toString() ?? '');
-    h = (json['h'] != null && (json['h'] is Map)) ? SonlistDetailModelTracksH.fromJson(json['h']) : null;
-    m = (json['m'] != null && (json['m'] is Map)) ? SonlistDetailModelTracksM.fromJson(json['m']) : null;
-    l = (json['l'] != null && (json['l'] is Map)) ? SonlistDetailModelTracksL.fromJson(json['l']) : null;
-    sq = (json['sq'] != null && (json['sq'] is Map)) ? SonlistDetailModelTracksSq.fromJson(json['sq']) : null;
+    h = (json['h'] != null && (json['h'] is Map))
+        ? SonlistDetailModelTracksH.fromJson(json['h'])
+        : null;
+    m = (json['m'] != null && (json['m'] is Map))
+        ? SonlistDetailModelTracksM.fromJson(json['m'])
+        : null;
+    l = (json['l'] != null && (json['l'] is Map))
+        ? SonlistDetailModelTracksL.fromJson(json['l'])
+        : null;
+    sq = (json['sq'] != null && (json['sq'] is Map))
+        ? SonlistDetailModelTracksSq.fromJson(json['sq'])
+        : null;
     hr = json['hr']?.toString();
     a = json['a']?.toString();
     cd = json['cd']?.toString();
@@ -530,9 +541,9 @@ class SonlistDetailModelTracks {
     if (ar != null) {
       final v = ar;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v!.toJson());
-  });
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
       data['ar'] = arr0;
     }
     data['pop'] = pop;
@@ -584,6 +595,24 @@ class SonlistDetailModelTracks {
     data['mv'] = mv;
     data['publishTime'] = publishTime;
     return data;
+  }
+
+  String get authorName {
+    if (ar != null) {
+      String ret = '';
+      for (int i = 0; i < ar!.length; i++) {
+        final a = ar![i];
+        if (a != null) {
+          if (i != 0) {
+            ret += ",${a.name}";
+          } else {
+            ret += a.name!;
+          }
+        }
+      }
+      return ret;
+    }
+    return '佚名';
   }
 }
 
@@ -746,20 +775,24 @@ class SonlistDetailModelCreator {
     backgroundUrl = json['backgroundUrl']?.toString();
     authority = int.tryParse(json['authority']?.toString() ?? '');
     mutual = json['mutual'];
-  if (json['expertTags'] != null && (json['expertTags'] is List)) {
-  final v = json['expertTags'];
-  final arr0 = <String>[];
-  v.forEach((v) {
-  arr0.add(v.toString());
-  });
-    expertTags = arr0;
+    if (json['expertTags'] != null && (json['expertTags'] is List)) {
+      final v = json['expertTags'];
+      final arr0 = <String>[];
+      v.forEach((v) {
+        arr0.add(v.toString());
+      });
+      expertTags = arr0;
     }
     experts = json['experts']?.toString();
     djStatus = int.tryParse(json['djStatus']?.toString() ?? '');
     vipType = int.tryParse(json['vipType']?.toString() ?? '');
     remarkName = json['remarkName']?.toString();
-    authenticationTypes = int.tryParse(json['authenticationTypes']?.toString() ?? '');
-    avatarDetail = (json['avatarDetail'] != null && (json['avatarDetail'] is Map)) ? SonlistDetailModelCreatorAvatarDetail.fromJson(json['avatarDetail']) : null;
+    authenticationTypes =
+        int.tryParse(json['authenticationTypes']?.toString() ?? '');
+    avatarDetail = (json['avatarDetail'] != null &&
+            (json['avatarDetail'] is Map))
+        ? SonlistDetailModelCreatorAvatarDetail.fromJson(json['avatarDetail'])
+        : null;
     backgroundImgIdStr = json['backgroundImgIdStr']?.toString();
     avatarImgIdStr = json['avatarImgIdStr']?.toString();
     anchor = json['anchor'];
@@ -790,9 +823,9 @@ class SonlistDetailModelCreator {
     if (expertTags != null) {
       final v = expertTags;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v);
-  });
+      v!.forEach((v) {
+        arr0.add(v);
+      });
       data['expertTags'] = arr0;
     }
     data['experts'] = experts;
@@ -937,7 +970,8 @@ class SonlistDetailModelSubscribers {
     djStatus = int.tryParse(json['djStatus']?.toString() ?? '');
     vipType = int.tryParse(json['vipType']?.toString() ?? '');
     remarkName = json['remarkName']?.toString();
-    authenticationTypes = int.tryParse(json['authenticationTypes']?.toString() ?? '');
+    authenticationTypes =
+        int.tryParse(json['authenticationTypes']?.toString() ?? '');
     avatarDetail = json['avatarDetail']?.toString();
     backgroundImgIdStr = json['backgroundImgIdStr']?.toString();
     avatarImgIdStr = json['avatarImgIdStr']?.toString();
@@ -1332,54 +1366,58 @@ class SonglistDetailModel {
     trackUpdateTime = int.tryParse(json['trackUpdateTime']?.toString() ?? '');
     commentThreadId = json['commentThreadId']?.toString();
     playCount = int.tryParse(json['playCount']?.toString() ?? '');
-    trackNumberUpdateTime = int.tryParse(json['trackNumberUpdateTime']?.toString() ?? '');
+    trackNumberUpdateTime =
+        int.tryParse(json['trackNumberUpdateTime']?.toString() ?? '');
     subscribedCount = int.tryParse(json['subscribedCount']?.toString() ?? '');
     cloudTrackCount = int.tryParse(json['cloudTrackCount']?.toString() ?? '');
     ordered = json['ordered'];
     description = json['description']?.toString();
-  if (json['tags'] != null && (json['tags'] is List)) {
-  final v = json['tags'];
-  final arr0 = <String>[];
-  v.forEach((v) {
-  arr0.add(v.toString());
-  });
-    tags = arr0;
+    if (json['tags'] != null && (json['tags'] is List)) {
+      final v = json['tags'];
+      final arr0 = <String>[];
+      v.forEach((v) {
+        arr0.add(v.toString());
+      });
+      tags = arr0;
     }
     updateFrequency = json['updateFrequency']?.toString();
-    backgroundCoverId = int.tryParse(json['backgroundCoverId']?.toString() ?? '');
+    backgroundCoverId =
+        int.tryParse(json['backgroundCoverId']?.toString() ?? '');
     backgroundCoverUrl = json['backgroundCoverUrl']?.toString();
     titleImage = int.tryParse(json['titleImage']?.toString() ?? '');
     titleImageUrl = json['titleImageUrl']?.toString();
     englishTitle = json['englishTitle']?.toString();
     officialPlaylistType = json['officialPlaylistType']?.toString();
     copied = json['copied'];
-  if (json['subscribers'] != null && (json['subscribers'] is List)) {
-  final v = json['subscribers'];
-  final arr0 = <SonlistDetailModelSubscribers>[];
-  v.forEach((v) {
-  arr0.add(SonlistDetailModelSubscribers.fromJson(v));
-  });
-    subscribers = arr0;
+    if (json['subscribers'] != null && (json['subscribers'] is List)) {
+      final v = json['subscribers'];
+      final arr0 = <SonlistDetailModelSubscribers>[];
+      v.forEach((v) {
+        arr0.add(SonlistDetailModelSubscribers.fromJson(v));
+      });
+      subscribers = arr0;
     }
     subscribed = json['subscribed'];
-    creator = (json['creator'] != null && (json['creator'] is Map)) ? SonlistDetailModelCreator.fromJson(json['creator']) : null;
-  if (json['tracks'] != null && (json['tracks'] is List)) {
-  final v = json['tracks'];
-  final arr0 = <SonlistDetailModelTracks>[];
-  v.forEach((v) {
-  arr0.add(SonlistDetailModelTracks.fromJson(v));
-  });
-    tracks = arr0;
+    creator = (json['creator'] != null && (json['creator'] is Map))
+        ? SonlistDetailModelCreator.fromJson(json['creator'])
+        : null;
+    if (json['tracks'] != null && (json['tracks'] is List)) {
+      final v = json['tracks'];
+      final arr0 = <SonlistDetailModelTracks>[];
+      v.forEach((v) {
+        arr0.add(SonlistDetailModelTracks.fromJson(v));
+      });
+      tracks = arr0;
     }
     videoIds = json['videoIds']?.toString();
     videos = json['videos']?.toString();
-  if (json['trackIds'] != null && (json['trackIds'] is List)) {
-  final v = json['trackIds'];
-  final arr0 = <SonlistDetailModelTrackIds>[];
-  v.forEach((v) {
-  arr0.add(SonlistDetailModelTrackIds.fromJson(v));
-  });
-    trackIds = arr0;
+    if (json['trackIds'] != null && (json['trackIds'] is List)) {
+      final v = json['trackIds'];
+      final arr0 = <SonlistDetailModelTrackIds>[];
+      v.forEach((v) {
+        arr0.add(SonlistDetailModelTrackIds.fromJson(v));
+      });
+      trackIds = arr0;
     }
     shareCount = int.tryParse(json['shareCount']?.toString() ?? '');
     commentCount = int.tryParse(json['commentCount']?.toString() ?? '');
@@ -1419,9 +1457,9 @@ class SonglistDetailModel {
     if (tags != null) {
       final v = tags;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v);
-  });
+      v!.forEach((v) {
+        arr0.add(v);
+      });
       data['tags'] = arr0;
     }
     data['updateFrequency'] = updateFrequency;
@@ -1435,9 +1473,9 @@ class SonglistDetailModel {
     if (subscribers != null) {
       final v = subscribers;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v!.toJson());
-  });
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
       data['subscribers'] = arr0;
     }
     data['subscribed'] = subscribed;
@@ -1447,9 +1485,9 @@ class SonglistDetailModel {
     if (tracks != null) {
       final v = tracks;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v!.toJson());
-  });
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
       data['tracks'] = arr0;
     }
     data['videoIds'] = videoIds;
@@ -1457,9 +1495,9 @@ class SonglistDetailModel {
     if (trackIds != null) {
       final v = trackIds;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v!.toJson());
-  });
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
       data['trackIds'] = arr0;
     }
     data['shareCount'] = shareCount;

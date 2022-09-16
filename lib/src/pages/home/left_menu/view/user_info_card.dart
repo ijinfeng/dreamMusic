@@ -68,7 +68,7 @@ class UserInfoCard extends StatelessWidget with EasyInterface {
                     style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
-                        color: kTextBlackColor),
+                        color: kText3Color),
                   ),
                 ),
                 widthSpace(5),

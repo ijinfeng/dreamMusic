@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,14 @@ class MovableNavigationBar extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 12)
   }) : super(key: key);
 
+  Widget _boxNavItem(Widget? child, AlignmentGeometry alignment) {
+    Widget current = child ?? const SizedBox.shrink();
+    return Expanded(child: Align(
+      alignment: alignment,
+      child: current,
+    ),);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,9 +41,9 @@ class MovableNavigationBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ...[leftItem ?? const SizedBox.shrink()],
-              ...[centerItem ?? const SizedBox.shrink()],
-              ...[rightItem ?? const SizedBox.shrink()]
+              ...[_boxNavItem(leftItem, Alignment.centerLeft)],
+              ...[_boxNavItem(centerItem, Alignment.center)],
+              ...[_boxNavItem(rightItem, Alignment.centerRight)]
             ],
           ),
         ),),

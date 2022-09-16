@@ -27,7 +27,7 @@ class MenuCellWidegt extends StatelessWidget with EasyInterface {
             src: selected == true ? model?.selIcon ?? model?.icon : model?.icon,
             width: 18,
             height: 18,
-            color: selected == true ? kTextHighlightColor : null,
+            color: selected == true ? kHighlightThemeColor : null,
           ),
           widthSpace(8),
           Text(
@@ -35,7 +35,7 @@ class MenuCellWidegt extends StatelessWidget with EasyInterface {
             style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
-                color: selected == true ? kTextHighlightColor : kTextBlackColor),
+                color: selected == true ? kHighlightThemeColor : kText3Color),
           )
         ],
       ),

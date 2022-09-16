@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/config/global_constant.dart';
+import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/find/model/find_recommend_model.dart';
 import 'package:dream_music/src/pages/find/model/find_state_model.dart';
 import 'package:dream_music/src/pages/find/request/find_request.dart';
@@ -35,21 +37,28 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel> with EasyIn
 
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
-    return Column(
-      children: [
-        const FindSectionTitleView(title: '推荐歌单'),
-        heightSpace(10),
-        Expanded(
-          child: Consumer<FindStateModel>(
-            builder: (context, value, child) {
-              debugPrint('[find]推荐列表刷新了, count=${value.recommendModels.length}');
-              return FindRecommendView(
-                models: value.recommendModels,
-              );
-            },
-          ),
-        )
-      ],
+    return Center(
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 850),
+        color: kPageBackgroundColor,
+        padding: kPageContentPadding,
+        child: Column(
+          children: [
+            const FindSectionTitleView(title: '推荐歌单'),
+            heightSpace(10),
+            Expanded(
+              child: Consumer<FindStateModel>(
+                builder: (context, value, child) {
+                  debugPrint('[find]推荐列表刷新了, count=${value.recommendModels.length}');
+                  return FindRecommendView(
+                    models: value.recommendModels,
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 

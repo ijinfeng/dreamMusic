@@ -40,7 +40,7 @@ class PlayUnitHoverIcon extends StatelessWidget {
                           src: 'assets/icon_play_full.png',
                           width: playIconWidth / 2,
                           height: playIconWidth / 2,
-                          color: kTextHighlightColor,
+                          color: kHighlightThemeColor,
                         ),
                       ),
                     )

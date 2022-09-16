@@ -21,7 +21,7 @@ class _MyCollectionPageState extends ProviderState {
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     return CommonScaffold(
-      backgroundColor: kTextHighlightColor,
+      backgroundColor: kHighlightThemeColor,
       hideNavigationBar: true,
       body: Center(
         child: ClipRRect(
@@ -44,7 +44,7 @@ class _MyCollectionPageState extends ProviderState {
                     src: 'assets/icon_play_full.png',
                     width: 22,
                     height: 22,
-                    color: kTextHighlightColor,
+                    color: kHighlightThemeColor,
                   ),
                 ),
               )

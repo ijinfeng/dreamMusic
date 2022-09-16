@@ -22,34 +22,40 @@ class SongTagsView extends StatelessWidget {
     if (tags != null) {
       for (int i = 0; i < tags!.length; i++) {
         final tag = tags![i];
-          if (tag != null) {
-            Widget text = TextButton(
+        if (tag != null) {
+          Widget text = TextButton(
               style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero
-              ),
-              onPressed: onTap != null ? () {
-              onTap!(tag);
-            } : null, child: Text(
-              tag,
-              style: style ?? const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: kTextHighlightColor
-              ),
-            ));
-            children.add(text);
-            if (i != tags!.length - 1) {
-              children.add(const SizedBox(width: 4,));
-            children.add(Container(width: 1, height: 14, color: kMainThemeColor,));
-            children.add(const SizedBox(width: 4,));
-            }
-          }
+                  padding: const EdgeInsets.all(3), minimumSize: Size.zero,
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(
+                      width: 1.0,
+                      color: kMainThemeColor
+                    ),
+                    borderRadius: BorderRadius.circular(4)
+                  )
+                ),
+              onPressed: onTap != null
+                  ? () {
+                      onTap!(tag);
+                    }
+                  : null,
+              child: Text(
+                tag,
+                style: style ??
+                    const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: kHighlightThemeColor),
+              ));
+          children.add(text);
+        }
       }
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Wrap(
+      // 主轴上item之间的间距
+      spacing: 4,
+      // 纵轴艰巨
+      runSpacing: 4,
       children: children,
     );
   }

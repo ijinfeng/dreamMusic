@@ -455,7 +455,7 @@ class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel>
           children: [
             const Divider(
               height: 1,
-              color: kTextDisableColor,
+              color: kText6Color,
             ),
             heightSpace(10),
             const Text(
@@ -463,7 +463,7 @@ class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel>
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
-                  color: kTextDisableColor),
+                  color: kText6Color),
             )
           ],
         ),

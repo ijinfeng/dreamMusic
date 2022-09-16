@@ -31,4 +31,19 @@ extension Time on num {
     final time = DateTime.fromMillisecondsSinceEpoch(timestamp);
     return "${time.year}年${time.month}月${time.day}日";
   }
+
+  /// 将时间戳转为倒计时
+  String get formatDownTime {
+    var timestamp = toInt() ~/ 1000;
+    int hour = timestamp ~/ kHourSeconds;
+    bool showHour = hour > 0;
+    timestamp -= hour * kHourSeconds;
+    int minute = timestamp ~/ kMinuteSeconds;
+    timestamp -= minute * kMinuteSeconds;
+    int second = timestamp;
+    final hourStr = "$hour".padLeft(2, '0');
+    final minuteStr = "$minute".padLeft(2, '0');
+    final secondStr = "$second".padLeft(2, '0');
+    return "${showHour ? '$hourStr:' : ''}$minuteStr:$secondStr";
+  }
 }

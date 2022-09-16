@@ -21,24 +21,17 @@ class RightContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      child: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 850),
-          color: kPageBackgroundColor,
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-          child: MaterialApp(
-            onGenerateRoute: PageRouters.generateRoute,
-            debugShowCheckedModeBanner: false,
-            color: kPageBackgroundColor,
-            theme: ThemeData(
-              hoverColor: kMainThemeColor,
-              splashColor: kMainThemeColor,
-            ),
-            home: CommonScaffold(
-              hideNavigationBar: true,
-              body: _RightContentBody(),
-            ),
-          ),
+      child: MaterialApp(
+        onGenerateRoute: PageRouters.generateRoute,
+        debugShowCheckedModeBanner: false,
+        color: kPageBackgroundColor,
+        theme: ThemeData(
+          hoverColor: kMainThemeColor,
+          splashColor: kMainThemeColor,
+        ),
+        home: CommonScaffold(
+          hideNavigationBar: true,
+          body: _RightContentBody(),
         ),
       ),
     );

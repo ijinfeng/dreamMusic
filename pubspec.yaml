@@ -43,3 +43,8 @@ flutter:
     - assets/
     - assets/leftmenu/
 
+  fonts:
+    - family: DINAlternate
+      fonts:
+        - asset: assets/fonts/DIN-RegularAlternate-2.otf
+

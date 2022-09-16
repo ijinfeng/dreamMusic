@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dream_music/src/components/util/utils.dart';
 import 'package:flutter/material.dart';
 
 enum ImageLoadType {
@@ -91,7 +92,7 @@ class ImageView extends StatelessWidget {
         );
       } else if (loadType == ImageLoadType.asset) {
         eximage = Image.asset(
-          nonullSrc,
+          Utils.fillAssetImagePath(nonullSrc),
           width: width,
           height: height,
           fit: fit,

@@ -65,7 +65,7 @@ class MainButton extends StatelessWidget {
         style: TextStyle(
           fontSize: fontSize ?? 17,
           fontWeight: FontWeight.w600,
-          color: (enable && highlight) ? kTextHighlightColor : kTextDisableColor
+          color: (enable && highlight) ? kHighlightThemeColor : kText6Color
         ),
       );
     Widget? current = child;

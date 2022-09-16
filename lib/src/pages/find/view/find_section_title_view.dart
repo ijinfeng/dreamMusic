@@ -23,7 +23,7 @@ class FindSectionTitleView extends StatelessWidget with EasyInterface {
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: kTextBlackColor,
+            color: kText3Color,
           ),
         ),
         if (hasMore) ...[
