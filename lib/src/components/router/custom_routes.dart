@@ -4,8 +4,9 @@ class FadeRoute extends PageRouteBuilder {
   final Widget child;
   final int duration;
 
-  FadeRoute({required this.child, this.duration = 300})
+  FadeRoute({RouteSettings? settings, required this.child, this.duration = 300})
       : super(
+            settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) {
               return child;
             },
@@ -27,9 +28,11 @@ class PushRoute extends PageRouteBuilder {
   final int duration;
 
   PushRoute({
+    RouteSettings? settings,
     required this.child,
     this.duration = 300,
   }) : super(
+            settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) => child,
             transitionDuration: Duration(milliseconds: duration),
             transitionsBuilder: (context, from, to, child) {
@@ -49,9 +52,11 @@ class ModelRoute extends PageRouteBuilder {
   final int duration;
 
   ModelRoute({
+    RouteSettings? settings,
     required this.child,
     this.duration = 300,
   }) : super(
+            settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) => child,
             transitionDuration: Duration(milliseconds: duration),
             transitionsBuilder: (context, from, to, child) {
@@ -69,8 +74,10 @@ class NoneAnimateRoute extends PageRouteBuilder {
   final Widget child;
 
   NoneAnimateRoute({
+    RouteSettings? settings,
     required this.child,
   }) : super(
+            settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) => child,
             transitionDuration: Duration.zero,
             transitionsBuilder: (context, from, to, child) {

@@ -14,24 +14,26 @@ class PageRouters {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final name = settings.name;
     final args = settings.arguments;
-    debugPrint("open route -----> name=$name, args=$args");
+    debugPrint("[route]open route -----> name=$name, args=$args");
     switch (name) {
       case login:
-        return ModelRoute(child: const LoginPage());
+        return ModelRoute(settings: settings, child: const LoginPage());
       case setting:
-        return ModelRoute(child: SettingPage());
+        return ModelRoute(settings: settings, child: SettingPage());
       case networkEnv:
-        return ModelRoute(child: const NetworkEnvPage());
+        return ModelRoute(settings: settings, child: const NetworkEnvPage());
       case songlist:
-      {
-        int id = 0;
-        if (args is int) {
-          id = args;
+        {
+          int id = 0;
+          if (args is int) {
+            id = args;
+          }
+          return NoneAnimateRoute(
+              settings: settings, child: SonglistPage(id: id));
         }
-        return NoneAnimateRoute(child: SonglistPage(id: id));
-      }
       default:
         return MaterialPageRoute(
+            settings: settings,
             builder: (_) => Scaffold(
                   body: Center(
                     child: Text('No route defined for ${settings.name}'),

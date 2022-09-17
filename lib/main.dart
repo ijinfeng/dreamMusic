@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dream_music/src/components/router/custom_navigator_observer.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: PageRouters.generateRoute,
           themeMode: ThemeMode.light,
           color: kPageBackgroundColor,
+          navigatorObservers: [
+            CustomNavigatorObserver()
+          ],
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),

@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
@@ -14,6 +15,9 @@ class SettingPage extends StatelessWidget with EasyInterface {
       body: Center(
         child: Column(
           children: [
+            MainButton.title(title: '设置', onTap: () {
+              Navigator.pushNamed(context, PageRouters.setting);
+            },),
             MainButton.title(
               title: '退出登录', 
               width: 120,

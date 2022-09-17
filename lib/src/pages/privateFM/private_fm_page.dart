@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/song_detail/request/song_detail_request.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
@@ -47,11 +48,13 @@ class PrivateFMPageState extends ProviderState {
             description: '喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。喜欢就点赞吧，我是你最喜欢的小东西。',
             coverImgUrl: 'https://p1.music.126.net/u7DETnqPs4YGrSxFrlrbyQ==/109951167051410965.jpg'
           ),),
-          MainButton.title(title: '播放', onTap: () async {
-            final res = await SongDetailRequest.details([347230]);
-            if (res.success) {
+          MainButton.title(title: '设置', onTap: () async {
+            // final res = await SongDetailRequest.details([347230]);
+            // if (res.success) {
 
-            }
+            // }
+  Navigator.pushNamed(context, PageRouters.setting);
+
           },)
         ],
       )

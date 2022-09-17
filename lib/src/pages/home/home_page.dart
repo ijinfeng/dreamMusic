@@ -95,17 +95,15 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
                 WindowNavigationBar(),
                 Expanded(
                   child: Row(
-                    children: [LeftMenu(), Expanded(child: RightContent())],
+                    children: [
+                      LeftMenu(),
+                      const Expanded(child: RightContent())
+                    ],
                   ),
                 )
               ],
             );
           },
         );
-  }
-
-  @override
-  HomeStateModel? createViewModel() {
-    return null;
   }
 }

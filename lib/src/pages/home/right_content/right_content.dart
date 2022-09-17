@@ -3,6 +3,7 @@ import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/router/custom_navigator_observer.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -25,6 +26,9 @@ class RightContent extends StatelessWidget {
         onGenerateRoute: PageRouters.generateRoute,
         debugShowCheckedModeBanner: false,
         color: kPageBackgroundColor,
+        navigatorObservers: [
+          CustomNavigatorObserver()
+        ],
         theme: ThemeData(
           hoverColor: kMainThemeColor,
           splashColor: kMainThemeColor,
