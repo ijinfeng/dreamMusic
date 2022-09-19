@@ -65,7 +65,7 @@ class CommonScaffold extends StatelessWidget {
                 Expanded(child: padding != null ? Padding(padding: padding!, child: body,) : body)
               ],
             )
-          : body,
+          : padding != null ? Padding(padding: padding!, child: body,) : body,
     );
   }
 }

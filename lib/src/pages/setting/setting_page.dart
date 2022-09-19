@@ -1,10 +1,12 @@
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
+import 'package:dream_music/src/pages/song_detail/request/song_detail_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +19,9 @@ class SettingPage extends StatelessWidget with EasyInterface {
           children: [
             MainButton.title(title: '设置', onTap: () {
               Navigator.pushNamed(context, PageRouters.setting);
+            },),
+            MainButton.title(title: '登录', onTap: () {
+              Navigator.pushNamed(context, PageRouters.login);
             },),
             MainButton.title(
               title: '退出登录', 
@@ -31,6 +36,17 @@ class SettingPage extends StatelessWidget with EasyInterface {
                   Navigator.pop(context);
                 }
               });
+            },),
+            MainButton.title(title: '29850531详情', onTap: () async {
+              final res = await SongDetailRequest.details([29850531], noCache: true);
+              if (res.success) {
+
+              }
+            },),
+            MainButton.title(title: '喜欢347230', onTap: () {
+              neRequest.get('/like', queryParameters: {
+                "id": 347230
+              }, addTimestamp: true);
             },)
           ],
         ),

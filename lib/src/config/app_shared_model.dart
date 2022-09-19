@@ -1,6 +1,8 @@
-
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dream_music/src/components/network/request_config.dart';
 import 'package:dream_music/src/pages/user/model/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const kAppLoginTypeKey = 'app-login-type-key';
@@ -20,21 +22,20 @@ class AppSharedManager {
   factory AppSharedManager() => _manager;
 
   AppSharedManager._instance() {
-    SharedPreferences.getInstance().then((pre) {
-      // 初始化登录状态
-      final loginTypeStr = pre.getString(kAppLoginTypeKey);
-      if (loginTypeStr == 'anonimous') {
-        _loginType = AppLoginType.anonimous;
-      } else if (loginTypeStr == 'user') {
-        _loginType = AppLoginType.user;
-      } else {
-        _loginType = AppLoginType.none;
-      }
-      debugPrint('初始化登录状态: $loginType');
-
-      if (initializedCallback != null) {
+    getApplicationDocumentsDirectory().then((docDir) {
+      CookieJar cj = PersistCookieJar(
+      storage: FileStorage(docDir.path)
+     );
+      cj.loadForRequest(Uri.https(RequestConfig.host, "/")).then((cookies) {
+        debugPrint("获取到本地cookie数据${cookies.length}条");
+        for (int i = 0; i < cookies.length; i++) {
+          final cookie = cookies[i];
+          debugPrint("[cookie]name=${cookie.name}, value=${cookie.value}");
+        }
+        if (initializedCallback != null) {
         initializedCallback!();
       }
+      });
     });
   }
 

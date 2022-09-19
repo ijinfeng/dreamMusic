@@ -33,6 +33,7 @@ class _SonglistState extends ProviderState<SonglistPage, SonglistStateModel> {
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     return CommonScaffold(
+        hideNavigationBar: true,
         padding: const EdgeInsets.symmetric(vertical: 20),
         body: Selector<SonglistStateModel, SonglistDetailModel?>(
           selector:(p0, p1) {
@@ -55,7 +56,7 @@ class _SonglistState extends ProviderState<SonglistPage, SonglistStateModel> {
                 model: viewModel?.detailModel?.tracks?[index],
               );
             }, indexCountBuilder:(context, section) {
-                return 20;
+                return viewModel?.detailModel?.tracks?.length ?? 0;
             },);
           },
         ),

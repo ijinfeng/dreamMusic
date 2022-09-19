@@ -1,11 +1,17 @@
 
 class RequestConfig {
   static String get baseUrl {
-    String host;
-    host = 'https://netease-cloud-music-api-eight-kappa-18.vercel.app';
     // host = "http://localhost:3000";
-    return host;
+    return "$scheme://$host";
   }
+
+  static String get scheme {
+    return "https";
+  }
+
+  static String get host {
+    return "netease-cloud-music-api-eight-kappa-18.vercel.app";
+  } 
 
   static const connectTimeout = 15000;
 }

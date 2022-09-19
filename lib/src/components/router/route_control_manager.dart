@@ -51,7 +51,7 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
   }
 
   void _debugPrintActionStack(RouteAction? action) {
-    debugPrint("[route] length=${_actions.length}, current=$_currentIndex, action=$action");
+    // debugPrint("[route] length=${_actions.length}, current=$_currentIndex, action=$action");
   }
 
   bool canBack() {
