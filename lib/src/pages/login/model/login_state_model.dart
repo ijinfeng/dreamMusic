@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/pages/login/model/login_qrstatus_model.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_music/src/components/regexp/regexp_util.dart';
@@ -14,7 +15,7 @@ enum LoginType {
 }
 
 
-class LoginStateModel extends ChangeNotifier {
+class LoginStateModel extends BaseChangeNotifier {
   LoginQrcodeStatusModel? _qrcodeStatusModel;
   LoginQrcodeStatusModel? get qrcodeStatusModel => _qrcodeStatusModel;
   // 800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功(803 状态码下会返回 cookies)

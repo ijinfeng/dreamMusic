@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +11,15 @@ abstract class ProviderStatefulWidget extends StatefulWidget {
 }
 
 abstract class ProviderState<P extends ProviderStatefulWidget,
-    T extends ChangeNotifier> extends State<P> with EasyInterface {
-  T? viewModel;
+    T extends BaseChangeNotifier> extends State<P> with EasyInterface {
+  T? _viewModel;
+  T? get viewModel {
+    if (mounted) {
+      return _viewModel;
+    }
+    return null;
+  }
+  set viewModel(T? value) => _viewModel = value;
 
   T? createViewModel() => null;
 

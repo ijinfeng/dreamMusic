@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/router/route_control_manager.dart';
@@ -9,7 +10,7 @@ class RouteControlButton extends ProviderStatefulWidget {
   const RouteControlButton({Key? key}) : super(key: key);
 
   @override
-  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {
     return _RouteControlButtonState();
   }
 }
@@ -44,7 +45,7 @@ class _RouteControlButtonState
                 width: iconWidth,
                 height: iconWidth,
                 src: 'icon_nav_left_arrow',
-                onTap: (p0) => _onBack(),
+                onTap: value ? (p0) => _onBack() : null,
               );
             },
           ),
@@ -63,7 +64,7 @@ class _RouteControlButtonState
                 width: iconWidth,
                 height: iconWidth,
                 src: 'icon_nav_right_arrow',
-                onTap: (p0) => _onForward(),
+                onTap: value ? (p0) => _onForward() : null,
               );
             },
           )

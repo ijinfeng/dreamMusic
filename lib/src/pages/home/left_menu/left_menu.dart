@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
@@ -25,7 +26,7 @@ class LeftMenu extends StatelessWidget {
 
 class _LeftMenuBody extends ProviderStatefulWidget {
   @override
-  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {
     return _LeftMenuBodyState();
   }
 }

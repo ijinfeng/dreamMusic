@@ -41,11 +41,9 @@ class SelectableIconButton extends StatelessWidget {
         style: TextButton.styleFrom(padding: padding ?? EdgeInsets.zero,
           minimumSize: Size.zero
         ),
-        onPressed: () {
-          if (onTap != null) {
+        onPressed: onTap != null ? () {
             onTap!(selected);
-          }
-        },
+        } : null,
         child: ImageView.asset(
           src: selected ? src : (unsrc ?? src),
           width: width,

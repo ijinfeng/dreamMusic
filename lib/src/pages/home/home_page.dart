@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
@@ -33,7 +34,7 @@ class HomeBody extends ProviderStatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
 
   @override
-  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {
     return _HomeBodyState();
   }
 }

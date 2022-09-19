@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
@@ -14,7 +15,7 @@ class PrivateFMPage extends ProviderStatefulWidget {
   const PrivateFMPage({Key? key}) : super(key: key);
 
   @override
-  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {
     return PrivateFMPageState();
   }
   

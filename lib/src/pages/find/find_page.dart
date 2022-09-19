@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
@@ -18,7 +19,7 @@ class FindPage extends ProviderStatefulWidget {
   const FindPage({Key? key}) : super(key: key);
 
   @override
-  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {
     return _FindPageState();
   }
 }

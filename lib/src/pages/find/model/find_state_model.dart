@@ -1,8 +1,9 @@
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/pages/find/model/find_recommend_model.dart';
 import 'package:dream_music/src/pages/find/request/find_request.dart';
 import 'package:flutter/material.dart';
 
-class FindStateModel extends ChangeNotifier {
+class FindStateModel extends BaseChangeNotifier {
   final List<FindRecommendModel> _recommendModels = [];
   set recommendModels(List<FindRecommendModel>? models) {
     _recommendModels.clear();

@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
@@ -44,7 +45,7 @@ class RightContent extends StatelessWidget {
 
 class _RightContentBody extends ProviderStatefulWidget {
   @override
-  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {
     return _RightContentBodyState();
   }
 }

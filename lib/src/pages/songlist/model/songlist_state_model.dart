@@ -1,8 +1,9 @@
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 import 'package:dream_music/src/pages/songlist/request/songlist_request.dart';
 import 'package:flutter/material.dart';
 
-class SonglistStateModel extends ChangeNotifier {
+class SonglistStateModel extends BaseChangeNotifier {
 
   SonglistDetailModel? detailModel;
 

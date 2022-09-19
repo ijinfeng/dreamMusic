@@ -1,7 +1,8 @@
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/pages/home/left_menu/model/left_menu_item_model.dart';
 import 'package:flutter/material.dart';
 
-class HomeStateModel extends ChangeNotifier {
+class HomeStateModel extends BaseChangeNotifier {
   // 通用UI刷新，整个首页都会刷新
   int uiRefreshCode = 0;
   // 每次登录后刷新

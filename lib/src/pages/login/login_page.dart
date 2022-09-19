@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/countdown_button.dart';
@@ -31,7 +32,7 @@ class LoginPage extends StatelessWidget {
 
 class _LoginPageBody extends ProviderStatefulWidget {
   @override
-  ProviderState<ProviderStatefulWidget, ChangeNotifier> createState() {
+  ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {
     return _LoginPageBodyState();
   }
 }
