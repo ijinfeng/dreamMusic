@@ -1,5 +1,5 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
-import 'package:dream_music/src/components/router/custom_routes.dart';
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:flutter/material.dart';
 
 enum RouteActionType {
@@ -10,7 +10,7 @@ enum RouteActionType {
   page,
 }
 
-class RouteControlManager extends BaseChangeNotifier {
+class RouteControlManager extends BaseChangeNotifier with EasyInterface {
   static final RouteControlManager _manager = RouteControlManager._instance();
   factory RouteControlManager() => _manager;
 
@@ -29,6 +29,31 @@ class RouteControlManager extends BaseChangeNotifier {
   bool _forwarding = false;
   bool _backing = false;
 
+  /// 查找最近的一个[TabRouteAction]对象
+  TabRouteAction? _findNearestTabAction(int startIndex, bool isBack) {
+    if (startIndex >= _actions.length) return null;
+    if (isBack) {
+      for (int i = startIndex; i > 0; i--) {
+        RouteAction action = _actions[i];
+        if (action is TabRouteAction) {
+          return action;
+        }
+      }
+    } else {
+      for (int i = startIndex; i < _actions.length; i++) {
+        RouteAction action = _actions[i];
+        if (action is TabRouteAction) {
+          return action;
+        }
+      }
+    }
+    return TabRouteAction(index: 0);
+  }
+
+  void _debugPrintActionStack(RouteAction? action) {
+    debugPrint("[route] length=${_actions.length}, current=$_currentIndex, action=$action");
+  }
+
   bool canBack() {
     return _currentIndex >= 0;
   }
@@ -39,8 +64,16 @@ class RouteControlManager extends BaseChangeNotifier {
       final current = _actions[_currentIndex];
       _currentIndex -= 1;
       if (current.type == RouteActionType.page) {
+        _debugPrintActionStack(current);
         PageRouteAction action = current as PageRouteAction;
         action.navigator?.pop();
+      } else {
+        // tab切换需要往前找到最近的一个[TabRouteAction]，这个才是需要返回到的状态
+        TabRouteAction? action = _findNearestTabAction(_currentIndex, true);
+        _debugPrintActionStack(action);
+        if (action != null && context != null) {
+          getHomeState(context!).selectedIndex = action.index;
+        }
       }
       notifyListeners();
     }
@@ -56,33 +89,36 @@ class RouteControlManager extends BaseChangeNotifier {
       _currentIndex += 1;
       final current = _actions[_currentIndex];
       if (current.type == RouteActionType.page) {
+        _debugPrintActionStack(current);
         PageRouteAction action = current as PageRouteAction;
-        if (action.setting.name != null) {
-          action.navigator?.pushNamed(action.setting.name!, arguments: action.setting.arguments); 
+        if (action.settings.name != null) {
+          action.navigator?.pushNamed(action.settings.name!,
+              arguments: action.settings.arguments);
+        }
+      } else {
+        TabRouteAction? action = _findNearestTabAction(_currentIndex, false);
+        _debugPrintActionStack(action);
+        if (action != null && context != null) {
+          getHomeState(context!).selectedIndex = action.index;
         }
       }
       notifyListeners();
     }
   }
 
-  void pushAction(Route route) {
-    if (_isDefaultRoute(route)) return;
-    if (_forwarding) {
+  void pushAction(RouteAction action) {
+    if (_isDefaultRoute(action)) return;
+    if (_forwarding || _backing) {
       _forwarding = false;
+      _backing = false;
       return;
     }
-    final navigator = route.navigator;
-    if (navigator != null) {
-      _actions.add(PageRouteAction(
-          navigator: navigator,
-          setting: route.settings,
-          ));
-          _currentIndex = maxActionIndex;
-          notifyListeners();
-    }
+    _actions.add(action);
+    _currentIndex = maxActionIndex;
+    notifyListeners();
   }
 
-  void popAction(Route route) {
+  void popAction(PageRouteAction route) {
     if (_isDefaultRoute(route)) return;
     if (_backing) {
       _backing = false;
@@ -94,9 +130,12 @@ class RouteControlManager extends BaseChangeNotifier {
     }
   }
 
-  bool _isDefaultRoute(Route route) {
-    if (route.settings.name == Navigator.defaultRouteName) {
-      return true;
+  bool _isDefaultRoute(RouteAction action) {
+    if (action is PageRouteAction) {
+      PageRouteAction pageRoute = action;
+      if (pageRoute.settings.name == Navigator.defaultRouteName) {
+        return true;
+      }
     }
     return false;
   }
@@ -110,13 +149,25 @@ abstract class RouteAction {
 class PageRouteAction extends RouteAction {
   PageRouteAction({
     required this.navigator,
-    required this.setting,
+    required this.settings,
   }) : super(type: RouteActionType.page);
 
-  final RouteSettings setting;
+  final RouteSettings settings;
   final NavigatorState? navigator;
+
+  @override
+  String toString() {
+    return "[route-action]page, name=${settings.name}";
+  }
 }
 
 class TabRouteAction extends RouteAction {
-  TabRouteAction() : super(type: RouteActionType.tab);
+  TabRouteAction({required this.index}) : super(type: RouteActionType.tab);
+
+  final int index;
+
+  @override
+  String toString() {
+    return "[route-action]tab, index=$index";
+  }
 }

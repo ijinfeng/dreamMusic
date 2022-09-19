@@ -1,4 +1,6 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
+import 'package:dream_music/src/components/router/route_control_button.dart';
+import 'package:dream_music/src/components/router/route_control_manager.dart';
 import 'package:dream_music/src/pages/home/left_menu/model/left_menu_item_model.dart';
 import 'package:flutter/material.dart';
 
@@ -40,6 +42,9 @@ class HomeStateModel extends BaseChangeNotifier {
   set selectedIndex(int value) {
     if (value == _selectedIndex) return;
     _selectedIndex = value;
+    RouteControlManager().pushAction(
+      TabRouteAction(index: value)
+    );
     notifyListeners();
   }
 

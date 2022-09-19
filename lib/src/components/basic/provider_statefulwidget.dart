@@ -46,7 +46,7 @@ abstract class ProviderState<P extends ProviderStatefulWidget,
       return buildProviderChild(context, reuseChild(context));
     } else {
       return ChangeNotifierProvider.value(
-        value: viewModel,
+        value: viewModel?..bindContext(context),
         builder: buildProviderChild,
         child: reuseChild(context),
       );

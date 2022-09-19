@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
+import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
@@ -38,26 +39,29 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel> with EasyIn
 
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
-    return Center(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 850),
-        color: kPageBackgroundColor,
-        padding: kPageContentPadding,
-        child: Column(
-          children: [
-            const FindSectionTitleView(title: '推荐歌单'),
-            heightSpace(10),
-            Expanded(
-              child: Consumer<FindStateModel>(
-                builder: (context, value, child) {
-                  debugPrint('[find]推荐列表刷新了, count=${value.recommendModels.length}');
-                  return FindRecommendView(
-                    models: value.recommendModels,
-                  );
-                },
-              ),
-            )
-          ],
+    return CommonScaffold(
+      hideNavigationBar: true,
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 850),
+          color: kPageBackgroundColor,
+          padding: kPageContentPadding,
+          child: Column(
+            children: [
+              const FindSectionTitleView(title: '推荐歌单'),
+              heightSpace(10),
+              Expanded(
+                child: Consumer<FindStateModel>(
+                  builder: (context, value, child) {
+                    debugPrint('[find]推荐列表刷新了, count=${value.recommendModels.length}');
+                    return FindRecommendView(
+                      models: value.recommendModels,
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

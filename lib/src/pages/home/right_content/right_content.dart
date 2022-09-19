@@ -22,24 +22,7 @@ class RightContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      child: MaterialApp(
-        onGenerateRoute: PageRouters.generateRoute,
-        debugShowCheckedModeBanner: false,
-        color: kPageBackgroundColor,
-        navigatorObservers: [
-          CustomNavigatorObserver()
-        ],
-        theme: ThemeData(
-          hoverColor: kMainThemeColor,
-          splashColor: kMainThemeColor,
-        ),
-        home: CommonScaffold(
-          hideNavigationBar: true,
-          body: _RightContentBody(),
-        ),
-      ),
-    );
+    return _RightContentBody();
   }
 }
 
@@ -91,7 +74,20 @@ class _RightContentBodyState
         return previous != next;
       },
       builder: (context, value, child) {
-        return _buildChildPage(context, value);
+        return ClipRRect(
+          key: Key("$value"),
+          child: MaterialApp(
+            onGenerateRoute: PageRouters.generateRoute,
+            debugShowCheckedModeBanner: false,
+            color: kPageBackgroundColor,
+            navigatorObservers: [CustomNavigatorObserver()],
+            theme: ThemeData(
+              hoverColor: kMainThemeColor,
+              splashColor: kMainThemeColor,
+            ),
+            home: _buildChildPage(context, value),
+          ),
+        );
       },
     );
     // return PageView.builder(

@@ -7,7 +7,7 @@ class CustomNavigatorObserver extends NavigatorObserver {
   void didPush(Route route, Route? previousRoute) {
     super.didPush(route, previousRoute);
     debugPrint('[route]push --> $route');
-    RouteControlManager().pushAction(route);
+    RouteControlManager().pushAction(PageRouteAction(navigator: route.navigator, settings: route.settings));
   }
 
   // pop: route是将要被pop的路由
@@ -15,7 +15,7 @@ class CustomNavigatorObserver extends NavigatorObserver {
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
     debugPrint('[route]pop --> $route');
-    RouteControlManager().popAction(route);
+    RouteControlManager().popAction(PageRouteAction(navigator: route.navigator, settings: route.settings));
   }
 
   @override
