@@ -1,3 +1,5 @@
+import 'package:dream_music/src/components/json/json_loader.dart';
+
 ///
 ///2022-9-3 2022/9/14
 ///
@@ -59,7 +61,7 @@ class SonlistDetailModelTrackIds {
   }
 }
 
-class SonlistDetailModelTracksSq {
+class SonglistDetailModelTracksSq {
   /*
     {
     "br": 1064657,
@@ -74,13 +76,13 @@ class SonlistDetailModelTracksSq {
   int? size;
   int? vd;
 
-  SonlistDetailModelTracksSq({
+  SonglistDetailModelTracksSq({
     this.br,
     this.fid,
     this.size,
     this.vd,
   });
-  SonlistDetailModelTracksSq.fromJson(Map<String, dynamic> json) {
+  SonglistDetailModelTracksSq.fromJson(Map<String, dynamic> json) {
     br = int.tryParse(json['br']?.toString() ?? '');
     fid = int.tryParse(json['fid']?.toString() ?? '');
     size = int.tryParse(json['size']?.toString() ?? '');
@@ -96,7 +98,7 @@ class SonlistDetailModelTracksSq {
   }
 }
 
-class SonlistDetailModelTracksL {
+class SonglistDetailModelTracksL {
   /*
     {
     "br": 128000,
@@ -111,13 +113,13 @@ class SonlistDetailModelTracksL {
   int? size;
   int? vd;
 
-  SonlistDetailModelTracksL({
+  SonglistDetailModelTracksL({
     this.br,
     this.fid,
     this.size,
     this.vd,
   });
-  SonlistDetailModelTracksL.fromJson(Map<String, dynamic> json) {
+  SonglistDetailModelTracksL.fromJson(Map<String, dynamic> json) {
     br = int.tryParse(json['br']?.toString() ?? '');
     fid = int.tryParse(json['fid']?.toString() ?? '');
     size = int.tryParse(json['size']?.toString() ?? '');
@@ -133,7 +135,7 @@ class SonlistDetailModelTracksL {
   }
 }
 
-class SonlistDetailModelTracksM {
+class SonglistDetailModelTracksM {
   /*
     {
     "br": 192000,
@@ -148,13 +150,13 @@ class SonlistDetailModelTracksM {
   int? size;
   int? vd;
 
-  SonlistDetailModelTracksM({
+  SonglistDetailModelTracksM({
     this.br,
     this.fid,
     this.size,
     this.vd,
   });
-  SonlistDetailModelTracksM.fromJson(Map<String, dynamic> json) {
+  SonglistDetailModelTracksM.fromJson(Map<String, dynamic> json) {
     br = int.tryParse(json['br']?.toString() ?? '');
     fid = int.tryParse(json['fid']?.toString() ?? '');
     size = int.tryParse(json['size']?.toString() ?? '');
@@ -170,7 +172,7 @@ class SonlistDetailModelTracksM {
   }
 }
 
-class SonlistDetailModelTracksH {
+class SonglistDetailModelTracksH {
   /*
     {
     "br": 320000,
@@ -185,13 +187,13 @@ class SonlistDetailModelTracksH {
   int? size;
   int? vd;
 
-  SonlistDetailModelTracksH({
+  SonglistDetailModelTracksH({
     this.br,
     this.fid,
     this.size,
     this.vd,
   });
-  SonlistDetailModelTracksH.fromJson(Map<String, dynamic> json) {
+  SonglistDetailModelTracksH.fromJson(Map<String, dynamic> json) {
     br = int.tryParse(json['br']?.toString() ?? '');
     fid = int.tryParse(json['fid']?.toString() ?? '');
     size = int.tryParse(json['size']?.toString() ?? '');
@@ -207,7 +209,7 @@ class SonlistDetailModelTracksH {
   }
 }
 
-class SonlistDetailModelTracksAl {
+class SonglistDetailModelTracksAl {
   /*
     {
     "id": 142279340,
@@ -227,14 +229,14 @@ class SonlistDetailModelTracksAl {
   String? picStr;
   int? pic;
 
-  SonlistDetailModelTracksAl({
+  SonglistDetailModelTracksAl({
     this.id,
     this.name,
     this.picUrl,
     this.picStr,
     this.pic,
   });
-  SonlistDetailModelTracksAl.fromJson(Map<String, dynamic> json) {
+  SonglistDetailModelTracksAl.fromJson(Map<String, dynamic> json) {
     id = int.tryParse(json['id']?.toString() ?? '');
     name = json['name']?.toString();
     picUrl = json['picUrl']?.toString();
@@ -252,7 +254,7 @@ class SonlistDetailModelTracksAl {
   }
 }
 
-class SonlistDetailModelTracksAr {
+class SonglistDetailModelTracksAr {
   /*
     {
     "id": 36030189,
@@ -269,11 +271,11 @@ class SonlistDetailModelTracksAr {
   int? id;
   String? name;
 
-  SonlistDetailModelTracksAr({
+  SonglistDetailModelTracksAr({
     this.id,
     this.name,
   });
-  SonlistDetailModelTracksAr.fromJson(Map<String, dynamic> json) {
+  SonglistDetailModelTracksAr.fromJson(Map<String, dynamic> json) {
     id = int.tryParse(json['id']?.toString() ?? '');
     name = json['name']?.toString();
   }
@@ -285,7 +287,8 @@ class SonlistDetailModelTracksAr {
   }
 }
 
-class SonlistDetailModelTracks {
+/// 歌曲详情
+class SonglistDetailModelTracks {
   /*
     {
     "name": "剑魂 (鱼多余DJ版)",
@@ -384,7 +387,7 @@ class SonlistDetailModelTracks {
   int? id;
   int? pst;
   int? t;
-  List<SonlistDetailModelTracksAr?>? ar;
+  List<SonglistDetailModelTracksAr?>? ar;
   int? pop;
   int? st;
   String? rt;
@@ -393,12 +396,12 @@ class SonlistDetailModelTracks {
   String? crbt;
   String? cf;
   ///专辑
-  SonlistDetailModelTracksAl? al;
+  SonglistDetailModelTracksAl? al;
   int? dt;
-  SonlistDetailModelTracksH? h;
-  SonlistDetailModelTracksM? m;
-  SonlistDetailModelTracksL? l;
-  SonlistDetailModelTracksSq? sq;
+  SonglistDetailModelTracksH? h;
+  SonglistDetailModelTracksM? m;
+  SonglistDetailModelTracksL? l;
+  SonglistDetailModelTracksSq? sq;
   String? hr;
   String? a;
   String? cd;
@@ -425,7 +428,7 @@ class SonlistDetailModelTracks {
   int? mv;
   int? publishTime;
 
-  SonlistDetailModelTracks({
+  SonglistDetailModelTracks({
     this.name,
     this.id,
     this.pst,
@@ -470,16 +473,16 @@ class SonlistDetailModelTracks {
     this.mv,
     this.publishTime,
   });
-  SonlistDetailModelTracks.fromJson(Map<String, dynamic> json) {
+  SonglistDetailModelTracks.fromJson(Map<String, dynamic> json) {
     name = json['name']?.toString();
     id = int.tryParse(json['id']?.toString() ?? '');
     pst = int.tryParse(json['pst']?.toString() ?? '');
     t = int.tryParse(json['t']?.toString() ?? '');
     if (json['ar'] != null && (json['ar'] is List)) {
       final v = json['ar'];
-      final arr0 = <SonlistDetailModelTracksAr>[];
+      final arr0 = <SonglistDetailModelTracksAr>[];
       v.forEach((v) {
-        arr0.add(SonlistDetailModelTracksAr.fromJson(v));
+        arr0.add(SonglistDetailModelTracksAr.fromJson(v));
       });
       ar = arr0;
     }
@@ -491,20 +494,20 @@ class SonlistDetailModelTracks {
     crbt = json['crbt']?.toString();
     cf = json['cf']?.toString();
     al = (json['al'] != null && (json['al'] is Map))
-        ? SonlistDetailModelTracksAl.fromJson(json['al'])
+        ? SonglistDetailModelTracksAl.fromJson(json['al'])
         : null;
     dt = int.tryParse(json['dt']?.toString() ?? '');
     h = (json['h'] != null && (json['h'] is Map))
-        ? SonlistDetailModelTracksH.fromJson(json['h'])
+        ? SonglistDetailModelTracksH.fromJson(json['h'])
         : null;
     m = (json['m'] != null && (json['m'] is Map))
-        ? SonlistDetailModelTracksM.fromJson(json['m'])
+        ? SonglistDetailModelTracksM.fromJson(json['m'])
         : null;
     l = (json['l'] != null && (json['l'] is Map))
-        ? SonlistDetailModelTracksL.fromJson(json['l'])
+        ? SonglistDetailModelTracksL.fromJson(json['l'])
         : null;
     sq = (json['sq'] != null && (json['sq'] is Map))
-        ? SonlistDetailModelTracksSq.fromJson(json['sq'])
+        ? SonglistDetailModelTracksSq.fromJson(json['sq'])
         : null;
     hr = json['hr']?.toString();
     a = json['a']?.toString();
@@ -1283,7 +1286,7 @@ class SonglistDetailModel {
   // 是否收藏
   bool? subscribed;
   SonlistDetailModelCreator? creator;
-  List<SonlistDetailModelTracks?>? tracks;
+  List<SonglistDetailModelTracks?>? tracks;
   String? videoIds;
   String? videos;
   List<SonlistDetailModelTrackIds?>? trackIds;
@@ -1403,9 +1406,9 @@ class SonglistDetailModel {
         : null;
     if (json['tracks'] != null && (json['tracks'] is List)) {
       final v = json['tracks'];
-      final arr0 = <SonlistDetailModelTracks>[];
+      final arr0 = <SonglistDetailModelTracks>[];
       v.forEach((v) {
-        arr0.add(SonlistDetailModelTracks.fromJson(v));
+        arr0.add(SonglistDetailModelTracks.fromJson(v));
       });
       tracks = arr0;
     }

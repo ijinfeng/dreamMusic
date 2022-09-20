@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -28,5 +29,9 @@ mixin EasyInterface {
 
   HomeStateModel getHomeState(BuildContext context) {
     return Provider.of<HomeStateModel>(context, listen: false);
+  }
+
+  SongPlayer getPlayer(BuildContext context) {
+    return Provider.of<SongPlayer>(context, listen: false);
   }
 }

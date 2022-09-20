@@ -5,6 +5,7 @@ import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/find/model/find_recommend_model.dart';
@@ -55,9 +56,9 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel> with EasyIn
                 child: Consumer<FindStateModel>(
                   builder: (context, value, child) {
                     debugPrint('[find]推荐列表刷新了, count=${value.recommendModels.length}');
-                    return FindRecommendView(
+                    return value.hasRequestData ? FindRecommendView(
                       models: value.recommendModels,
-                    );
+                    ) : const LoadingView();
                   },
                 ),
               )

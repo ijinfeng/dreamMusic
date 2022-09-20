@@ -16,7 +16,7 @@ class SonglistItemCell extends StatefulWidget {
     }) : super(key: key);
 
   final int? index;
-  final SonlistDetailModelTracks? model;
+  final SonglistDetailModelTracks? model;
 
   @override
   State<StatefulWidget> createState() {

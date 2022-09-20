@@ -42,6 +42,7 @@ flutter:
   assets:
     - assets/
     - assets/leftmenu/
+    - assets/json/
 
   fonts:
     - family: DINAlternate

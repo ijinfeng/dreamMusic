@@ -1,0 +1,91 @@
+{
+    "name": "剑魂 (鱼多余DJ版)",
+    "id": 1930863429,
+    "pst": 0,
+    "t": 0,
+    "ar": [
+        {
+            "id": 36030189,
+            "name": "鱼多余",
+            "tns": [
+                null
+            ],
+            "alias": [
+                null
+            ]
+        }
+    ],
+    "alia": [
+        null
+    ],
+    "pop": 100,
+    "st": 0,
+    "rt": "",
+    "fee": 8,
+    "v": 9,
+    "crbt": null,
+    "cf": "",
+    "al": {
+        "id": 142279340,
+        "name": "剑魂 (鱼多余DJ版)",
+        "picUrl": "http://p4.music.126.net/RGWrKL95_nNWfGbqx1byMA==/109951167184486001.jpg",
+        "tns": [
+            null
+        ],
+        "pic_str": "109951167184486001",
+        "pic": 109951167184486000
+    },
+    "dt": 176245,
+    "h": {
+        "br": 320000,
+        "fid": 0,
+        "size": 7052060,
+        "vd": -77619
+    },
+    "m": {
+        "br": 192000,
+        "fid": 0,
+        "size": 4231253,
+        "vd": -75131
+    },
+    "l": {
+        "br": 128000,
+        "fid": 0,
+        "size": 2820850,
+        "vd": -73669
+    },
+    "sq": {
+        "br": 1064657,
+        "fid": 0,
+        "size": 23455093,
+        "vd": -77613
+    },
+    "hr": null,
+    "a": null,
+    "cd": "01",
+    "no": 1,
+    "rtUrl": null,
+    "ftype": 0,
+    "rtUrls": [
+        null
+    ],
+    "djId": 0,
+    "copyright": 0,
+    "s_id": 0,
+    "mark": 8192,
+    "originCoverType": 0,
+    "originSongSimpleData": null,
+    "tagPicList": null,
+    "resourceState": true,
+    "version": 9,
+    "songJumpInfo": null,
+    "entertainmentTags": null,
+    "single": 0,
+    "noCopyrightRcmd": null,
+    "rtype": 0,
+    "rurl": null,
+    "mst": 9,
+    "cp": 7001,
+    "mv": 0,
+    "publishTime": 0
+    }

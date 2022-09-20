@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_state_model.dart';
@@ -43,7 +44,7 @@ class _SonglistState extends ProviderState<SonglistPage, SonglistStateModel> {
             return previous != next;
           },
           builder: (context, value, child) {
-            return FFListView(
+            return value == null ? const LoadingView() : FFListView(
               sectionBuilder: (context, index) {
                 if (index == 0) {
                   return SonglistHeaderView(model: value,);

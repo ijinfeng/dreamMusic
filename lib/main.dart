@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dream_music/src/components/network/network_env_route.dart';
+import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/router/custom_navigator_observer.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
@@ -30,7 +31,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) {
           return HomeStateModel();
         }),
-        ChangeNotifierProvider.value(value: NetworkEnv())
+        ChangeNotifierProvider.value(value: NetworkEnv()),
+        ChangeNotifierProvider(create: (context) {
+          return SongPlayer();
+        })
       ],
       builder: (context, child) {
         return MaterialApp(

@@ -30,3 +30,6 @@ const Color kPageBackgroundColor = Color(0xFFFFFFFF);
 
 /// 红色
 const Color kRedColor = Color(0xFFF20000);
+
+/// 分割线颜色
+const Color kDividerColor = Color(0xffcccccc);
