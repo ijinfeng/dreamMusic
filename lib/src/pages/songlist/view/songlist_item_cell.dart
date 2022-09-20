@@ -98,6 +98,8 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
     // 专辑名称
     Widget album = Text(
       widget.model?.al?.name ?? '',
+      maxLines: 1,
+      textAlign: TextAlign.center,
       style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w500,

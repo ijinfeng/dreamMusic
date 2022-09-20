@@ -15,7 +15,7 @@ class VolumeControl extends StatefulWidget {
 class _VolumeControlState extends State<VolumeControl> with EasyInterface {
   @override
   Widget build(BuildContext context) {
-    double width = 16;
+    double width = 18;
     return SizedBox(
       width: 120,
       child: Row(

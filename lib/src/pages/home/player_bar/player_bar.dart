@@ -21,7 +21,8 @@ class PlayerBar extends ProviderStatefulWidget {
   }
 }
 
-class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer> with EasyInterface {
+class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
+    with EasyInterface {
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     return Container(
@@ -33,25 +34,57 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer> with EasyInte
         // 播放控制
         // 音量
         children: [
-          SongInfoView(
-            model: getPlayer(context).currentTrack,
+          Flexible(
+            flex: 1,
+            child: SongInfoView(
+              model: getPlayer(context).currentTrack,
+            ),
           ),
-          const PlayerControl(),
-          Row(
-            children: [
-              const VolumeControl(),
-              SelectableIconButton(
-                selected: true,
-                src: 'icon_songlist.png',
-                width: 18,
-                height: 18,
-                color: kText3Color,
-                onTap: (p0) {},
-              ),
-            ],
+          const Flexible(flex: 1, child: PlayerControl()),
+          Flexible(
+            flex: 1,
+            child: _buildRightControls(),
           )
         ],
       ),
+    );
+  }
+
+  Row _buildRightControls() {
+    double width = 21;
+    double space = 7;
+    String playmodeSrc = "";
+    final mode = SongPlayer().playMode;
+    if (mode == PlayMode.loop) {
+      playmodeSrc = "play_mode_loop.png";
+    } else if (mode == PlayMode.oneloop) {
+      playmodeSrc = "play_mode_oneloop.png";
+    } else {
+      playmodeSrc = "play_mode_random.png";
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        SelectableIconButton(
+          selected: true,
+          src: playmodeSrc,
+          width: width,
+          height: width,
+          color: kText3Color,
+          onTap: (p0) {},
+        ),
+        widthSpace(space),
+        SelectableIconButton(
+          selected: true,
+          src: 'icon_songlist.png',
+          width: width,
+          height: width,
+          color: kText3Color,
+          onTap: (p0) {},
+        ),
+        widthSpace(space),
+        const VolumeControl(),
+      ],
     );
   }
 }

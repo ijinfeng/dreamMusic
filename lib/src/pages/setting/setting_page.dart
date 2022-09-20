@@ -7,6 +7,7 @@ import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
 import 'package:dream_music/src/pages/song_detail/request/song_detail_request.dart';
+import 'package:dream_music/src/pages/songlist/request/songlist_request.dart';
 import 'package:dream_music/src/pages/user/request/user_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,6 +52,13 @@ class SettingPage extends StatelessWidget with EasyInterface {
             },),
             MainButton.title(title: 'userInfo', onTap: () {
               _getUserAccount();
+            },),
+            heightSpace(10),
+            MainButton.title(title: '获取歌单[7217230485]所有歌曲', onTap: () async {
+              final res = await SonglistRequest.trackAll(7217230485);
+              if (res.success) {
+                
+              }
             },)
           ],
         ),

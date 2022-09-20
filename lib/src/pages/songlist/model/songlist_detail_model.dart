@@ -1514,3 +1514,8 @@ class SonglistDetailModel {
     return data;
   }
 }
+
+// TODO: 完善模型
+class SonglistModel {
+
+}

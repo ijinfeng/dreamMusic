@@ -4,11 +4,14 @@ import 'package:dream_music/src/pages/song_detail/model/song_detail_model.dart';
 
 class SongDetailRequest {
   /// 获取歌曲详情
-  static Future<ResponseModel<SongDetailModel>> details(List<int> ids, {bool noCache = false}) {
+  static Future<ResponseModel<SongDetailModel>> details(List<int> ids,
+   {bool noCache = false, int offset = 0, int limit = 50}) {
     final res = neRequest.get(
       '/song/detail',
       queryParameters: {
-        "ids": ids.join(',')
+        "ids": ids.join(','),
+        "offset": offset,
+        "limit": limit,
       },
       addTimestamp: noCache,
       builder: (json) {
