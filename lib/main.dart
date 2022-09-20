@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dream_music/src/components/network/network_env_route.dart';
 import 'package:dream_music/src/components/router/custom_navigator_observer.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
@@ -24,10 +25,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        return HomeStateModel();
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) {
+          return HomeStateModel();
+        }),
+        ChangeNotifierProvider.value(value: NetworkEnv())
+      ],
       builder: (context, child) {
         return MaterialApp(
           title: 'DreamMusic',
@@ -35,9 +39,7 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: PageRouters.generateRoute,
           themeMode: ThemeMode.light,
           color: kPageBackgroundColor,
-          navigatorObservers: [
-            CustomNavigatorObserver()
-          ],
+          navigatorObservers: [CustomNavigatorObserver()],
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
@@ -45,15 +47,57 @@ class MyApp extends StatelessWidget {
           builder: EasyLoading.init(),
         );
       },
-      child: Selector<HomeStateModel, int>(
-        selector:(p0, p1) {
-          return p1.loginRefreshCode;
+      child: Selector2<HomeStateModel, NetworkEnv, String>(
+        selector: (p0, p1, p2) {
+          return "${p1.loginRefreshCode}-${p2.initialized}";
         },
-        shouldRebuild: (previous, next) => previous != next,
+        shouldRebuild: (previous, next) {
+          return previous != next;
+        },
         builder: (context, value, child) {
           return const HomePage();
         },
       ),
+      // child: Selector<HomeStateModel, int>(
+      //   selector: (p0, p1) {
+      //     return p1.loginRefreshCode;
+      //   },
+      //   shouldRebuild: (previous, next) => previous != next,
+      //   builder: (context, value, child) {
+      //     return const HomePage();
+      //   },
+      // ),
     );
+    // return ChangeNotifierProvider(
+    //   create: (context) {
+    //     return HomeStateModel();
+    //   },
+    //   builder: (context, child) {
+    //     return MaterialApp(
+    //       title: 'DreamMusic',
+    //       debugShowCheckedModeBanner: false,
+    //       onGenerateRoute: PageRouters.generateRoute,
+    //       themeMode: ThemeMode.light,
+    //       color: kPageBackgroundColor,
+    //       navigatorObservers: [
+    //         CustomNavigatorObserver()
+    //       ],
+    //       theme: ThemeData(
+    //         primarySwatch: Colors.blue,
+    //       ),
+    //       home: child,
+    //       builder: EasyLoading.init(),
+    //     );
+    //   },
+    //   child: Selector<HomeStateModel, int>(
+    //     selector:(p0, p1) {
+    //       return p1.loginRefreshCode;
+    //     },
+    //     shouldRebuild: (previous, next) => previous != next,
+    //     builder: (context, value, child) {
+    //       return const HomePage();
+    //     },
+    //   ),
+    // );
   }
 }

@@ -17,7 +17,8 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class FindPage extends ProviderStatefulWidget {
-  const FindPage({Key? key}) : super(key: key);
+  // ignore: prefer_const_constructors_in_immutables
+  FindPage({Key? key}) : super(key: key);
 
   @override
   ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {

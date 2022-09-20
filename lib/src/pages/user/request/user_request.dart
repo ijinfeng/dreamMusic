@@ -7,7 +7,7 @@ class UserRequest {
   static Future<ResponseModel<UserModel>> accountInfo() {
     final res = neRequest.get(
       '/user/account',
-      queryParameters: neRequest.timestampParams,
+      addTimestamp: true,
       builder: (json) {
         return UserModel.fromJson(json);
       },

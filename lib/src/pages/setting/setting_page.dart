@@ -7,6 +7,7 @@ import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
 import 'package:dream_music/src/pages/song_detail/request/song_detail_request.dart';
+import 'package:dream_music/src/pages/user/request/user_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,10 +48,21 @@ class SettingPage extends StatelessWidget with EasyInterface {
               neRequest.get('/like', queryParameters: {
                 "id": 347230
               }, addTimestamp: true);
+            },),
+            MainButton.title(title: 'userInfo', onTap: () {
+              _getUserAccount();
             },)
           ],
         ),
       ),
     );
+  }
+
+  void _getUserAccount() async {
+    debugPrint('用户已登录，开始获取账号信息');
+    final res = await UserRequest.accountInfo();
+    if (res.success) {
+      debugPrint('已成功获取到用户账号信息: ${res.data}');
+    }
   }
 }

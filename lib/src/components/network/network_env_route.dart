@@ -89,6 +89,8 @@ class NetworkEnv with ChangeNotifier {
     });
   }
 
+  void start() {}
+
   void _setInitializeFinished() {
     _initialized = true;
     notifyListeners();

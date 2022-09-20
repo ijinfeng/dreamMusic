@@ -37,7 +37,8 @@ class _LoginPageBody extends ProviderStatefulWidget {
   }
 }
 
-class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel> {
+class _LoginPageBodyState
+    extends ProviderState<_LoginPageBody, LoginStateModel> {
   Timer? _timer;
   final double width = 280;
 
@@ -45,7 +46,6 @@ class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel>
   void dispose() {
     super.dispose();
     _cancelTimer();
-    
   }
 
   @override
@@ -141,10 +141,11 @@ class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel>
   }
 
   void _loginSuccess() {
-    debugPrint('登录成功');
-    AppSharedManager().loginType = AppLoginType.user;
-    Provider.of<HomeStateModel>(context, listen: false).refreshByLogin();
-    Navigator.pop(context);
+    debugPrint('登录成功，开始刷新cookies');
+    AppSharedManager().reloadCookies(() {
+      Provider.of<HomeStateModel>(context, listen: false).refreshByLogin();
+      Navigator.pop(context);
+    });
   }
 
   void _requestLoginQrcode() async {
@@ -324,7 +325,8 @@ class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel>
               } else {
                 if (viewModel!.phone != null && viewModel!.code != null) {
                   showLoading('正在登录');
-                  final res = await LoginRequest.codeLogin(viewModel!.phone!, viewModel!.code!);
+                  final res = await LoginRequest.codeLogin(
+                      viewModel!.phone!, viewModel!.code!);
                   dismissLoading();
                   if (res.success) {
                     showToast('登录成功');
@@ -391,7 +393,8 @@ class _LoginPageBodyState extends ProviderState<_LoginPageBody, LoginStateModel>
               } else {
                 if (viewModel?.phone != null && viewModel?.password != null) {
                   showLoading('正在登录');
-                  final res = await LoginRequest.phoneLogin(viewModel!.phone!, viewModel!.password!);
+                  final res = await LoginRequest.phoneLogin(
+                      viewModel!.phone!, viewModel!.password!);
                   dismissLoading();
                   if (res.success) {
                     showToast('登录成功');

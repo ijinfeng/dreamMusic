@@ -16,9 +16,9 @@ class UserInfoCard extends StatelessWidget with EasyInterface {
     final backgroundUrl = AppSharedManager().userModel?.profile?.backgroundUrl;
     final avatarUrl = AppSharedManager().userModel?.profile?.avatarUrl;
     String? nickname;
-    if (AppSharedManager().loginType == AppLoginType.anonimous) {
+    if (AppSharedManager().isAnonimousLogin()) {
       nickname = '游客${AppSharedManager().userModel?.account?.id ?? ''}';
-    } else if (AppSharedManager().loginType == AppLoginType.user) {
+    } else if (AppSharedManager().isUserLogin()) {
       nickname = AppSharedManager().userModel?.profile?.nickname ??
           AppSharedManager().userModel?.account?.userName ??
           AppSharedManager().userModel?.account?.id?.toString() ??
@@ -29,7 +29,7 @@ class UserInfoCard extends StatelessWidget with EasyInterface {
 
    return GestureDetector(
     onTap: () {
-      if (AppSharedManager().loginType == AppLoginType.user) {
+      if (AppSharedManager().isUserLogin()) {
           // 跳转个人主页
           Navigator.pushNamed(context, PageRouters.setting);
         } else {

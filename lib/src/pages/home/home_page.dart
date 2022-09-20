@@ -45,7 +45,7 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
     super.initState();
     AppSharedManager().initializedCallback = () {
       // 未登录过，则使用游客身份登录
-      if (AppSharedManager().loginType == AppLoginType.none) {
+      if (AppSharedManager().hasCookies == false) {
         _requestAnonimousLogin();
       } else {
         // 表示已经登录过了，直接拉取用户信息
@@ -66,7 +66,6 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
     LoginRequest.anonimousLogin().then((res) {
       dismissLoading();
       if (res.success) {
-        AppSharedManager().loginType = AppLoginType.anonimous;
         debugPrint('游客登录成功');
         homeState?.refreshByLogin();
       }
@@ -86,25 +85,27 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     return Selector<HomeStateModel, int>(
-          selector: (p0, p1) {
-            return p1.uiRefreshCode;
-          },
-          shouldRebuild: (previous, next) => previous != next,
-          builder: (context, value, child) {
-            return Column(
-              children: [
-                WindowNavigationBar(),
-                Expanded(
-                  child: Row(
-                    children: [
-                      LeftMenu(),
-                      const Expanded(child: RightContent())
-                    ],
-                  ),
-                )
-              ],
-            );
-          },
+      selector: (p0, p1) {
+        return p1.uiRefreshCode;
+      },
+      shouldRebuild: (previous, next) => previous != next,
+      builder: (context, value, child) {
+        return Column(
+          children: [
+            WindowNavigationBar(),
+            Expanded(
+              child: Row(
+                children: [
+                  LeftMenu(),
+                  AppSharedManager().initialized
+                      ? const Expanded(child: RightContent())
+                      : const Spacer()
+                ],
+              ),
+            )
+          ],
         );
+      },
+    );
   }
 }

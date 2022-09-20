@@ -52,7 +52,7 @@ class _RightContentBodyState
 
   Widget _buildChildPage(BuildContext context, int index) {
     if (index == 0) {
-      return const FindPage();
+      return FindPage();
     } else if (index == 1) {
       return const PrivateFMPage();
     } else if (index == 2) {

@@ -15,10 +15,8 @@ class FindStateModel extends BaseChangeNotifier {
   List<FindRecommendModel> get recommendModels => _recommendModels;
 
    void requestDailyRecommend() async {
-    debugPrint('[find]获取推荐歌单...');
     final res = await FindRequest.recommendResource();
     if (res.success) {
-      debugPrint('[find]已成功获取到推荐歌单--->${res.datas?.length}');
       recommendModels = res.datas;
     }
   }
