@@ -1,4 +1,5 @@
 import 'package:dream_music/src/components/json/json_loader.dart';
+import 'package:dream_music/src/pages/song_detail/model/song_detail_model.dart';
 
 ///
 ///2022-9-3 2022/9/14
@@ -395,6 +396,7 @@ class SonglistDetailModelTracks {
   int? v;
   String? crbt;
   String? cf;
+
   ///专辑
   SonglistDetailModelTracksAl? al;
   int? dt;
@@ -1515,7 +1517,39 @@ class SonglistDetailModel {
   }
 }
 
-// TODO: 完善模型
 class SonglistModel {
+  SonglistDetailModel? playlist;
+  List<SongDetailModelPrivileges?>? privileges;
 
+  SonglistModel({this.playlist, this.privileges});
+
+  SonglistModel.fromJson(Map<String, dynamic> json) {
+    playlist = (json['playlist'] != null && (json['playlist'] is Map))
+        ? SonglistDetailModel.fromJson(json['playlist'])
+        : null;
+    if (json['privileges'] != null && (json['privileges'] is List)) {
+      final v = json['privileges'];
+      final arr0 = <SongDetailModelPrivileges>[];
+      v.forEach((v) {
+        arr0.add(SongDetailModelPrivileges.fromJson(v));
+      });
+      privileges = arr0;
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (playlist != null) {
+      data['playlist'] = playlist!.toJson();
+    }
+    if (privileges != null) {
+      final v = privileges;
+      final arr0 = [];
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
+      data['privileges'] = arr0;
+    }
+    return data;
+  }
 }
