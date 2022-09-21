@@ -36,7 +36,7 @@ class _SonglistState extends ProviderState<SonglistPage, SonglistStateModel> {
     return CommonScaffold(
         hideNavigationBar: true,
         padding: const EdgeInsets.only(top: 20),
-        body: Selector<SonglistStateModel, SonglistDetailModel?>(
+        body: Selector<SonglistStateModel, SonglistModel?>(
           selector:(p0, p1) {
             return p1.detailModel;
           },
@@ -47,17 +47,17 @@ class _SonglistState extends ProviderState<SonglistPage, SonglistStateModel> {
             return value == null ? const LoadingView() : FFListView(
               sectionBuilder: (context, index) {
                 if (index == 0) {
-                  return SonglistHeaderView(model: value,);
+                  return SonglistHeaderView(model: value.playlist,);
                 }
                 return const SizedBox.shrink();
               },
               itemBuilder:(context, section, index) {
               return SonglistItemCell(
                 index: index,
-                model: viewModel?.detailModel?.tracks?[index],
+                model: viewModel?.detailModel?.playlist?.tracks?[index],
               );
             }, indexCountBuilder:(context, section) {
-                return viewModel?.detailModel?.tracks?.length ?? 0;
+                return viewModel?.detailModel?.playlist?.tracks?.length ?? 0;
             },);
           },
         ),

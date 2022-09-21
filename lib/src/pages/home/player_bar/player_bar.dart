@@ -5,6 +5,7 @@ import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/home/player_bar/play_progress_indicator.dart';
 import 'package:dream_music/src/pages/home/player_bar/player_controls.dart';
 import 'package:dream_music/src/pages/home/player_bar/song_info_view.dart';
 import 'package:dream_music/src/pages/home/player_bar/volume_control.dart';
@@ -25,28 +26,33 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
     with EasyInterface {
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
-    return Container(
-      color: kPageBackgroundColor,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        // 歌曲名
-        // 播放控制
-        // 音量
-        children: [
-          Flexible(
-            flex: 1,
-            child: SongInfoView(
-              model: getPlayer(context).currentTrack,
-            ),
+    return Stack(
+      children: [
+        Container(
+          color: kPageBackgroundColor,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // 歌曲名
+            // 播放控制
+            // 音量
+            children: [
+              Flexible(
+                flex: 1,
+                child: SongInfoView(
+                  model: getPlayer(context).currentTrack,
+                ),
+              ),
+              const Flexible(flex: 1, child: PlayerControl()),
+              Flexible(
+                flex: 1,
+                child: _buildRightControls(),
+              )
+            ],
           ),
-          const Flexible(flex: 1, child: PlayerControl()),
-          Flexible(
-            flex: 1,
-            child: _buildRightControls(),
-          )
-        ],
-      ),
+        ),
+        Positioned(left: 0, right: 0, bottom: 0,child: PlayProgressIndicator(),)
+      ],
     );
   }
 
@@ -80,6 +86,7 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
           width: width,
           height: width,
           color: kText3Color,
+          unColor: kText3Color,
           onTap: (p0) {},
         ),
         widthSpace(space),

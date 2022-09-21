@@ -89,6 +89,13 @@ abstract class ResponseSerializer {
 }
 
 class DefaultResponserSerializer extends ResponseSerializer {
+
+  DefaultResponserSerializer({
+    this.rootKey = 'data'
+  });
+
+  final String? rootKey;
+
   @override
   ResponseModel<T> serialize<T>(Response response,
       NetworkJSONModelBuilder<T>? builder, String? searchKeyPath) {
@@ -102,8 +109,6 @@ class DefaultResponserSerializer extends ResponseSerializer {
         res.message = response.data['message'];
       }
     }
-
-    const String rootKey = 'data';
 
     if (builder != null) {
       final resData = response.data;

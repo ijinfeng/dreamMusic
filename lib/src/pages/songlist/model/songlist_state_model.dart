@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class SonglistStateModel extends BaseChangeNotifier {
 
-  SonglistDetailModel? detailModel;
+  SonglistModel? detailModel;
 
   void requestDetail(int id) async {
     debugPrint('[songlist]正在获取歌单详情');

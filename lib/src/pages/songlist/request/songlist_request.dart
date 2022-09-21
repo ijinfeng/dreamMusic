@@ -5,15 +5,14 @@ import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart'
 
 class SonglistRequest {
   /// 歌单详情
-  static Future<ResponseModel<SonglistDetailModel>> detail(int id) {
+  static Future<ResponseModel<SonglistModel>> detail(int id) {
     final res = neRequest.get(
       '/playlist/detail',
       queryParameters: {
         "id": id
       },
-      searchKeyPath: 'playlist',
       builder: (json) {
-        return SonglistDetailModel.fromJson(json);
+        return SonglistModel.fromJson(json);
       },
     );
     return res;
