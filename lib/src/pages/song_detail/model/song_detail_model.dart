@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 
 ///
@@ -513,5 +516,20 @@ class SongDetailModel {
     }
     data['code'] = code;
     return data;
+  }
+
+  /// 获取歌曲数组
+  List<SingleSongModel> getSongs() {
+    if (songs == null || privileges == null) return [];
+    int minIndex = min(songs!.length, privileges!.length);
+    List<SingleSongModel> ret = [];
+    for (int i = 0; i < minIndex; i++) {
+      final track = songs?[i];
+      final privilege = privileges?[i];
+      ret.add(
+          SingleSongModel(track: track, privilege: privilege)
+      );
+    }
+    return ret;
   }
 }

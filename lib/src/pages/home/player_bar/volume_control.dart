@@ -45,7 +45,7 @@ class _VolumeControlState extends State<VolumeControl> with EasyInterface {
                       ),
               child: Slider(
                   min: 0,
-                  max: 100,
+                  max: 1.0,
                   value: getPlayer(context).volume,
                   onChanged: (v) {
                     setState(() {

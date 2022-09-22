@@ -34,8 +34,18 @@ class PlayProgressIndicator extends StatelessWidget with EasyInterface {
                     pressedElevation: 10)),
             child: Slider(
               value: value,
+              min: 0,
+              max: 1.0,
               onChanged: (value) {
-                getPlayer(context).progress = value;
+                getPlayer(context).seekToProgress(value);
+              },
+              onChangeStart: (value) {
+                getPlayer(context).lockSeek();
+                getPlayer(context).seekToProgress(value);
+              },
+              onChangeEnd: (value) {
+                getPlayer(context).unlockSeek();
+                getPlayer(context).seekToProgress(value);
               },
             ));
       },

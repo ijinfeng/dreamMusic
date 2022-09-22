@@ -2,9 +2,11 @@ import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
+import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PlayerControl extends StatelessWidget with EasyInterface {
   const PlayerControl({Key? key}) : super(key: key);
@@ -34,15 +36,23 @@ class PlayerControl extends StatelessWidget with EasyInterface {
             onTap: (p0) {},
           ),
           widthSpace(space),
-          SelectableIconButton(
-            selected: true,
-            src: 'song_control_play.png',
-            unsrc: 'song_control_pause.png',
-            width: width + 10,
-            height: width + 10,
-            color: controlColor,
-            unColor: controlColor,
-            onTap: (p0) {},
+          Selector<SongPlayer, bool>(
+            selector: (p0, p1) {
+              return p1.playing;
+            },
+            shouldRebuild: (previous, next) => previous != next,
+            builder: (context, value, child) {
+              return SelectableIconButton(
+                selected: !value,
+                src: 'song_control_play.png',
+                unsrc: 'song_control_pause.png',
+                width: width + 10,
+                height: width + 10,
+                color: controlColor,
+                unColor: controlColor,
+                onTap: (p0) {},
+              );
+            },
           ),
           widthSpace(space),
           SelectableIconButton(

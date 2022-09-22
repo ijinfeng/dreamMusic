@@ -1,4 +1,5 @@
 import 'package:dream_music/src/components/json/json_loader.dart';
+import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_detail_model.dart';
 
 ///
@@ -1551,5 +1552,22 @@ class SonglistModel {
       data['privileges'] = arr0;
     }
     return data;
+  }
+
+  /// 获取歌曲详情数组
+  List<SingleSongModel> getSongs() {
+    if (playlist?.tracks == null) return [];
+    final tracks = playlist!.tracks!;
+    const List<SingleSongModel> ret = [];
+    for (int i = 0; i < tracks.length; i++) {
+      final track = tracks[i];
+      ret.add(
+            SingleSongModel(
+              track:track,
+              privilege: privileges?[i]
+            )
+        );
+    }
+    return ret;
   }
 }

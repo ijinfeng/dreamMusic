@@ -1,5 +1,6 @@
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
+import 'package:dream_music/src/components/network/request_config.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -172,9 +173,9 @@ class NetworkEnvPage extends StatelessWidget with EasyInterface {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    '本地代理',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  Text(
+                    '本地代理: ${RequestConfig.baseUrl}',
+                    style:const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                   Consumer<NetworkEnv>(
                     builder: (context, value, child) {

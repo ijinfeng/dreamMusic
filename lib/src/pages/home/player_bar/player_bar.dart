@@ -40,7 +40,7 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
               Flexible(
                 flex: 1,
                 child: SongInfoView(
-                  model: getPlayer(context).currentTrack,
+                  model: getPlayer(context).currentSong?.track,
                 ),
               ),
               const Flexible(flex: 1, child: PlayerControl()),
@@ -51,7 +51,7 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
             ],
           ),
         ),
-        Positioned(left: 0, right: 0, bottom: 0,child: PlayProgressIndicator(),)
+        const Positioned(left: 0, right: 0, bottom: 0,child: PlayProgressIndicator(),)
       ],
     );
   }
