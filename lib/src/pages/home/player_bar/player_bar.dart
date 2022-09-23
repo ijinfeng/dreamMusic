@@ -12,6 +12,7 @@ import 'package:dream_music/src/pages/home/player_bar/volume_control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
 class PlayerBar extends ProviderStatefulWidget {
   const PlayerBar({Key? key}) : super(key: key);
@@ -39,8 +40,16 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
             children: [
               Flexible(
                 flex: 1,
-                child: SongInfoView(
-                  model: getPlayer(context).currentSong?.track,
+                child: Selector<SongPlayer, int?>(
+                  selector: (p0, p1) {
+                    return p1.currentSong?.track?.id;
+                  },
+                  shouldRebuild: (previous, next) => previous != next,
+                  builder: (context, value, child) {
+                    return SongInfoView(
+                      model: getPlayer(context).currentSong?.track,
+                    );
+                  },
                 ),
               ),
               const Flexible(flex: 1, child: PlayerControl()),
@@ -51,7 +60,12 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
             ],
           ),
         ),
-        const Positioned(left: 0, right: 0, bottom: 0,child: PlayProgressIndicator(),)
+        const Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: PlayProgressIndicator(),
+        )
       ],
     );
   }
@@ -60,24 +74,33 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
     double width = 21;
     double space = 7;
     String playmodeSrc = "";
-    final mode = SongPlayer().playMode;
-    if (mode == PlayMode.loop) {
-      playmodeSrc = "play_mode_loop.png";
-    } else if (mode == PlayMode.oneloop) {
-      playmodeSrc = "play_mode_oneloop.png";
-    } else {
-      playmodeSrc = "play_mode_random.png";
-    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        SelectableIconButton(
-          selected: true,
-          src: playmodeSrc,
-          width: width,
-          height: width,
-          color: kText3Color,
-          onTap: (p0) {},
+        Selector<SongPlayer, PlayMode>(
+          selector: (p0, p1) {
+            return p1.playMode;
+          },
+          shouldRebuild: (previous, next) => previous != next,
+          builder: (context, mode, child) {
+            if (mode == PlayMode.loop) {
+              playmodeSrc = "play_mode_loop.png";
+            } else if (mode == PlayMode.oneloop) {
+              playmodeSrc = "play_mode_oneloop.png";
+            } else {
+              playmodeSrc = "play_mode_random.png";
+            }
+            return SelectableIconButton(
+              selected: true,
+              src: playmodeSrc,
+              width: width,
+              height: width,
+              color: kText3Color,
+              onTap: (p0) {
+                getPlayer(context).switchPlayMode();
+              },
+            );
+          },
         ),
         widthSpace(space),
         SelectableIconButton(

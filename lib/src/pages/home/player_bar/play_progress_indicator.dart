@@ -31,7 +31,7 @@ class PlayProgressIndicator extends StatelessWidget with EasyInterface {
                     enabledThumbRadius: progressRadius,
                     disabledThumbRadius: progressRadius,
                     elevation: 0,
-                    pressedElevation: 10)),
+                    pressedElevation: 0)),
             child: Slider(
               value: value,
               min: 0,

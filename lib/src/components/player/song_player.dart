@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
@@ -16,6 +18,8 @@ enum PlayMode {
 
 class SongPlayer extends BaseChangeNotifier {
   SongPlayer() {
+    player.stop();
+
     // 音乐播放器启动的时候，需要读取本地保存的歌单id
 
     player.setVolume(volume);
@@ -30,9 +34,11 @@ class SongPlayer extends BaseChangeNotifier {
       }
     });
 
-    // seek后的位置变化通知
+    // 播放进度通知
     player.onPositionChanged.listen((durantion) {
-      if (_currentDuration == durantion || _lockSeeking) return;
+      if (_currentDuration == durantion || _lockSeeking || _unlockFlagSet) {
+        return;
+      }
       _currentDuration = durantion;
       _updateAudioProgress();
       notifyListeners();
@@ -40,13 +46,23 @@ class SongPlayer extends BaseChangeNotifier {
 
     // 播放器状态变化
     player.onPlayerStateChanged.listen((state) {
-      debugPrint('state changed-$state');
+      // debugPrint('state changed-$state');
+      notifyListeners();
     });
 
     // 拖拽结束
     player.onSeekComplete.listen((event) {
-      debugPrint("seek complete");
-      player.resume();
+      if (_unlockFlagSet) {
+        _unlockFlagSet = false;
+        player.resume();
+      }
+    });
+
+    player.onPlayerComplete.listen((event) {
+      notifyListeners();
+      if (autoPlayNextSong) {
+        playNext(ignoreOneloop: false);
+      }
     });
   }
 
@@ -74,12 +90,24 @@ class SongPlayer extends BaseChangeNotifier {
   PlayMode get playMode => _playMode;
   set playMode(PlayMode value) {
     if (_playMode != value) {
-      if (_playMode == PlayMode.loop) {
-      } else if (_playMode == PlayMode.oneloop) {
-      } else {}
+      _playMode = value;
       notifyListeners();
     }
   }
+
+  /// 切换播放模式
+  void switchPlayMode() {
+    if (playMode == PlayMode.loop) {
+      playMode = PlayMode.oneloop;
+    } else if (playMode == PlayMode.oneloop) {
+      playMode = PlayMode.random;
+    } else {
+      playMode = PlayMode.loop;
+    }
+  }
+
+  /// 当播完一首歌后自动播放下一首
+  bool autoPlayNextSong = true;
 
   /// 播放速率
   double rate = 1.0;
@@ -95,6 +123,9 @@ class SongPlayer extends BaseChangeNotifier {
   Duration _currentDuration = Duration.zero;
   Duration get currentDuration => _currentDuration;
 
+  /// 剩余播放时长
+  Duration get surplusDuration => totalDuration - currentDuration;
+
   /// 当前的歌单id
   int? songlistId;
 
@@ -105,19 +136,46 @@ class SongPlayer extends BaseChangeNotifier {
   SingleSongModel? _currentSong;
   SingleSongModel? get currentSong => _currentSong;
 
+  /// 记录两首歌的播放队列
+  PlaySongStack stack = PlaySongStack();
+
   /// 更新播放的歌曲
   void updatePlaySong(SingleSongModel? song) {
     if (song == null) return;
     _currentSong = song;
-    _currentDuration = Duration.zero;
-    _totalDuration = Duration.zero;
-    _progress = 0;
-    _lockSeeking = false;
+    _switchSong(song);
+    _initializePropertys();
+    if (!playlistIsEmpty) {
+      for (int i = 0; i < _allSongsLength; i++) {
+        final listSong = songs![i];
+        if (listSong.track?.id == song.track?.id) {
+          _playSongIndex = i;
+          break;
+        }
+      }
+    }
+    notifyListeners();
     stop();
   }
 
-  Source? _getCurrentSongSource() {
-    if (_currentSong == null) return null;
+  /// 初始化部分变量
+  void _initializePropertys() {
+    _currentDuration = Duration.zero;
+    // 如果第二首歌和前一首歌相同，那么duration回调将不会触发，因此需要判断下
+    if (stack.currentSongId != stack.previousSongId) {
+      _totalDuration = Duration.zero;
+    }
+    _progress = 0;
+    _lockSeeking = false;
+    _unlockFlagSet = false;
+  }
+
+  UrlSource? _getCurrentSongSource() {
+    if (_currentSong == null && playlistIsEmpty) return null;
+    if (_currentSong == null) {
+      _fixPlaySongIndexIfNeeded();
+      _currentSong = songs?[_playSongIndex];
+    }
     int? songId = _currentSong!.track?.id;
     if (songId == null) return null;
     return UrlSource(
@@ -127,12 +185,22 @@ class SongPlayer extends BaseChangeNotifier {
   // https://music.163.com/song/media/outer/url?id=id.mp3
   // https://music.163.com/song/media/outer/url?id=1930863429.mp3
   void play() {
-    // final source = _getCurrentSongSource();
-    // if (source != null) {
-    //   player.setSource(source);
-    // }
-    player.setSource(UrlSource(
-        "https://music.163.com/song/media/outer/url?id=1930863429.mp3"));
+    if (player.state == PlayerState.paused) {
+      player.resume();
+    } else {
+      UrlSource? source = _getCurrentSongSource();
+      if (source != null) {
+        player.play(source);
+      }
+          debugPrint(
+"""[play]ready to play id=${_currentSong?.track?.id}, 
+  name=${_currentSong?.track?.name}
+  url=${source?.url}
+  index=$_playSongIndex, all=$_allSongsLength
+  playmode=$playMode
+  songlistid=$songlistId
+--------------""");
+    }
   }
 
   void pause() {
@@ -159,21 +227,120 @@ class SongPlayer extends BaseChangeNotifier {
   }
 
   bool _lockSeeking = false;
+
+  /// 拖拽进度条时锁住时间进度，防止和本身播放进度冲突
   void lockSeek() {
     _lockSeeking = true;
   }
 
+  /// 表示进度条需要等待seek结束才能更新
+  bool _unlockFlagSet = false;
   void unlockSeek() {
     _lockSeeking = false;
+    _unlockFlagSet = true;
   }
 
+  /// 播放进度
   double _progress = 0.0;
   double get progress => _progress;
   void _updateAudioProgress() {
-    final p = _currentDuration.inMilliseconds / _totalDuration.inMilliseconds;
+    double p = 0;
+    if (_totalDuration == Duration.zero) {
+      p = 0;
+    } else {
+      p = _currentDuration.inMilliseconds / _totalDuration.inMilliseconds;
+    }
     if (_progress != p) {
       _progress = p;
       notifyListeners();
     }
   }
+
+  /// 播放下一首
+  /// - ignoreOneloop: 忽略单曲循环
+  void playNext({bool ignoreOneloop = true}) {
+    _playSongIndex = _getAPlaySongIndex(true, ignoreOneloop: ignoreOneloop);
+    _readyToPlayNewSong();
+    play();
+  }
+
+  /// 播放上一首
+  /// /// - ignoreOneloop: 忽略单曲循环
+  void playPrevious({bool ignoreOneloop = true}) {
+    _playSongIndex = _getAPlaySongIndex(false, ignoreOneloop: ignoreOneloop);
+    _readyToPlayNewSong();
+    play();
+  }
+
+  /// 获取一个播放下标
+  /// - isNext: 是否是播放下一首
+  /// - ignoreOneloop: 忽略单曲循环
+  int _getAPlaySongIndex(bool isNext, {bool ignoreOneloop = true}) {
+    if (playlistIsEmpty) return 0;
+    if (playMode == PlayMode.random) {
+      return _getRandomPlaySongIndex();
+    } else {
+      if (!ignoreOneloop && playMode == PlayMode.oneloop) {
+        return _playSongIndex;
+      } else {
+        if (isNext) {
+          return _playSongIndex == _allSongsLength - 1 ? 0 : _playSongIndex + 1;
+        } else {
+          return _playSongIndex == 0 ? _allSongsLength - 1 : _playSongIndex - 1;
+        }
+      }
+    }
+  }
+
+  /// 获取一个随机播放下表
+  int _getRandomPlaySongIndex() {
+    final random = Random();
+    return random.nextInt(_allSongsLength);
+  }
+
+  int get _allSongsLength => songs == null ? 0 : songs!.length;
+
+  /// 播放列表是否为空
+  bool get playlistIsEmpty => _allSongsLength == 0;
+
+  /// 播放音乐在播放列表中的下标
+  int _playSongIndex = 0;
+
+  /// 修正播放下标
+  void _fixPlaySongIndexIfNeeded() {
+    if (_playSongIndex < 0) {
+      _playSongIndex = 0;
+    }
+    if (playlistIsEmpty) return;
+    if (_playSongIndex >= _allSongsLength) {
+      _playSongIndex = _allSongsLength - 1;
+    }
+  }
+
+  /// 准备播放一首新歌
+  /// 在 [播放结束｜下一首｜上一首] 触发
+  void _readyToPlayNewSong() {
+    _fixPlaySongIndexIfNeeded();
+    if (playlistIsEmpty) {
+      updatePlaySong(null);
+    } else {
+      final song = songs![_playSongIndex];
+      updatePlaySong(song);
+    }
+  }
+
+  /// 切换歌曲的时候更新
+  void _switchSong(SingleSongModel song) {
+    stack.previousSong = stack.currentSong;
+    stack.currentSong = song;
+  }
+}
+
+/// 两首歌的队列，记录上一首歌和当前这个首歌的id
+class PlaySongStack {
+  SingleSongModel? previousSong;
+  SingleSongModel? currentSong;
+
+  int? get currentSongId => currentSong?.track?.id;
+  int? get previousSongId => previousSong?.track?.id;
 }

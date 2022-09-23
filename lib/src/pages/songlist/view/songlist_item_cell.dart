@@ -5,18 +5,20 @@ import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
-import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
+import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
 
 class SonglistItemCell extends StatefulWidget {
   const SonglistItemCell({
     Key? key,
     required this.model,
-    this.index
+    required this.onDoubleTap,
+    this.index,
     }) : super(key: key);
 
   final int? index;
-  final SonglistDetailModelTracks? model;
+  final SingleSongModel? model;
+  final OneParamCallback<SingleSongModel> onDoubleTap;
 
   @override
   State<StatefulWidget> createState() {
@@ -70,7 +72,7 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.model?.name ?? '',
+              widget.model?.track?.name ?? '',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
@@ -81,7 +83,7 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
             ),
             heightSpace(2),
             Text(
-              widget.model?.authorName ?? '',
+              widget.model?.track?.authorName ?? '',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
@@ -97,7 +99,7 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
 
     // 专辑名称
     Widget album = Text(
-      widget.model?.al?.name ?? '',
+      widget.model?.track?.al?.name ?? '',
       maxLines: 1,
       textAlign: TextAlign.center,
       style: const TextStyle(
@@ -109,7 +111,7 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
 
     // 时长
     Widget time = Text(
-      (widget.model?.dt ?? 0).formatDownTime,
+      (widget.model?.track?.dt ?? 0).formatDownTime,
       style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w500,
@@ -117,19 +119,32 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
       ),
     );
 
-    return Container(
-      height: 48,
-      padding: EdgeInsets.only(left: kPageContentPadding.left, right: kPageContentPadding.right),
-      color: backgroundHighlight ? kThinGreyColor : Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _boxAlignItem(Row(
-            children: left,
-          ), Alignment.centerLeft),
-          _boxAlignItem(album, Alignment.center),
-          _boxAlignItem(time, Alignment.centerRight)
-        ],
+    Color backgroundColor = backgroundHighlight ? kThinGreyColor : Colors.white;
+    if (getPlayer(context).currentSong?.track?.id == widget.model?.track?.id) {
+      // 正在播放同一首歌
+      backgroundColor = kMainThemeColor;
+    }
+
+    return GestureDetector(
+      onDoubleTap: () {
+        if (widget.model != null) {
+          widget.onDoubleTap(widget.model!);
+        }
+      },
+      child: Container(
+        height: 48,
+        padding: EdgeInsets.only(left: kPageContentPadding.left, right: kPageContentPadding.right),
+        color: backgroundColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _boxAlignItem(Row(
+              children: left,
+            ), Alignment.centerLeft),
+            _boxAlignItem(album, Alignment.center),
+            _boxAlignItem(time, Alignment.centerRight)
+          ],
+        ),
       ),
     );
   }

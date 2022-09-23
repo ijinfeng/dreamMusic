@@ -1558,7 +1558,7 @@ class SonglistModel {
   List<SingleSongModel> getSongs() {
     if (playlist?.tracks == null) return [];
     final tracks = playlist!.tracks!;
-    const List<SingleSongModel> ret = [];
+    List<SingleSongModel> ret = [];
     for (int i = 0; i < tracks.length; i++) {
       final track = tracks[i];
       ret.add(

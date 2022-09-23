@@ -33,11 +33,14 @@ class PlayerControl extends StatelessWidget with EasyInterface {
             width: width,
             height: width,
             color: controlColor,
-            onTap: (p0) {},
+            onTap: (p0) {
+              getPlayer(context).playPrevious();
+            },
           ),
           widthSpace(space),
           Selector<SongPlayer, bool>(
             selector: (p0, p1) {
+              // 当前播放状态·
               return p1.playing;
             },
             shouldRebuild: (previous, next) => previous != next,
@@ -50,7 +53,14 @@ class PlayerControl extends StatelessWidget with EasyInterface {
                 height: width + 10,
                 color: controlColor,
                 unColor: controlColor,
-                onTap: (p0) {},
+                onTap: (p0) {
+                  final player = getPlayer(context);
+                  if (value) {
+                    player.pause();
+                  } else {
+                    player.play();
+                  }
+                },
               );
             },
           ),
@@ -61,7 +71,9 @@ class PlayerControl extends StatelessWidget with EasyInterface {
             width: width,
             height: width,
             color: controlColor,
-            onTap: (p0) {},
+            onTap: (p0) {
+              getPlayer(context).playNext();
+            },
           ),
         ],
       ),
