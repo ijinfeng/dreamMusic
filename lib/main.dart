@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:dream_music/src/components/basic/common_material_app.dart';
 import 'package:dream_music/src/components/network/network_env_route.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/router/custom_navigator_observer.dart';
@@ -37,16 +38,8 @@ class MyApp extends StatelessWidget {
         })
       ],
       builder: (context, child) {
-        return MaterialApp(
+        return CommonMaterialApp(
           title: 'DreamMusic',
-          debugShowCheckedModeBanner: false,
-          onGenerateRoute: PageRouters.generateRoute,
-          themeMode: ThemeMode.light,
-          color: kPageBackgroundColor,
-          navigatorObservers: [CustomNavigatorObserver()],
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
           home: child,
           builder: EasyLoading.init(),
         );
@@ -62,46 +55,6 @@ class MyApp extends StatelessWidget {
           return const HomePage();
         },
       ),
-      // child: Selector<HomeStateModel, int>(
-      //   selector: (p0, p1) {
-      //     return p1.loginRefreshCode;
-      //   },
-      //   shouldRebuild: (previous, next) => previous != next,
-      //   builder: (context, value, child) {
-      //     return const HomePage();
-      //   },
-      // ),
     );
-    // return ChangeNotifierProvider(
-    //   create: (context) {
-    //     return HomeStateModel();
-    //   },
-    //   builder: (context, child) {
-    //     return MaterialApp(
-    //       title: 'DreamMusic',
-    //       debugShowCheckedModeBanner: false,
-    //       onGenerateRoute: PageRouters.generateRoute,
-    //       themeMode: ThemeMode.light,
-    //       color: kPageBackgroundColor,
-    //       navigatorObservers: [
-    //         CustomNavigatorObserver()
-    //       ],
-    //       theme: ThemeData(
-    //         primarySwatch: Colors.blue,
-    //       ),
-    //       home: child,
-    //       builder: EasyLoading.init(),
-    //     );
-    //   },
-    //   child: Selector<HomeStateModel, int>(
-    //     selector:(p0, p1) {
-    //       return p1.loginRefreshCode;
-    //     },
-    //     shouldRebuild: (previous, next) => previous != next,
-    //     builder: (context, value, child) {
-    //       return const HomePage();
-    //     },
-    //   ),
-    // );
   }
 }

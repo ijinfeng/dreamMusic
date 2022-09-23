@@ -5,13 +5,12 @@ import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/player_bar/play_progress_indicator.dart';
 import 'package:dream_music/src/pages/home/player_bar/player_controls.dart';
 import 'package:dream_music/src/pages/home/player_bar/song_info_view.dart';
 import 'package:dream_music/src/pages/home/player_bar/volume_control.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 
 class PlayerBar extends ProviderStatefulWidget {
@@ -110,7 +109,18 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
           height: width,
           color: kText3Color,
           unColor: kText3Color,
-          onTap: (p0) {},
+          onTap: (p0) {
+            print(
+              kHomeBodyScaffoldKey
+            );
+            print(
+              kHomeBodyScaffoldKey.currentWidget
+            );
+            print(
+              kHomeBodyScaffoldKey.currentState
+            );
+            kHomeBodyScaffoldKey.currentState?.openEndDrawer();
+          },
         ),
         widthSpace(space),
         const VolumeControl(),

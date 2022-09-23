@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
+import 'package:dream_music/src/components/basic/common_material_app.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
@@ -76,11 +77,7 @@ class _RightContentBodyState
       builder: (context, value, child) {
         return ClipRRect(
           key: Key("$value"),
-          child: MaterialApp(
-            onGenerateRoute: PageRouters.generateRoute,
-            debugShowCheckedModeBanner: false,
-            color: kPageBackgroundColor,
-            navigatorObservers: [CustomNavigatorObserver()],
+          child: CommonMaterialApp(
             theme: ThemeData(
               hoverColor: kMainThemeColor,
               splashColor: kMainThemeColor,
