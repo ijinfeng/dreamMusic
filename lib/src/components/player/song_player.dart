@@ -146,7 +146,7 @@ class SongPlayer extends BaseChangeNotifier {
     _switchSong(song);
     _initializePropertys();
     if (!playlistIsEmpty) {
-      for (int i = 0; i < _allSongsLength; i++) {
+      for (int i = 0; i < allSongsLength; i++) {
         final listSong = songs![i];
         if (listSong.track?.id == song.track?.id) {
           _playSongIndex = i;
@@ -196,7 +196,7 @@ class SongPlayer extends BaseChangeNotifier {
 """[play]ready to play id=${_currentSong?.track?.id}, 
   name=${_currentSong?.track?.name}
   url=${source?.url}
-  index=$_playSongIndex, all=$_allSongsLength
+  index=$_playSongIndex, all=$allSongsLength
   playmode=$playMode
   songlistid=$songlistId
 --------------""");
@@ -284,9 +284,9 @@ class SongPlayer extends BaseChangeNotifier {
         return _playSongIndex;
       } else {
         if (isNext) {
-          return _playSongIndex == _allSongsLength - 1 ? 0 : _playSongIndex + 1;
+          return _playSongIndex == allSongsLength - 1 ? 0 : _playSongIndex + 1;
         } else {
-          return _playSongIndex == 0 ? _allSongsLength - 1 : _playSongIndex - 1;
+          return _playSongIndex == 0 ? allSongsLength - 1 : _playSongIndex - 1;
         }
       }
     }
@@ -295,13 +295,14 @@ class SongPlayer extends BaseChangeNotifier {
   /// 获取一个随机播放下表
   int _getRandomPlaySongIndex() {
     final random = Random();
-    return random.nextInt(_allSongsLength);
+    return random.nextInt(allSongsLength);
   }
 
-  int get _allSongsLength => songs == null ? 0 : songs!.length;
+  /// 播放列表的长度
+  int get allSongsLength => songs == null ? 0 : songs!.length;
 
   /// 播放列表是否为空
-  bool get playlistIsEmpty => _allSongsLength == 0;
+  bool get playlistIsEmpty => allSongsLength == 0;
 
   /// 播放音乐在播放列表中的下标
   int _playSongIndex = 0;
@@ -312,8 +313,8 @@ class SongPlayer extends BaseChangeNotifier {
       _playSongIndex = 0;
     }
     if (playlistIsEmpty) return;
-    if (_playSongIndex >= _allSongsLength) {
-      _playSongIndex = _allSongsLength - 1;
+    if (_playSongIndex >= allSongsLength) {
+      _playSongIndex = allSongsLength - 1;
     }
   }
 
