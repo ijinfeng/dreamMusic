@@ -1,7 +1,9 @@
 import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
+import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_detail_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_url_model.dart';
+import 'package:flutter/material.dart';
 
 class SongDetailRequest {
   /// 获取歌曲详情
@@ -49,5 +51,36 @@ class SongDetailRequest {
         }
     );
     return res;
+  }
+
+  /// 喜欢音乐
+  /// - id: 歌曲id
+  /// - like: 布尔值 , 默认为 true 即喜欢 , 若传 false, 则取消喜欢
+  static Future<ResponseModel> like(int id, {bool? like = true}) {
+    final res = neRequest.get(
+      "/like",
+      queryParameters: {
+        "id": id,
+        "like": like
+      }
+    );
+    return res;
+  }
+
+  /// 喜欢音乐列表，需要登录
+  static Future<ResponseModel> likelist() {
+    if (AppSharedManager().isUserLogin() && AppSharedManager().hasAccount) {
+      final res = neRequest.get(
+      "/likelist",
+      searchKeyPath: "ids",
+      queryParameters: {
+        "uid": AppSharedManager().userModel?.account?.id
+      }
+    );
+    return res;
+    } else {
+      debugPrint("需要用户uid");
+      return Future.value(ResponseModel.empty());
+    }
   }
 }

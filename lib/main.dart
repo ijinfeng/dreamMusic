@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       },
       child: Selector2<HomeStateModel, NetworkEnv, String>(
         selector: (p0, p1, p2) {
-          return "${p1.loginRefreshCode}-${p2.initialized}";
+          return "${p1.uiRefreshCode}-${p2.initialized}";
         },
         shouldRebuild: (previous, next) {
           return previous != next;

@@ -11,6 +11,7 @@ import 'package:dream_music/src/pages/home/playlist/playlist_drawer.dart';
 import 'package:dream_music/src/pages/home/right_content/right_content.dart';
 import 'package:dream_music/src/pages/home/window_navigation_bar/window_navigation_bar.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
+import 'package:dream_music/src/pages/song_detail/request/song_detail_request.dart';
 import 'package:dream_music/src/pages/user/request/user_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +77,7 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
       dismissLoading();
       if (res.success) {
         debugPrint('游客登录成功');
-        homeState?.refreshByLogin();
+        homeState?.needRefresh();
       }
     });
   }

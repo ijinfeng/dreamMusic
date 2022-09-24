@@ -135,12 +135,12 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
       children: [
         MainButton.icon(
           icon: ImageView.asset(
-            src: 'assets/icon_play_full.png',
+            src: 'assets/icon_add.png',
             width: iconWidth,
             height: iconWidth,
             color: kHighlightThemeColor,
           ),
-          title: '播放',
+          title: '播放全部',
           padding: const EdgeInsets.symmetric(horizontal: 10),
           height: buttonHeight,
           fontSize: fontSize,

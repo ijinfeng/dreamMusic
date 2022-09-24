@@ -72,6 +72,13 @@ class SettingPage extends StatelessWidget with EasyInterface {
             heightSpace(10),
             MainButton.title(title: '播放音乐', onTap: () {
               getPlayer(context).play();
+            },),
+            heightSpace(10),
+            MainButton.title(title: '获取用户喜欢音乐列表', onTap: () async {
+              final res = await SongDetailRequest.likelist();
+              if (res.success) {
+                print(res.data);
+              }
             },)
           ],
         ),

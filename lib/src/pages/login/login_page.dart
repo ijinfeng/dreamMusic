@@ -143,7 +143,7 @@ class _LoginPageBodyState
   void _loginSuccess() {
     debugPrint('登录成功，开始刷新cookies');
     AppSharedManager().reloadCookies(() {
-      Provider.of<HomeStateModel>(context, listen: false).refreshByLogin();
+      Provider.of<HomeStateModel>(context, listen: false).needRefresh();
       Navigator.pop(context);
     });
   }
