@@ -1,7 +1,6 @@
+import 'package:dream_music/src/components/animation/magic_play_animation_icon.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
-import 'package:dream_music/src/components/image/image_view.dart';
-import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -45,6 +44,16 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
                   letterSpacing: 0
                 ),
       );
+      // 当前正在播放这首歌
+      if (getPlayer(context).currentSong?.track?.id == widget.model?.track?.id) {
+        text = MagicPlayAnimationIcon(
+          playing: getPlayer(context).playing,
+          color: kHighlightThemeColor,
+          width: 17,
+          height: 22,
+          stripeSpace: 1,
+        );
+      }
       text = Container(
         width: 30,
         alignment: Alignment.centerRight,
