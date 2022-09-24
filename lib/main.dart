@@ -3,6 +3,7 @@ import 'package:dream_music/src/components/basic/common_material_app.dart';
 import 'package:dream_music/src/components/network/network_env_route.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/router/custom_navigator_observer.dart';
+import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: NetworkEnv()),
         ChangeNotifierProvider(create: (context) {
           return SongPlayer();
-        })
+        }),
+        ChangeNotifierProvider.value(value: AppSharedManager()),
       ],
       builder: (context, child) {
         return CommonMaterialApp(
@@ -44,9 +46,9 @@ class MyApp extends StatelessWidget {
           builder: EasyLoading.init(),
         );
       },
-      child: Selector2<HomeStateModel, NetworkEnv, String>(
-        selector: (p0, p1, p2) {
-          return "${p1.uiRefreshCode}-${p2.initialized}";
+      child: Selector<NetworkEnv, bool>(
+        selector: (context, p1) {
+          return p1.initialized;
         },
         shouldRebuild: (previous, next) {
           return previous != next;

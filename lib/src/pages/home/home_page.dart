@@ -53,15 +53,6 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
   @override
   void initState() {
     super.initState();
-    AppSharedManager().initializedCallback = () {
-      // 未登录过，则使用游客身份登录
-      if (AppSharedManager().hasCookies == false) {
-        _requestAnonimousLogin();
-      } else {
-        // 表示已经登录过了，直接拉取用户信息
-        _getUserAccount();
-      }
-    };
   }
 
   HomeStateModel? get homeState {
@@ -71,32 +62,12 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
     return super.viewModel;
   }
 
-  void _requestAnonimousLogin() {
-    showLoading('游客身份登录中...');
-    LoginRequest.anonimousLogin().then((res) {
-      dismissLoading();
-      if (res.success) {
-        debugPrint('游客登录成功');
-        homeState?.needRefresh();
-      }
-    });
-  }
-
-  void _getUserAccount() async {
-    debugPrint('用户已登录，开始获取账号信息');
-    final res = await UserRequest.accountInfo();
-    if (res.success) {
-      debugPrint('已成功获取到用户账号信息: ${res.data}');
-      AppSharedManager().userModel = res.data;
-      homeState?.needRefresh();
-    }
-  }
-
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
-    return Selector<HomeStateModel, int>(
-      selector: (p0, p1) {
-        return p1.uiRefreshCode;
+    debugPrint("[home]首页刷新了----------");
+    return Selector2<HomeStateModel, AppSharedManager, String>(
+      selector: (cx, p1, p2) {
+        return "${p1.uiRefreshCode}-${p2.initialized}";
       },
       shouldRebuild: (previous, next) => previous != next,
       builder: (context, value, child) {

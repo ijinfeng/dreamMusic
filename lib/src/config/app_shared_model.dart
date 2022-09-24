@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dream_music/src/components/basic/base_change_notifier.dart';
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/network/request_config.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
 import 'package:dream_music/src/pages/song_detail/request/song_detail_request.dart';
@@ -10,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// 全局单利
-class AppSharedManager {
+class AppSharedManager extends BaseChangeNotifier with EasyInterface {
   static final AppSharedManager _manager = AppSharedManager._instance();
   factory AppSharedManager() => _manager;
 
@@ -19,20 +21,16 @@ class AppSharedManager {
     reloadCookies(() {
       /// 登录策略
       initializeAppAccount().then((value) {
+        _initialized = true;
         /// 登录后获取用户喜欢音乐id列表
         requestLikelistIds();
-        if (initializedCallback != null) {
-          _initialized = true;
-          initializedCallback!();
-        }
+        notifyListeners();
       });
     });
   }
 
   bool _initialized = false;
   bool get initialized => _initialized;
-
-  VoidCallback? initializedCallback;
 
   List<Cookie>? _cookies;
 
@@ -96,9 +94,6 @@ class AppSharedManager {
     likelistIds = null;
   }
 
-  /// 喜欢的音乐列表
-  List<int>? likelistIds;
-
   Future<bool> initializeAppAccount() {
     // 未登录过，则使用游客身份登录
     if (hasCookies == false) {
@@ -130,16 +125,58 @@ class AppSharedManager {
     return Future.value(res.success);
   }
 
+
+  /// 喜欢的音乐列表
+  List<int>? likelistIds;
+  int likelistRefreshCode = 0;
+
+  void needRefreshLikelist() {
+    likelistRefreshCode += 1;
+    notifyListeners(); 
+  }
+
+  /// 是否在用户的喜欢列表中
+  bool isLikeSong(int id) {
+    if (isUserLogin() && hasAccount && likelistIds != null) {
+      return likelistIds!.contains(id);
+    } else {
+      return false;
+    }
+  }
+
   /// 获取用户喜欢的音乐id列表
   void requestLikelistIds() async {
     if (isUserLogin() && hasAccount) {
       debugPrint("开始拉取用户喜欢的音乐id列表");
       final res = await SongDetailRequest.likelist();
       if (res.success) {
-        likelistIds = res.data;
+         likelistIds = res.datas;
+          needRefreshLikelist();
+          debugPrint("拉取到用户喜欢音乐共${likelistIds?.length}条");
       }
     } else {
       debugPrint("[error]未登录-拉取用户喜欢音乐列表");
+    }
+  }
+
+  /// 喜欢/不喜欢一首歌
+  void likeASong(int id, {bool like = true}) async {
+    if (isUserLogin() && hasAccount) {
+      final res = await SongDetailRequest.like(id, like: like);
+      if (res.success) {
+        if (like) {
+          if (!isLikeSong(id)) {
+            likelistIds?.add(id);
+          }
+          showToast("已添加到我喜欢的音乐");
+        } else {
+          likelistIds?.remove(id);
+          showToast("取消喜欢成功");
+        }
+        needRefreshLikelist();
+      }
+    } else {
+      debugPrint("[error]未登录-调用喜欢音乐接口");
     }
   }
 }

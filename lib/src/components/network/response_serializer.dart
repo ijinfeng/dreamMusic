@@ -114,9 +114,13 @@ class DefaultResponserSerializer extends ResponseSerializer {
       final resData = response.data;
       parseJson(resData, res, builder, rootKey, searchKeyPath);
     } else {
-      res.data = parseSearchKey(parseRootKey(response.data, rootKey), searchKeyPath);
+      final data = parseSearchKey(parseRootKey(response.data, rootKey), searchKeyPath);
+      if (data is List) {
+        res.datas = data.cast<T>();
+      } else {
+        res.data = data;
+      }
     }
-
     return res;
   }
 }

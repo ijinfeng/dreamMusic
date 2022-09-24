@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/dialog/dialog.dart';
 import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
@@ -70,8 +71,10 @@ class SettingPage extends StatelessWidget with EasyInterface {
               }
             },) ,
             heightSpace(10),
-            MainButton.title(title: '播放音乐', onTap: () {
-              getPlayer(context).play();
+            MainButton.title(title: '弹窗', onTap: () {
+                showXCDialog(context, content: '我是弹窗', actions: [
+                  DialogAction.sure()
+                ]);
             },),
             heightSpace(10),
             MainButton.title(title: '获取用户喜欢音乐列表', onTap: () async {

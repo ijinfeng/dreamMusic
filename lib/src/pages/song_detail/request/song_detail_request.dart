@@ -68,9 +68,8 @@ class SongDetailRequest {
   }
 
   /// 喜欢音乐列表，需要登录
-  static Future<ResponseModel> likelist() {
-    if (AppSharedManager().isUserLogin() && AppSharedManager().hasAccount) {
-      final res = neRequest.get(
+  static Future<ResponseModel<int>> likelist() {
+    final res = neRequest.get<int>(
       "/likelist",
       searchKeyPath: "ids",
       queryParameters: {
@@ -78,9 +77,5 @@ class SongDetailRequest {
       }
     );
     return res;
-    } else {
-      debugPrint("需要用户uid");
-      return Future.value(ResponseModel.empty());
-    }
   }
 }

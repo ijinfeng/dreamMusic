@@ -142,6 +142,7 @@ class SongPlayer extends BaseChangeNotifier {
   /// 更新播放的歌曲
   void updatePlaySong(SingleSongModel? song) {
     if (song == null) return;
+    if (song.track?.id == _currentSong?.track?.id) return;
     _currentSong = song;
     _switchSong(song);
     _initializePropertys();

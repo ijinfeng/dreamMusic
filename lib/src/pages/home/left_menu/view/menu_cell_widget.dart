@@ -24,10 +24,10 @@ class MenuCellWidegt extends StatelessWidget with EasyInterface {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ImageView.asset(
-            src: selected == true ? model?.selIcon ?? model?.icon : model?.icon,
+            src: model?.icon,
             width: 18,
             height: 18,
-            color: selected == true ? kHighlightThemeColor : null,
+            color: selected == true ? kHighlightThemeColor : kText3Color,
           ),
           widthSpace(8),
           Text(

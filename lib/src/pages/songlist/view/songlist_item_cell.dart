@@ -2,10 +2,12 @@ import 'package:dream_music/src/components/animation/magic_play_animation_icon.d
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
+import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SonglistItemCell extends StatefulWidget {
   const SonglistItemCell({
@@ -13,7 +15,7 @@ class SonglistItemCell extends StatefulWidget {
     required this.model,
     required this.onDoubleTap,
     this.index,
-    }) : super(key: key);
+  }) : super(key: key);
 
   final int? index;
   final SingleSongModel? model;
@@ -25,7 +27,8 @@ class SonglistItemCell extends StatefulWidget {
   }
 }
 
-class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface {
+class _SonglistItemCellState extends State<SonglistItemCell>
+    with EasyInterface {
   @override
   Widget build(BuildContext context) {
     // 背景是否高亮
@@ -36,16 +39,16 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
       int index = widget.index! + 1;
       backgroundHighlight = index % 2 != 0;
       Widget text = Text(
-        "${index < 10 ? "0":""}$index",
+        "${index < 10 ? "0" : ""}$index",
         style: const TextStyle(
-                  fontFamily: 'DINAlternate',
-                  fontSize: 17,
-                  color: kText9Color,
-                  letterSpacing: 0
-                ),
+            fontFamily: 'DINAlternate',
+            fontSize: 17,
+            color: kText9Color,
+            letterSpacing: 0),
       );
       // 当前正在播放这首歌
-      if (getPlayer(context).currentSong?.track?.id == widget.model?.track?.id) {
+      if (getPlayer(context).currentSong?.track?.id ==
+          widget.model?.track?.id) {
         text = MagicPlayAnimationIcon(
           playing: getPlayer(context).playing,
           color: kHighlightThemeColor,
@@ -64,11 +67,27 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
     // 喜欢
     left.addAll([
       widthSpace(10),
-      SelectableIconButton(selected: true, src: 'icon_like_full', unsrc: 'icon_like_empty',
-        width: 22, height: 22,
-        color: kRedColor,
-        onTap: (sel) {
-
+      Selector<AppSharedManager, int>(
+        selector: (p0, p1) {
+          return p1.likelistRefreshCode;
+        },
+        shouldRebuild: (previous, next) => previous != next,
+        builder: (context, value, child) {
+          final like = AppSharedManager().isLikeSong(widget.model?.track?.id ?? 0);
+          return SelectableIconButton(
+            selected:
+                like,
+            src: 'icon_like_full',
+            unsrc: 'icon_like_empty',
+            width: 22,
+            height: 22,
+            color: kRedColor,
+            onTap: (sel) {
+              if (widget.model?.track?.id != null) {
+                AppSharedManager().likeASong(widget.model!.track!.id!, like: !like);
+              }
+            },
+          );
         },
       )
     ]);
@@ -85,10 +104,9 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: kText3Color
-              ),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: kText3Color),
             ),
             heightSpace(2),
             Text(
@@ -96,10 +114,9 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: kText9Color
-              ),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: kText9Color),
             ),
           ],
         ),
@@ -112,20 +129,14 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
       maxLines: 1,
       textAlign: TextAlign.center,
       style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: kText9Color
-      ),
+          fontSize: 14, fontWeight: FontWeight.w500, color: kText9Color),
     );
 
     // 时长
     Widget time = Text(
       (widget.model?.track?.dt ?? 0).formatDownTime,
       style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: kText9Color
-      ),
+          fontSize: 14, fontWeight: FontWeight.w500, color: kText9Color),
     );
 
     Color backgroundColor = backgroundHighlight ? kThinGreyColor : Colors.white;
@@ -142,14 +153,17 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
       },
       child: Container(
         height: 48,
-        padding: EdgeInsets.only(left: kPageContentPadding.left, right: kPageContentPadding.right),
+        padding: EdgeInsets.only(
+            left: kPageContentPadding.left, right: kPageContentPadding.right),
         color: backgroundColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _boxAlignItem(Row(
-              children: left,
-            ), Alignment.centerLeft),
+            _boxAlignItem(
+                Row(
+                  children: left,
+                ),
+                Alignment.centerLeft),
             _boxAlignItem(album, Alignment.center),
             _boxAlignItem(time, Alignment.centerRight)
           ],
@@ -163,8 +177,9 @@ class _SonglistItemCellState extends State<SonglistItemCell> with EasyInterface 
     return Expanded(
       flex: 1,
       child: Align(
-      alignment: alignment,
-      child: current,
-    ),);
+        alignment: alignment,
+        child: current,
+      ),
+    );
   }
 }
