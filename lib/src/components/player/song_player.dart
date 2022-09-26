@@ -46,7 +46,7 @@ class SongPlayer extends BaseChangeNotifier {
 
     // 播放器状态变化
     player.onPlayerStateChanged.listen((state) {
-      // debugPrint('state changed-$state');
+      debugPrint('state changed-$state');
       notifyListeners();
     });
 
@@ -127,7 +127,13 @@ class SongPlayer extends BaseChangeNotifier {
   Duration get surplusDuration => totalDuration - currentDuration;
 
   /// 当前的歌单id
-  int? songlistId;
+  int? _songlistId;
+  int? get songlistId => _songlistId;
+  set songlistId(int? id) {
+    if (_songlistId == id) return;
+    _songlistId = id;
+    _playSongIndex = 0;
+  }
 
   /// 当前的歌单下的所有歌曲
   List<SingleSongModel>? songs;

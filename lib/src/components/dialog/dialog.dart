@@ -1,23 +1,25 @@
+import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:flutter/material.dart';
 
 
-const kDialogWidth = 295.0;
+const kDialogWidth = 320.0;
 const kDialogRowHeight = 43.0;
 
 /// 显示统一样式的对话框
-void showXCDialog(
+void showCommonDialog(
   BuildContext context, {
   String? title,
   required String content,
   TextStyle? titleStyle,
   TextStyle? contentStyle,
-  int? contentMaxlines = 2,
+  int? contentMaxlines,
   Widget? customContent,
   required List<DialogAction> actions,
 }) {
   assert(actions.isNotEmpty, '操作按钮为空');
   showDialog(
       context: context,
+      barrierColor: Colors.black12,
       builder: (context) {
         return Dialog(
           actions: actions,
@@ -90,9 +92,9 @@ class Dialog extends StatelessWidget {
         title!,
         textAlign: TextAlign.center,
         style: titleStyle ?? const TextStyle(
-            fontSize: 15,
+            fontSize: 17,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF333333)),
+            color: kText3Color),
         maxLines: 1,
       );
       contents.add(titleWidget);
@@ -100,7 +102,7 @@ class Dialog extends StatelessWidget {
 
     if (title?.isNotEmpty == true && content?.isNotEmpty == true) {
       contents.add(const SizedBox(
-        height: 5,
+        height: 15,
       ));
     }
 
@@ -109,9 +111,9 @@ class Dialog extends StatelessWidget {
         content!,
         textAlign: TextAlign.center,
         style: contentStyle ?? const TextStyle(
-            fontSize: 14,
+            fontSize: 16,
             fontWeight: FontWeight.w400,
-            color: Color(0xFF333333)),
+            color: kText3Color),
         maxLines: contentMaxlines,
       );
       contents.add(contentWidget);
@@ -145,7 +147,7 @@ class Dialog extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: action.highlight
-                    ? const Color(0xffF20000)
+                    ? kHighlightThemeColor
                     : const Color(0xff333333)),
           ));
       button = SizedBox(
@@ -168,7 +170,7 @@ class Dialog extends StatelessWidget {
         width: kDialogWidth,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(6),
         ),
         child: Material(
           color: Colors.transparent,

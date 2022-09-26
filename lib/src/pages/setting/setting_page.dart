@@ -72,8 +72,9 @@ class SettingPage extends StatelessWidget with EasyInterface {
             },) ,
             heightSpace(10),
             MainButton.title(title: '弹窗', onTap: () {
-                showXCDialog(context, content: '我是弹窗', actions: [
-                  DialogAction.sure()
+                showCommonDialog(context, title: "阿克苏机会发掘更多", content: '我是弹窗哈哈是的啊罚款是否打算看复活卡收到后发快递师傅算看复活卡收到后发快递师傅算看复活卡收到后发快递师傅算看复活卡收到后发快递师傅', actions: [
+                  DialogAction.sure(),
+                  DialogAction.cancel()
                 ]);
             },),
             heightSpace(10),

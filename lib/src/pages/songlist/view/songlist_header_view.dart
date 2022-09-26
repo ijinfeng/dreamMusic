@@ -1,14 +1,17 @@
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/dialog/dialog.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/rich_text/ff_rich_label.dart';
 import 'package:dream_music/src/components/rich_text/rich_text_define.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
+import 'package:dream_music/src/pages/songlist/model/songlist_state_model.dart';
 import 'package:dream_music/src/pages/songlist/view/song_tags_view.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
+import 'package:provider/provider.dart';
 
 class SonglistHeaderView extends StatelessWidget with EasyInterface {
   const SonglistHeaderView({Key? key, required this.model}) : super(key: key);
@@ -98,26 +101,25 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
         heightSpace(20),
         if (model?.description != null) ...[
           Padding(
-            padding: EdgeInsets.only(left: kPageContentPadding.left, right: kPageContentPadding.right),
+            padding: EdgeInsets.only(
+                left: kPageContentPadding.left,
+                right: kPageContentPadding.right),
             child: RepaintBoundary(
               child: FFRichLabel(
                 text: TextSpan(
-                  text: model?.description ?? '',
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: kText6Color)
-                ),
+                    text: model?.description ?? '',
+                    style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: kText6Color)),
                 overflow: RichTextOverflow.custom,
                 maxLines: 3,
                 overflowSpan: const TextSpan(
-                  text: ' 展开全部',
-                  style: TextStyle(
-                    fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: kText3Color
-                  )
-                ),
+                    text: ' 展开全部',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: kText3Color)),
               ),
             ),
           ),
@@ -145,7 +147,15 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
           height: buttonHeight,
           fontSize: fontSize,
           onTap: () {
-            showToast('点击播放');
+            showCommonDialog(context,
+                title: "替换播放列表",
+                content: "\"播放全部\"将会替换当前的播放列表，是否继续？",
+                actions: [
+                  DialogAction.cancel(),
+                  DialogAction.sure(title: '继续', onTap: () {
+_updatePlaylist(context);
+                  })
+                ]);
           },
         ),
         widthSpace(10),
@@ -162,7 +172,7 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
               "${(model?.subscribed ?? false) ? '已收藏' : '收藏'}(${(model?.subscribedCount ?? 0).longNumShow})",
           padding: const EdgeInsets.symmetric(horizontal: 10),
           height: buttonHeight,
-          highlight: model?.subscribed ?? false,
+          highlight: !(model?.subscribed ?? false),
           fontSize: fontSize,
           onTap: () {
             showToast('点击收藏');
@@ -170,5 +180,14 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
         ),
       ],
     );
+  }
+
+  void _updatePlaylist(BuildContext context) {
+    final state = Provider.of<SonglistStateModel>(context, listen: false);
+    final player = getPlayer(context);
+    player.songlistId = state.detailModel?.playlist?.id;
+    player.songs = state.songs;
+    player.updatePlaySong(player.songs?.first);
+    player.play();
   }
 }
