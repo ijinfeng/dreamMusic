@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/network/network_env_route.dart';
 import 'package:dream_music/src/pages/login/login_page.dart';
 import 'package:dream_music/src/pages/setting/setting_page.dart';
+import 'package:dream_music/src/pages/song_detail/song_detail_page.dart';
 import 'package:dream_music/src/pages/songlist/songlist_page.dart';
 import 'package:flutter/material.dart';
 import 'custom_routes.dart';
@@ -10,6 +11,7 @@ class PageRouters {
   static const String login = "login";
   static const String setting = "setting";
   static const String songlist = "songlist";
+  static const String songDetail = "songDetail";
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final name = settings.name;
@@ -19,7 +21,7 @@ class PageRouters {
       case login:
         return ModelRoute(settings: settings, child: const LoginPage());
       case setting:
-        return ModelRoute(settings: settings, child: SettingPage());
+        return ModelRoute(settings: settings, child: const SettingPage());
       case networkEnv:
         return ModelRoute(settings: settings, child: const NetworkEnvPage());
       case songlist:
@@ -30,6 +32,18 @@ class PageRouters {
           }
           return NoneAnimateRoute(
               settings: settings, child: SonglistPage(id: id));
+        }
+      case songDetail:
+        {
+          int id = 0;
+          if (args is int) {
+            id = args;
+          }
+          return ModelDownRoute(
+              settings: settings,
+              child: SongDetailPage(
+                id: id,
+              ));
         }
       default:
         return MaterialPageRoute(

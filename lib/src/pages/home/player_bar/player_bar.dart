@@ -110,15 +110,6 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
           color: kText3Color,
           unColor: kText3Color,
           onTap: (p0) {
-            print(
-              kHomeBodyScaffoldKey
-            );
-            print(
-              kHomeBodyScaffoldKey.currentWidget
-            );
-            print(
-              kHomeBodyScaffoldKey.currentState
-            );
             kHomeBodyScaffoldKey.currentState?.openEndDrawer();
           },
         ),

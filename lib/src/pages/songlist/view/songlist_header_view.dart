@@ -147,15 +147,7 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
           height: buttonHeight,
           fontSize: fontSize,
           onTap: () {
-            showCommonDialog(context,
-                title: "替换播放列表",
-                content: "\"播放全部\"将会替换当前的播放列表，是否继续？",
-                actions: [
-                  DialogAction.cancel(),
-                  DialogAction.sure(title: '继续', onTap: () {
-_updatePlaylist(context);
-                  })
-                ]);
+            _updatePlaylistIfNeeded(context);
           },
         ),
         widthSpace(10),
@@ -165,8 +157,7 @@ _updatePlaylist(context);
             width: iconWidth,
             height: iconWidth,
             color: (model?.subscribed ?? false)
-                ? kHighlightThemeColor
-                : kText6Color,
+                ? kText6Color : kHighlightThemeColor,
           ),
           title:
               "${(model?.subscribed ?? false) ? '已收藏' : '收藏'}(${(model?.subscribedCount ?? 0).longNumShow})",
@@ -182,12 +173,24 @@ _updatePlaylist(context);
     );
   }
 
-  void _updatePlaylist(BuildContext context) {
-    final state = Provider.of<SonglistStateModel>(context, listen: false);
+  void _updatePlaylistIfNeeded(BuildContext context) {
     final player = getPlayer(context);
-    player.songlistId = state.detailModel?.playlist?.id;
+    final state = Provider.of<SonglistStateModel>(context, listen: false);
+    if (player.songlistId == state.detailModel?.playlist?.id) {
+      showToast("当前正在播放中的列表");
+      return;
+    }
+    showCommonDialog(context,
+                title: "替换播放列表",
+                content: "\"播放全部\"将会替换当前的播放列表，是否继续？",
+                actions: [
+                  DialogAction.cancel(),
+                  DialogAction.sure(title: '继续', onTap: () {
+                    player.songlistId = state.detailModel?.playlist?.id;
     player.songs = state.songs;
     player.updatePlaySong(player.songs?.first);
     player.play();
+                  })
+                ]);
   }
 }

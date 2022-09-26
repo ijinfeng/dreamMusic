@@ -83,6 +83,10 @@ class SettingPage extends StatelessWidget with EasyInterface {
               if (res.success) {
                 print(res.data);
               }
+            },),
+            heightSpace(10),
+            MainButton.title(title: '获取歌词', onTap: () {
+              SongDetailRequest.lyric(347230);
             },)
           ],
         ),

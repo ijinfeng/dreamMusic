@@ -62,10 +62,36 @@ class ModelRoute extends PageRouteBuilder {
             transitionsBuilder: (context, from, to, child) {
               return SlideTransition(
                 position:
-                    Tween(begin: const Offset(0, 1.0), end: const Offset(0, 0))
+                    Tween(begin:const Offset(0, 1.0), end:const Offset(0, 0))
                         .animate(CurvedAnimation(
                             parent: from, curve: Curves.fastOutSlowIn)),
                 child: child,
+              );
+            });
+}
+
+// 页面从上往下
+class ModelDownRoute extends PageRouteBuilder {
+  final Widget child;
+  final int duration;
+
+  ModelDownRoute({
+    RouteSettings? settings,
+    required this.child,
+    this.duration = 300,
+  }) : super(
+            settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) => child,
+            transitionDuration: Duration(milliseconds: duration),
+            transitionsBuilder: (context, from, to, child) {
+              return ClipRRect(
+                child: SlideTransition(
+                  position:
+                      Tween(begin:const Offset(0, -1.0), end:const Offset(0, 0.0))
+                          .animate(CurvedAnimation(
+                              parent: from, curve: Curves.fastOutSlowIn)),
+                  child: child,
+                ),
               );
             });
 }

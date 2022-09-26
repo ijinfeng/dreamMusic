@@ -18,9 +18,11 @@ class FindRecommendItemCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerUp: onTap != null ? (event){
-        onTap!(model);
-      } : null,
+      onPointerUp: onTap != null
+          ? (event) {
+              onTap!(model);
+            }
+          : null,
       child: Column(
         children: [
           _BackPicture(model: model),
@@ -28,9 +30,7 @@ class FindRecommendItemCell extends StatelessWidget {
             model.name ?? '',
             maxLines: 2,
             style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: kText3Color),
+                fontSize: 14, fontWeight: FontWeight.w400, color: kText3Color),
           )
         ],
       ),
