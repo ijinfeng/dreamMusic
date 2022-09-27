@@ -27,9 +27,6 @@ class SongLyricRowModel {
     final ts = timeStr!.split(":");
     double scale = 1;
     double res = 0;
-    if (timeStr == "01:02.133") {
-      debugPrint("--");
-    }
     for (int i = ts.length - 1; i >= 0; i--) {
       final t = ts[i];
       final dt = double.tryParse(t) ?? 0;
