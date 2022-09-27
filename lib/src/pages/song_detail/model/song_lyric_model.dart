@@ -1,3 +1,8 @@
+import 'dart:ffi';
+
+import 'package:dream_music/src/pages/song_detail/model/song_lyric_row_model.dart';
+import 'package:flutter/material.dart';
+
 ///
 ///2022-9-1 2022/9/26
 ///
@@ -195,9 +200,15 @@ class SongLyricModel {
   bool? sfy;
   bool? qfy;
   SongLyricModelLyricUser? lyricUser;
+
+  /// 原曲歌词
   SongLyricModelLrc? lrc;
   SongLyricModelKlyric? klyric;
+
+  /// 英文歌会有这个
   SongLyricModelTlyric? tlyric;
+
+  /// 中文歌的英文版本
   SongLyricModelRomalrc? romalrc;
   int? code;
 
@@ -216,11 +227,21 @@ class SongLyricModel {
     sgc = json['sgc'];
     sfy = json['sfy'];
     qfy = json['qfy'];
-    lyricUser = (json['lyricUser'] != null && (json['lyricUser'] is Map)) ? SongLyricModelLyricUser.fromJson(json['lyricUser']) : null;
-    lrc = (json['lrc'] != null && (json['lrc'] is Map)) ? SongLyricModelLrc.fromJson(json['lrc']) : null;
-    klyric = (json['klyric'] != null && (json['klyric'] is Map)) ? SongLyricModelKlyric.fromJson(json['klyric']) : null;
-    tlyric = (json['tlyric'] != null && (json['tlyric'] is Map)) ? SongLyricModelTlyric.fromJson(json['tlyric']) : null;
-    romalrc = (json['romalrc'] != null && (json['romalrc'] is Map)) ? SongLyricModelRomalrc.fromJson(json['romalrc']) : null;
+    lyricUser = (json['lyricUser'] != null && (json['lyricUser'] is Map))
+        ? SongLyricModelLyricUser.fromJson(json['lyricUser'])
+        : null;
+    lrc = (json['lrc'] != null && (json['lrc'] is Map))
+        ? SongLyricModelLrc.fromJson(json['lrc'])
+        : null;
+    klyric = (json['klyric'] != null && (json['klyric'] is Map))
+        ? SongLyricModelKlyric.fromJson(json['klyric'])
+        : null;
+    tlyric = (json['tlyric'] != null && (json['tlyric'] is Map))
+        ? SongLyricModelTlyric.fromJson(json['tlyric'])
+        : null;
+    romalrc = (json['romalrc'] != null && (json['romalrc'] is Map))
+        ? SongLyricModelRomalrc.fromJson(json['romalrc'])
+        : null;
     code = int.tryParse(json['code']?.toString() ?? '');
   }
   Map<String, dynamic> toJson() {
@@ -245,5 +266,72 @@ class SongLyricModel {
     }
     data['code'] = code;
     return data;
+  }
+
+  List<SongLyricRowModel> parseLyricToRows() {
+    List<SongLyricRowModel> rows = [];
+    if (lrc != null && lrc?.lyric?.isNotEmpty == true) {
+      final lyric = lrc!.lyric!;
+      final lyricSubs = lyric.split("\n");
+      debugPrint("-----------------------歌词------------------");
+      // [00:00.000] 作词 : 黄家驹
+      final Map<String, List<String?>> lyricMap = {};
+
+      for (final sub in lyricSubs) {
+        final two = sub.split("]");
+        if (two.length > 1) {
+          final time = two.first.substring(1);
+          final content = two.length > 1 ? two.last : null;
+          lyricMap[time] = [content];
+        }
+      }
+
+      if (tlyric != null && tlyric?.lyric?.isNotEmpty == true) {
+        final lyricSubs = tlyric!.lyric!.split("\n");
+        for (final sub in lyricSubs) {
+          final two = sub.split("]");
+          if (two.length > 1) {
+            final time = two.first.substring(1);
+            final content = two.length > 1 ? two.last : null;
+            final list = lyricMap[time];
+            if (list != null) {
+              lyricMap[time]?.add(content);
+            } else {
+              lyricMap[time] = [content];
+            }
+          }
+        }
+      }
+
+      if (romalrc != null && romalrc?.lyric?.isNotEmpty == true) {
+        final lyricSubs = romalrc!.lyric!.split("\n");
+        for (final sub in lyricSubs) {
+          final two = sub.split("]");
+          if (two.length > 1) {
+            final time = two.first.substring(1);
+            final content = two.length > 1 ? two.last : null;
+            final list = lyricMap[time];
+            if (list != null) {
+              lyricMap[time]?.add(content);
+            } else {
+              lyricMap[time] = [content];
+            }
+          }
+        }
+      }
+      lyricMap.forEach((key, value) {
+        rows.add(SongLyricRowModel(
+            timeStr: key,
+            mainLyric: value.first,
+            subLyric: value.length > 1 ? value.last : null));
+      });
+    } else {
+      // 纯音乐
+
+    }
+    for (var row in rows) {
+      debugPrint(row.toString());
+    }
+    return rows;
   }
 }

@@ -34,4 +34,14 @@ mixin EasyInterface {
   SongPlayer getPlayer(BuildContext context) {
     return Provider.of<SongPlayer>(context, listen: false);
   }
+
+  Widget easySongIdSelector(ValueWidgetBuilder<int?> builder) {
+    return Selector<SongPlayer, int?>(
+      selector:(p0, p1) {
+        return p1.currentSong?.track?.id;
+      },
+      shouldRebuild: (previous, next) => previous != next,
+      builder: builder,
+    );
+  }
 }

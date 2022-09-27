@@ -3,6 +3,7 @@ import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/hover/hover_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
+import 'package:dream_music/src/components/router/route_control_manager.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
@@ -99,9 +100,13 @@ class SongInfoView extends StatelessWidget with EasyInterface {
                       ),
                       onTap: () {
                         if (kHomeBodyScaffoldKey.currentContext != null) {
-                          Navigator.pushNamed(
+                          if (RouteControlManager().hasOpenSongDetailRoute()) {
+                            Navigator.pop(kHomeBodyScaffoldKey.currentContext!);
+                          } else {
+                            Navigator.pushNamed(
                               kHomeBodyScaffoldKey.currentContext!,
                               PageRouters.songDetail, arguments: model?.id);
+                          }
                         }
                       },
                     ))
@@ -125,6 +130,8 @@ class SongInfoView extends StatelessWidget with EasyInterface {
                     ),
                     Text(
                       model!.authorName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 12,
                           color: kText6Color,

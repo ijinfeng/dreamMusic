@@ -415,6 +415,7 @@ class SonglistDetailModelTracks {
   int? copyright;
   int? sId;
   int? mark;
+  /// 0: 未知 1: 原曲 2: 翻唱
   int? originCoverType;
   String? originSongSimpleData;
   String? tagPicList;
@@ -423,6 +424,7 @@ class SonglistDetailModelTracks {
   String? songJumpInfo;
   String? entertainmentTags;
   int? single;
+  /// 是否有版权，null表示可以播
   String? noCopyrightRcmd;
   int? rtype;
   String? rurl;

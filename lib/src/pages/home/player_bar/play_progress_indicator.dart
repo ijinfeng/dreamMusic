@@ -6,11 +6,21 @@ import 'package:provider/provider.dart';
 
 /// 播放进度条
 class PlayProgressIndicator extends StatelessWidget with EasyInterface {
-  const PlayProgressIndicator({Key? key}) : super(key: key);
+  const PlayProgressIndicator({
+    Key? key,
+    this.activeTrackColor = kText3Color,
+    this.inactiveTrackColor = kPageBackgroundColor,
+    this.progressRadius = 2.0,
+    this.trackHeight = 2.0,
+    }) : super(key: key);
+
+  final Color activeTrackColor;
+  final Color inactiveTrackColor;
+  final double progressRadius;
+  final double trackHeight;
 
   @override
   Widget build(BuildContext context) {
-    const double progressRadius = 2.0;
     return Selector<SongPlayer, double>(
       selector: (p0, p1) {
         return p1.progress;
@@ -21,13 +31,14 @@ class PlayProgressIndicator extends StatelessWidget with EasyInterface {
       builder: (context, value, child) {
         return SliderTheme(
             data: SliderTheme.of(context).copyWith(
-                activeTrackColor: kText3Color,
-                inactiveTrackColor: kPageBackgroundColor,
+                activeTrackColor: activeTrackColor,
+                inactiveTrackColor: inactiveTrackColor,
                 thumbColor: Colors.transparent,
-                overlayShape: const RoundSliderOverlayShape(overlayRadius: progressRadius),
+                overlayShape: RoundSliderOverlayShape(overlayRadius: progressRadius),
+                trackShape: CustomRoundedRectSliderTrackShape(),
                 overlayColor: kText3Color,
-                trackHeight: progressRadius,
-                thumbShape: const RoundSliderThumbShape(
+                trackHeight: trackHeight,
+                thumbShape: RoundSliderThumbShape(
                     enabledThumbRadius: progressRadius,
                     disabledThumbRadius: progressRadius,
                     elevation: 0,
@@ -50,5 +61,12 @@ class PlayProgressIndicator extends StatelessWidget with EasyInterface {
             ));
       },
     );
+  }
+}
+
+class CustomRoundedRectSliderTrackShape extends RoundedRectSliderTrackShape {
+  @override
+  void paint(PaintingContext context, Offset offset, {required RenderBox parentBox, required SliderThemeData sliderTheme, required Animation<double> enableAnimation, required TextDirection textDirection, required Offset thumbCenter, bool isDiscrete = false, bool isEnabled = false, double additionalActiveTrackHeight = 2}) {
+    super.paint(context, offset, parentBox: parentBox, sliderTheme: sliderTheme, enableAnimation: enableAnimation, textDirection: textDirection, thumbCenter: thumbCenter, isDiscrete: isDiscrete, isEnabled: isEnabled, additionalActiveTrackHeight: 0);
   }
 }

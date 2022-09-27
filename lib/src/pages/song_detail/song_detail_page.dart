@@ -1,40 +1,17 @@
 import 'dart:ui';
 
-import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
-import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
-import 'package:dream_music/src/pages/song_detail/model/song_detail_state_model.dart';
 import 'package:dream_music/src/pages/song_detail/view/song_lyric_view.dart';
 import 'package:dream_music/src/pages/song_detail/view/song_playing_disk_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SongDetailPage extends ProviderStatefulWidget {
+class SongDetailPage extends StatelessWidget {
   const SongDetailPage({Key? key, required this.id}) : super(key: key);
 
   final int id;
-
-  @override
-  ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {
-    return _SongDetailPageState();
-  }
-}
-
-class _SongDetailPageState
-    extends ProviderState<SongDetailPage, SongDetailStateModel> {
-  @override
-  void initState() {
-    super.initState();
-
-  }
-
-  @override
-  SongDetailStateModel? createViewModel() {
-    return SongDetailStateModel(widget.id);
-  }
-
   /// 模糊背景
   Widget _buildShadowBackground(BuildContext context) {
     double width = 130;
@@ -84,7 +61,7 @@ class _SongDetailPageState
   }
 
   @override
-  Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
+  Widget build(BuildContext context) {
     return CommonScaffold(
       hideNavigationBar: true,
       body: Stack(
@@ -95,7 +72,8 @@ class _SongDetailPageState
               constraints: const BoxConstraints(maxWidth: 850),
               padding: kPageContentPadding,
               child: Row(
-                children: const [SongPlayingDiskView(), SongLyricView()],
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [Flexible(child: SongPlayingDiskView()), Flexible(child: SongLyricView())],
               ),
             ),
           )

@@ -22,72 +22,104 @@ class SettingPage extends StatelessWidget with EasyInterface {
       body: Center(
         child: Column(
           children: [
-            MainButton.title(title: '设置', onTap: () {
-              Navigator.pushNamed(context, PageRouters.setting);
-            },),
-            MainButton.title(title: '登录', onTap: () {
-              Navigator.pushNamed(context, PageRouters.login);
-            },),
             MainButton.title(
-              title: '退出登录', 
+              title: '设置',
+              onTap: () {
+                Navigator.pushNamed(context, PageRouters.setting);
+              },
+            ),
+            MainButton.title(
+              title: '登录',
+              onTap: () {
+                Navigator.pushNamed(context, PageRouters.login);
+              },
+            ),
+            MainButton.title(
+              title: '退出登录',
               width: 120,
               height: 40,
               onTap: () {
-              LoginRequest.logout().then((res) {
+                LoginRequest.logout().then((res) {
+                  if (res.success) {
+                    showToast('退出登录成功');
+                    AppSharedManager().clearAccount();
+                    Provider.of<HomeStateModel>(context, listen: false)
+                        .needRefresh();
+                    Navigator.pop(context);
+                  }
+                });
+              },
+            ),
+            MainButton.title(
+              title: '29850531详情',
+              onTap: () async {
+                final res =
+                    await SongDetailRequest.details([29850531], noCache: true);
+                if (res.success) {}
+              },
+            ),
+            MainButton.title(
+              title: '喜欢347230',
+              onTap: () {
+                neRequest.get('/like',
+                    queryParameters: {"id": 347230}, addTimestamp: true);
+              },
+            ),
+            MainButton.title(
+              title: 'userInfo',
+              onTap: () {
+                _getUserAccount();
+              },
+            ),
+            heightSpace(10),
+            MainButton.title(
+              title: '获取歌单[7217230485]所有歌曲',
+              onTap: () async {
+                final res = await SonglistRequest.trackAll(7217230485);
+                if (res.success) {}
+              },
+            ),
+            heightSpace(10),
+            MainButton.title(
+              title: '获取歌曲347230url',
+              onTap: () async {
+                final res = await SongDetailRequest.songUrl([347230]);
+                if (res.success) {}
+              },
+            ),
+            heightSpace(10),
+            MainButton.title(
+              title: '弹窗',
+              onTap: () {
+                showCommonDialog(context,
+                    title: "阿克苏机会发掘更多",
+                    content:
+                        '我是弹窗哈哈是的啊罚款是否打算看复活卡收到后发快递师傅算看复活卡收到后发快递师傅算看复活卡收到后发快递师傅算看复活卡收到后发快递师傅',
+                    actions: [DialogAction.sure(), DialogAction.cancel()]);
+              },
+            ),
+            heightSpace(10),
+            MainButton.title(
+              title: '获取用户喜欢音乐列表',
+              onTap: () async {
+                final res = await SongDetailRequest.likelist();
                 if (res.success) {
-                  showToast('退出登录成功');
-                  AppSharedManager().clearAccount();
-                  Provider.of<HomeStateModel>(context, listen: false).needRefresh();
-                  Navigator.pop(context);
+                  print(res.data);
                 }
-              });
-            },),
-            MainButton.title(title: '29850531详情', onTap: () async {
-              final res = await SongDetailRequest.details([29850531], noCache: true);
-              if (res.success) {
-
-              }
-            },),
-            MainButton.title(title: '喜欢347230', onTap: () {
-              neRequest.get('/like', queryParameters: {
-                "id": 347230
-              }, addTimestamp: true);
-            },),
-            MainButton.title(title: 'userInfo', onTap: () {
-              _getUserAccount();
-            },),
+              },
+            ),
             heightSpace(10),
-            MainButton.title(title: '获取歌单[7217230485]所有歌曲', onTap: () async {
-              final res = await SonglistRequest.trackAll(7217230485);
-              if (res.success) {
-                
-              }
-            },),
-            heightSpace(10),
-            MainButton.title(title: '获取歌曲347230url', onTap: ()async {
-              final res = await SongDetailRequest.songUrl([347230]);
-              if (res.success) {
-
-              }
-            },) ,
-            heightSpace(10),
-            MainButton.title(title: '弹窗', onTap: () {
-                showCommonDialog(context, title: "阿克苏机会发掘更多", content: '我是弹窗哈哈是的啊罚款是否打算看复活卡收到后发快递师傅算看复活卡收到后发快递师傅算看复活卡收到后发快递师傅算看复活卡收到后发快递师傅', actions: [
-                  DialogAction.sure(),
-                  DialogAction.cancel()
-                ]);
-            },),
-            heightSpace(10),
-            MainButton.title(title: '获取用户喜欢音乐列表', onTap: () async {
-              final res = await SongDetailRequest.likelist();
-              if (res.success) {
-                print(res.data);
-              }
-            },),
-            heightSpace(10),
-            MainButton.title(title: '获取歌词', onTap: () {
-              SongDetailRequest.lyric(347230);
-            },)
+            MainButton.title(
+              title: '获取歌词',
+              onTap: () {
+                SongDetailRequest.lyric(347230).then((value) {
+                  if (value.success) {
+                    final lyric = value.data;
+                    lyric?.parseLyricToRows();
+                  }
+                });
+              },
+            ),
           ],
         ),
       ),

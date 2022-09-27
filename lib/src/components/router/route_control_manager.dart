@@ -1,5 +1,6 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
+import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:flutter/material.dart';
 
 enum RouteActionType {
@@ -139,6 +140,27 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
     }
     return false;
   }
+
+  /// 是否已经打开了音乐播放详情页
+  bool hasOpenSongDetailRoute() {
+    printRoutesDetail();
+    bool res = false;
+    return res;
+  }
+
+  void printRoutesDetail() {
+    debugPrint("====================\n[route]length=${_actions.length},current=$_currentIndex");
+    for (int i = _actions.length - 1; i > 0; i--) {
+      final action = _actions[i];
+      String t = action.toString();
+      if (i == _currentIndex) {
+        t = "---->$t";
+      } else {
+        t = "\t$t";
+      }
+      debugPrint(t);
+    }
+  }
 }
 
 abstract class RouteAction {
@@ -157,7 +179,7 @@ class PageRouteAction extends RouteAction {
 
   @override
   String toString() {
-    return "[route-action]page, name=${settings.name}";
+    return "[route]page, name=${settings.name}";
   }
 }
 
@@ -168,6 +190,6 @@ class TabRouteAction extends RouteAction {
 
   @override
   String toString() {
-    return "[route-action]tab, index=$index";
+    return "[route]tab, index=$index";
   }
 }

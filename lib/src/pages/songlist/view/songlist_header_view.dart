@@ -157,7 +157,8 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
             width: iconWidth,
             height: iconWidth,
             color: (model?.subscribed ?? false)
-                ? kText6Color : kHighlightThemeColor,
+                ? kText6Color
+                : kHighlightThemeColor,
           ),
           title:
               "${(model?.subscribed ?? false) ? '已收藏' : '收藏'}(${(model?.subscribedCount ?? 0).longNumShow})",
@@ -180,17 +181,26 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
       showToast("当前正在播放中的列表");
       return;
     }
-    showCommonDialog(context,
-                title: "替换播放列表",
-                content: "\"播放全部\"将会替换当前的播放列表，是否继续？",
-                actions: [
-                  DialogAction.cancel(),
-                  DialogAction.sure(title: '继续', onTap: () {
-                    player.songlistId = state.detailModel?.playlist?.id;
-    player.songs = state.songs;
-    player.updatePlaySong(player.songs?.first);
-    player.play();
-                  })
-                ]);
+    void playCallback() {
+      player.songlistId = state.detailModel?.playlist?.id;
+      player.songs = state.songs;
+      player.updatePlaySong(player.songs?.first);
+      player.play();
+    }
+    if (player.songlistId == null) {
+      playCallback();
+    } else {
+      showCommonDialog(context,
+          title: "替换播放列表",
+          content: "\"播放全部\"将会替换当前的播放列表，是否继续？",
+          actions: [
+            DialogAction.cancel(),
+            DialogAction.sure(
+                title: '继续',
+                onTap: () {
+                  playCallback();
+                })
+          ]);
+    }
   }
 }

@@ -63,7 +63,10 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
           left: 0,
           right: 0,
           bottom: 0,
-          child: PlayProgressIndicator(),
+          child: PlayProgressIndicator(
+            trackHeight: 2,
+            progressRadius: 0,
+          ),
         )
       ],
     );
