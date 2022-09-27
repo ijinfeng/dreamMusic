@@ -6,6 +6,7 @@ import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 
 class UserInfoCard extends StatelessWidget with EasyInterface {
@@ -33,7 +34,9 @@ class UserInfoCard extends StatelessWidget with EasyInterface {
           // 跳转个人主页
           Navigator.pushNamed(context, PageRouters.setting);
         } else {
-          Navigator.pushNamed(context, PageRouters.login);
+          if (kTopPageScaffoldKey.currentContext != null) {
+            Navigator.pushNamed(kTopPageScaffoldKey.currentContext!, PageRouters.login);
+          }
         }
     },
      child: SizedBox(

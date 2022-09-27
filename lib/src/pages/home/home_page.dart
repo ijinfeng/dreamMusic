@@ -16,6 +16,8 @@ import 'package:dream_music/src/pages/user/request/user_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// 最顶层
+final GlobalKey<ScaffoldState> kTopPageScaffoldKey = GlobalKey(debugLabel: "top-page-gkey");
 final GlobalKey<ScaffoldState> kHomeBodyScaffoldKey = GlobalKey(debugLabel: 'home-body-gkey');
 
 class HomePage extends StatelessWidget {
@@ -24,6 +26,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: kTopPageScaffoldKey,
       backgroundColor: kPageBackgroundColor,
       floatingActionButton: Builder(
         builder: (context) {
