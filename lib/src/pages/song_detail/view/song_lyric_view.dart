@@ -5,6 +5,7 @@ import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
+import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -172,21 +173,24 @@ class LyricListView extends StatelessWidget {
                   selector: (p0, p1) => p1.autoScrollToPlayingLyric,
                   shouldRebuild: (previous, next) => previous != next,
                   builder: (context, value, child) {
-                    return SelectableIconButton(
-                      selected: value,
-                      src: 'icon_lyric_lock.png',
-                      unsrc: 'icon_lyric_location.png',
-                      color: kText3Color,
-                      unColor: kText3Color,
-                      width: 38,
-                      height: 38,
-                      onTap: (_) {
-                        viewModel.autoScrollToPlayingLyric =
-                            !viewModel.autoScrollToPlayingLyric;
-                        if (viewModel.autoScrollToPlayingLyric) {
-                          viewModel.scrollToRow(viewModel.lastSelectedRow);
-                        }
-                      },
+                    return CustomTooltipWidget(
+                      message: value ? '取消锁定' : '跟随歌词',
+                      child: SelectableIconButton(
+                        selected: value,
+                        src: 'icon_lyric_lock.png',
+                        unsrc: 'icon_lyric_location.png',
+                        color: kText3Color,
+                        unColor: kText3Color,
+                        width: 38,
+                        height: 38,
+                        onTap: (_) {
+                          viewModel.autoScrollToPlayingLyric =
+                              !viewModel.autoScrollToPlayingLyric;
+                          if (viewModel.autoScrollToPlayingLyric) {
+                            viewModel.scrollToRow(viewModel.lastSelectedRow);
+                          }
+                        },
+                      ),
                     );
                   },
                 ),

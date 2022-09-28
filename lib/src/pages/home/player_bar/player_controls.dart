@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
+import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/config/global_constant.dart';
@@ -27,15 +28,18 @@ class PlayerControl extends StatelessWidget with EasyInterface {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SelectableIconButton(
-            selected: true,
-            src: 'song_control_previous.png',
-            width: width,
-            height: width,
-            color: controlColor,
-            onTap: (p0) {
-              getPlayer(context).playPrevious();
-            },
+          CustomTooltipWidget(
+            message: '上一曲',
+            child: SelectableIconButton(
+              selected: true,
+              src: 'song_control_previous.png',
+              width: width,
+              height: width,
+              color: controlColor,
+              onTap: (p0) {
+                getPlayer(context).playPrevious();
+              },
+            ),
           ),
           widthSpace(space),
           Selector<SongPlayer, bool>(
@@ -45,7 +49,7 @@ class PlayerControl extends StatelessWidget with EasyInterface {
             },
             shouldRebuild: (previous, next) => previous != next,
             builder: (context, value, child) {
-              return SelectableIconButton(
+              Widget current = SelectableIconButton(
                 selected: !value,
                 src: 'song_control_play.png',
                 unsrc: 'song_control_pause.png',
@@ -62,18 +66,25 @@ class PlayerControl extends StatelessWidget with EasyInterface {
                   }
                 },
               );
+              return CustomTooltipWidget(
+                message: value ? '暂停' : '播放',
+                child: current,
+              );
             },
           ),
           widthSpace(space),
-          SelectableIconButton(
-            selected: true,
-            src: 'song_control_next.png',
-            width: width,
-            height: width,
-            color: controlColor,
-            onTap: (p0) {
-              getPlayer(context).playNext();
-            },
+          CustomTooltipWidget(
+            message: '下一曲',
+            child: SelectableIconButton(
+              selected: true,
+              src: 'song_control_next.png',
+              width: width,
+              height: width,
+              color: controlColor,
+              onTap: (p0) {
+                getPlayer(context).playNext();
+              },
+            ),
           ),
         ],
       ),

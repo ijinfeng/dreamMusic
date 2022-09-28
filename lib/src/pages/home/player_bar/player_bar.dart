@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
+import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -85,36 +86,46 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
           },
           shouldRebuild: (previous, next) => previous != next,
           builder: (context, mode, child) {
+            String message;
             if (mode == PlayMode.loop) {
               playmodeSrc = "play_mode_loop.png";
+              message = "顺序播放";
             } else if (mode == PlayMode.oneloop) {
               playmodeSrc = "play_mode_oneloop.png";
+              message = "单曲循环";
             } else {
               playmodeSrc = "play_mode_random.png";
+              message = "随机播放";
             }
-            return SelectableIconButton(
-              selected: true,
-              src: playmodeSrc,
-              width: width,
-              height: width,
-              color: kText3Color,
-              onTap: (p0) {
-                getPlayer(context).switchPlayMode();
-              },
+            return CustomTooltipWidget(
+              message: message,
+              child: SelectableIconButton(
+                selected: true,
+                src: playmodeSrc,
+                width: width,
+                height: width,
+                color: kText3Color,
+                onTap: (p0) {
+                  getPlayer(context).switchPlayMode();
+                },
+              ),
             );
           },
         ),
         widthSpace(space),
-        SelectableIconButton(
-          selected: true,
-          src: 'icon_songlist.png',
-          width: width,
-          height: width,
-          color: kText3Color,
-          unColor: kText3Color,
-          onTap: (p0) {
-            kHomeBodyScaffoldKey.currentState?.openEndDrawer();
-          },
+        CustomTooltipWidget(
+          message: '播放列表',
+          child: SelectableIconButton(
+            selected: true,
+            src: 'icon_songlist.png',
+            width: width,
+            height: width,
+            color: kText3Color,
+            unColor: kText3Color,
+            onTap: (p0) {
+              kHomeBodyScaffoldKey.currentState?.openEndDrawer();
+            },
+          ),
         ),
         widthSpace(space),
         const VolumeControl(),

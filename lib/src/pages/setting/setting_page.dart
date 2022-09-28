@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/dialog/dialog.dart';
+import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
@@ -109,16 +110,19 @@ class SettingPage extends StatelessWidget with EasyInterface {
               },
             ),
             heightSpace(10),
-            MainButton.title(
-              title: '获取歌词',
-              onTap: () {
-                SongDetailRequest.lyric(347230).then((value) {
-                  if (value.success) {
-                    final lyric = value.data;
-                    lyric?.parseLyricToRows();
-                  }
-                });
-              },
+            CustomTooltipWidget(
+              message: "我是一个按钮，获取歌词",
+              child: MainButton.title(
+                title: '获取歌词',
+                onTap: () {
+                  SongDetailRequest.lyric(347230).then((value) {
+                    if (value.success) {
+                      final lyric = value.data;
+                      lyric?.parseLyricToRows();
+                    }
+                  });
+                },
+              ),
             ),
           ],
         ),

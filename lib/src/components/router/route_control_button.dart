@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
+import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/router/route_control_manager.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:flutter/material.dart';
@@ -40,13 +41,20 @@ class _RouteControlButtonState
               return previous != next;
             },
             builder: (context, value, child) {
-              return SelectableIconButton(
-                selected: RouteControlManager().canBack(),
+              Widget current = SelectableIconButton(
+                selected: value,
                 width: iconWidth,
                 height: iconWidth,
                 src: 'icon_nav_left_arrow',
                 onTap: value ? (p0) => _onBack() : null,
               );
+              if (value) {
+                return CustomTooltipWidget(
+                  message: '后退',
+                  child: current,
+                );
+              }
+              return current;
             },
           ),
           const SizedBox(
@@ -59,13 +67,20 @@ class _RouteControlButtonState
             },
             shouldRebuild: (previous, next) => previous != next,
             builder: (context, value, child) {
-              return SelectableIconButton(
+              Widget current = SelectableIconButton(
                 selected: RouteControlManager().canForward(),
                 width: iconWidth,
                 height: iconWidth,
                 src: 'icon_nav_right_arrow',
                 onTap: value ? (p0) => _onForward() : null,
               );
+              if (value) {
+                return CustomTooltipWidget(
+                  message: '前进',
+                  child: current,
+                );
+              }
+              return current;
             },
           )
         ],
@@ -81,8 +96,8 @@ class _RouteControlButtonState
     RouteControlManager().forward();
   }
 
-  @override
-  RouteControlManager? createViewModel() {
-    return RouteControlManager();
-  }
+  // @override
+  // RouteControlManager? createViewModel() {
+  //   return RouteControlManager();
+  // }
 }

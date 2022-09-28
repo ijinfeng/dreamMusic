@@ -1,5 +1,6 @@
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
+import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/hover/hover_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
@@ -54,21 +55,25 @@ class SongInfoView extends StatelessWidget with EasyInterface {
                 },
                 shouldRebuild: (previous, next) => previous != next,
                 builder: (context, value, child) {
-                  return SelectableIconButton(
-                    selected: AppSharedManager().isLikeSong(model?.id ?? 0),
-                    src: 'icon_like_full.png',
-                    unsrc: 'icon_like_empty.png',
-                    color: kRedColor,
-                    unColor: kText9Color,
-                    width: 25,
-                    height: 25,
-                    onTap: (p0) {
-                      if (model?.id != null) {
-                        AppSharedManager().likeASong(model!.id!,
-                            like:
-                                !AppSharedManager().isLikeSong(model?.id ?? 0));
-                      }
-                    },
+                  final like = AppSharedManager().isLikeSong(model?.id ?? 0);
+                  return CustomTooltipWidget(
+                    message: like ? '不喜欢' : '喜欢',
+                    child: SelectableIconButton(
+                      selected: like,
+                      src: 'icon_like_full.png',
+                      unsrc: 'icon_like_empty.png',
+                      color: kRedColor,
+                      unColor: kText9Color,
+                      width: 25,
+                      height: 25,
+                      onTap: (p0) {
+                        if (model?.id != null) {
+                          AppSharedManager().likeASong(model!.id!,
+                              like: !AppSharedManager()
+                                  .isLikeSong(model?.id ?? 0));
+                        }
+                      },
+                    ),
                   );
                 },
               ),
@@ -87,29 +92,41 @@ class SongInfoView extends StatelessWidget with EasyInterface {
                       height: coverWidth,
                       radius: 6,
                     ),
-                    Positioned.fill(
-                        child: HoverWidget(
-                      hoverColor: Colors.black45,
-                      child: const Center(
-                        child: ImageView.asset(
-                          src: 'icon_unfold.png',
-                          width: 16,
-                          height: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      onTap: () {
-                        if (kHomeBodyScaffoldKey.currentContext != null) {
-                          if (RouteControlManager().hasOpenSongDetailRoute()) {
-                            Navigator.pop(kHomeBodyScaffoldKey.currentContext!);
-                          } else {
-                            Navigator.pushNamed(
-                              kHomeBodyScaffoldKey.currentContext!,
-                              PageRouters.songDetail, arguments: model?.id);
-                          }
-                        }
+                    Selector<RouteControlManager, bool>(
+                      selector: (p0, p1) => p1.hasOpenSongDetailRoute(),
+                      shouldRebuild: (previous, next) => previous != next,
+                      builder: (context, value, child) {
+                        return CustomTooltipWidget(
+                          message: value ? '关闭音乐详情' : '展开音乐详情',
+                          child: Positioned.fill(
+                              child: HoverWidget(
+                            hoverColor: Colors.black45,
+                            child: Center(
+                              child: ImageView.asset(
+                                src: value ? 'icon_fold' : 'icon_unfold.png',
+                                width: 16,
+                                height: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onTap: () {
+                              if (kHomeBodyScaffoldKey.currentContext != null) {
+                                if (RouteControlManager()
+                                    .hasOpenSongDetailRoute()) {
+                                  Navigator.pop(
+                                      kHomeBodyScaffoldKey.currentContext!);
+                                } else {
+                                  Navigator.pushNamed(
+                                      kHomeBodyScaffoldKey.currentContext!,
+                                      PageRouters.songDetail,
+                                      arguments: model?.id);
+                                }
+                              }
+                            },
+                          )),
+                        );
                       },
-                    ))
+                    )
                   ],
                 ),
               ),

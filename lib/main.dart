@@ -3,6 +3,7 @@ import 'package:dream_music/src/components/basic/common_material_app.dart';
 import 'package:dream_music/src/components/network/network_env_route.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/router/custom_navigator_observer.dart';
+import 'package:dream_music/src/components/router/route_control_manager.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
           return SongPlayer();
         }),
         ChangeNotifierProvider.value(value: AppSharedManager()),
+        ChangeNotifierProvider.value(value: RouteControlManager()),
       ],
       builder: (context, child) {
         return CommonMaterialApp(
