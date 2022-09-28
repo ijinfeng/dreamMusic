@@ -77,6 +77,7 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
         }
       }
       notifyListeners();
+      printRoutesDetail();
     }
   }
 
@@ -104,6 +105,7 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
         }
       }
       notifyListeners();
+      printRoutesDetail();
     }
   }
 
@@ -114,9 +116,14 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
       _backing = false;
       return;
     }
+    // 当当前导航不是最后一个action时，去掉后面所有的action
+    if (_currentIndex != _actions.length - 1) {
+      _actions = _actions.sublist(0, _currentIndex + 1);
+    }
     _actions.add(action);
     _currentIndex = maxActionIndex;
     notifyListeners();
+    printRoutesDetail();
   }
 
   void popAction(PageRouteAction route) {
@@ -129,6 +136,7 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
       _currentIndex -= 1;
       notifyListeners();
     }
+    printRoutesDetail();
   }
 
   bool _isDefaultRoute(RouteAction action) {
@@ -143,20 +151,19 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
 
   /// 是否已经打开了音乐播放详情页
   bool hasOpenSongDetailRoute() {
-    printRoutesDetail();
     bool res = false;
     return res;
   }
 
   void printRoutesDetail() {
-    debugPrint("====================\n[route]length=${_actions.length},current=$_currentIndex");
-    for (int i = _actions.length - 1; i > 0; i--) {
+    debugPrint("====================[route]length=${_actions.length},current=$_currentIndex");
+    for (int i = _actions.length - 1; i >= 0; i--) {
       final action = _actions[i];
       String t = action.toString();
       if (i == _currentIndex) {
-        t = "---->$t";
+        t = "-->$t";
       } else {
-        t = "\t$t";
+        t = "---$t";
       }
       debugPrint(t);
     }
