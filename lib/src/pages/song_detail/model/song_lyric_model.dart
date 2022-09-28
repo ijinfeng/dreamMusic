@@ -273,7 +273,6 @@ class SongLyricModel {
     if (lrc != null && lrc?.lyric?.isNotEmpty == true) {
       final lyric = lrc!.lyric!;
       final lyricSubs = lyric.split("\n");
-      debugPrint("-----------------------歌词------------------");
       // [00:00.000] 作词 : 黄家驹
       final Map<String, List<String?>> lyricMap = {};
 
@@ -319,18 +318,18 @@ class SongLyricModel {
           }
         }
       }
-      lyricMap.forEach((key, value) {
+      for (int i = 0; i < lyricMap.length; i++) {
+        final key = lyricMap.keys.toList()[i];
+        final value = lyricMap[key];
         rows.add(SongLyricRowModel(
+            index: i,
             timeStr: key,
-            mainLyric: value.first,
-            subLyric: value.length > 1 ? value.last : null));
-      });
+            mainLyric: value?.first,
+            subLyric: (value?.length ?? 0) > 1 ? value?.last : null));
+      }
     } else {
       // 纯音乐
 
-    }
-    for (var row in rows) {
-      debugPrint(row.toString());
     }
     return rows;
   }

@@ -5,10 +5,15 @@ import 'package:flutter/material.dart';
 /// 每行歌词有时间属性和多语言版本的歌词
 class SongLyricRowModel {
   SongLyricRowModel({
+    required this.index,
     required this.timeStr,
     required this.mainLyric,
     this.subLyric,
+    this.selected = false,
   });
+  final int index;
+
+  Size? size;
 
   /// 01:15.799
   final String? timeStr;
@@ -17,10 +22,12 @@ class SongLyricRowModel {
   /// 副歌词
   final String? subLyric;
 
-  /// 获取秒，精确到小数点后一位
-  /// 0:00:10.250000 ---> 0:00:10.2 ---> 10.2
-  /// 00:18.630 ---> 00:18.6 ---> 18.6
-  double get getSecond {
+  bool? selected;
+
+  /// 获取秒，精确到整数即可
+  /// 0:00:10.250000 ---> 0:00:10 ---> 10
+  /// 00:18.630 ---> 00:18 ---> 18
+  int get getSecond {
     if (timeStr == null) {
       return 0;
     }
@@ -33,7 +40,7 @@ class SongLyricRowModel {
       res = res + dt * scale;
       scale *= 60;
     }
-    return double.tryParse(res.toStringAsFixed(1)) ?? 0;
+    return res.toInt();
   }
 
   @override

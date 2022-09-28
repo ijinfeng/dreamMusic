@@ -60,7 +60,7 @@ class CommonScaffold extends StatelessWidget {
                             Navigator.pop(context);
                           },
                           child: Image.asset(
-                            'assets/ic_close.png',
+                            'assets/icon_close.png',
                             width: 23,
                             height: 23,
                           )),
