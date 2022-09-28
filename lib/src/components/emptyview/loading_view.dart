@@ -14,21 +14,21 @@ class LoadingView extends StatelessWidget {
     return Container(
       color: kPageBackgroundColor,
       alignment: Alignment.center,
-      child: Column(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const CupertinoActivityIndicator(
-            color: kHighlightThemeColor,
-            radius: 13,
+            color: kText3Color,
+            radius: 8,
           ),
-          const SizedBox(height: 10,),
+          const SizedBox(width: 6,),
           Text(
-            title ?? '精彩即将呈现',
+            title ?? '精彩即将呈现...',
             style: const TextStyle(
               fontSize: 15,
-              color: kText6Color,
-              fontWeight: FontWeight.bold
+              color: kText3Color,
+              fontWeight: FontWeight.normal
             ),
           )
         ],

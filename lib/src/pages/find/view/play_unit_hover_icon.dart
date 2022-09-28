@@ -15,40 +15,30 @@ class PlayUnitHoverIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HoverWidget(
-          child: Center(
-            child: SizedBox(
-              width: playIconWidth + 10,
-              height: playIconWidth + 10,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular((playIconWidth + 10) / 2.0),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: playIconWidth,
-                      height: playIconWidth,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(playIconWidth / 2.0),
-                          color: Colors.white),
-                    ),
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.only(left: 3),
-                        child: ImageView.asset(
-                          src: 'assets/icon_play_full.png',
-                          width: playIconWidth / 2,
-                          height: playIconWidth / 2,
-                          color: kHighlightThemeColor,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+      child: Center(
+        child: Container(
+          width: playIconWidth,
+          height: playIconWidth,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(playIconWidth / 2.0),
+              color: Colors.white.withOpacity(0.9),
+              boxShadow: const [
+                BoxShadow(
+                  offset: Offset(0, 0),
+                  blurRadius: 20,
+                  color: Colors.black12
+                )
+              ]
               ),
-            ),
+          alignment: Alignment.center,
+          child: ImageView.asset(
+            src: 'assets/song_control_play.png',
+            width: playIconWidth * 0.7,
+            height: playIconWidth * 0.7,
+            color: kHighlightThemeColor,
           ),
-        );
+        ),
+      ),
+    );
   }
 }

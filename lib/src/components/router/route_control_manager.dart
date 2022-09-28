@@ -120,6 +120,17 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
     if (_currentIndex != _actions.length - 1) {
       _actions = _actions.sublist(0, _currentIndex + 1);
     }
+    // 如果是切换tab，需要把上一个tab的导航栈清空，因为实际切换tab时，每个页面都是被重构的
+    if (action.type == RouteActionType.tab) {
+      List<RouteAction> newActions = [];
+      for (int i = _actions.length - 1; i >= 0; i--) {
+        final action = _actions[i];
+        if (action.type == RouteActionType.tab) {
+          newActions.insert(0, action);
+        }
+      }
+      _actions = newActions;
+    }
     _actions.add(action);
     _currentIndex = maxActionIndex;
     notifyListeners();
@@ -151,12 +162,20 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
 
   /// 是否已经打开了音乐播放详情页
   bool hasOpenSongDetailRoute() {
-    bool res = false;
-    return res;
+    for (int i = _actions.length - 1; i >= 0; i--) {
+      final action = _actions[i];
+      if (action is PageRouteAction &&
+      action.settings.name == PageRouters.songDetail &&
+      i == _currentIndex) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void printRoutesDetail() {
-    debugPrint("====================[route]length=${_actions.length},current=$_currentIndex");
+    debugPrint(
+        "====================[route]length=${_actions.length},current=$_currentIndex");
     for (int i = _actions.length - 1; i >= 0; i--) {
       final action = _actions[i];
       String t = action.toString();

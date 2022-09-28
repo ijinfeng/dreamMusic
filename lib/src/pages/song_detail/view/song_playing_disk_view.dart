@@ -104,13 +104,13 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   decoration: BoxDecoration(
                       border:
-                          Border.all(color: kHighlightThemeColor, width: 0.5),
+                          Border.all(color: kText6Color, width: 0.5),
                       borderRadius: BorderRadius.circular(4)),
                   child: Text(
                     coverType == 1 ? '原唱' : '翻唱',
                     style: const TextStyle(
                         fontSize: 13,
-                        color: kHighlightThemeColor,
+                        color: kText6Color,
                         fontWeight: FontWeight.normal),
                   ),
                 )
