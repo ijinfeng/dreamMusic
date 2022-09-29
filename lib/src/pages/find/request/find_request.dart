@@ -1,5 +1,6 @@
 import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
+import 'package:dream_music/src/pages/find/model/daily_songs_model.dart';
 import 'package:dream_music/src/pages/find/model/find_recommend_model.dart';
 
 class FindRequest {
@@ -11,6 +12,17 @@ class FindRequest {
       addTimestamp: true,
       builder: (json) {
         return FindRecommendModel.fromJson(json);
+      },
+    );
+    return res;
+  }
+
+  /// 每日推荐歌曲
+  static Future<ResponseModel<DailySongsModel>> recommendSongs() {
+    final res = neRequest.get(
+      '/recommend/songs',
+      builder: (json) {
+        return DailySongsModel.fromJson(json);
       },
     );
     return res;

@@ -11,6 +11,7 @@ import 'package:dream_music/src/pages/home/player_bar/play_progress_indicator.da
 import 'package:dream_music/src/pages/home/player_bar/player_controls.dart';
 import 'package:dream_music/src/pages/home/player_bar/song_info_view.dart';
 import 'package:dream_music/src/pages/home/player_bar/volume_control.dart';
+import 'package:dream_music/src/pages/home/playlist/playlist_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -123,7 +124,8 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
             color: kText3Color,
             unColor: kText3Color,
             onTap: (p0) {
-              kHomeBodyScaffoldKey.currentState?.openEndDrawer();
+              // kHomeBodyScaffoldKey.currentState?.openEndDrawer();
+              getPlayer(context).openSonglist();
             },
           ),
         ),

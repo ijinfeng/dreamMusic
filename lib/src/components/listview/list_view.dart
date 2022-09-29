@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 typedef FFIndexWidgetBuilder = Widget Function(
     BuildContext context, int section, int index);
-typedef SectionIndexWidgetBuilder = Widget Function(
+typedef SectionIndexWidgetBuilder = Widget? Function(
     BuildContext context, int index);
 typedef FFIndexCountBuilder = int Function(BuildContext context, int section);
 
@@ -25,52 +25,57 @@ class FFListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(sectionCount >= 0);
-    bool hasSection = sectionCount > 0 && sectionBuilder != null;
-    var totalItemCount = 0;
-    Map<int, int> sectionMap = {};
-    if (hasSection) {
-      for (var i = 0; i < sectionCount; i++) {
-        final count = indexCountBuilder(context, i);
-        totalItemCount += count;
-        sectionMap[i] = count;
+    Map<int, _FFIndexPath> indexPathMap = {}; // index -> row
+    // section和item的总和
+    var totalCount = sectionCount;
+    var index = 0;
+    for (int i = 0; i < sectionCount; i++) {
+      indexPathMap[index] = _FFIndexPath(index: i, type: IndexPathType.section);
+      final count = indexCountBuilder(context, i);
+      totalCount += count;
+      for (int j = 0; j < count; j++) {
+        index += 1;
+        indexPathMap[index] = _FFIndexPath(index: j, section: i, type: IndexPathType.item);
       }
-    } else {
-      totalItemCount = indexCountBuilder(context, 0);
-      sectionMap[0] = totalItemCount;
+      index += 1;
     }
-    // 当前section的下标
-    int currentBuilderSection = 0;
-    // 当前section有几个item
-    int currentSectionItemCount = sectionMap[currentBuilderSection] ?? 0;
-    // 已经统计过的item数
-    int builderedItemCount = 0;
-    // 上一个section的item数
-    int builderedSectionCount = 0;
 
     return ListView.builder(
       controller: controller,
-      itemCount: totalItemCount + sectionCount,
+      itemCount: totalCount,
       itemBuilder: (context, index) {
-        int i = index - builderedItemCount - builderedSectionCount;
-        if (i == 0) {
-          // 构建Section
+        final indexPath = indexPathMap[index];
+        if (indexPath == null) return const SizedBox.shrink();
+        if (indexPath.type == IndexPathType.section) {
           if (sectionBuilder != null) {
-            return sectionBuilder!(context, currentBuilderSection);
+            return sectionBuilder!(context, indexPath.index) ?? const SizedBox.shrink();
           }
-        } else if (i <= currentSectionItemCount) {
-          Widget current = itemBuilder(context, currentBuilderSection, i - 1);
-          return current;
         } else {
-          currentBuilderSection += 1;
-          builderedSectionCount += 1;
-          builderedItemCount += currentSectionItemCount;
-          currentSectionItemCount = sectionMap[currentBuilderSection] ?? 0;
-          if (sectionBuilder != null) {
-            return sectionBuilder!(context, currentBuilderSection);
-          } 
+          return itemBuilder(context, indexPath.section ?? 0, indexPath.index);
         }
         return const SizedBox.shrink();
       },
     );
+  }
+}
+
+enum IndexPathType {
+  section,
+  item,
+}
+class _FFIndexPath {
+  final IndexPathType type;
+  final int index;
+  final int? section;
+
+  _FFIndexPath({
+    this.type = IndexPathType.item,
+    required this.index,
+    this.section,
+  });
+
+  @override
+  String toString() {
+    return "[FF]type-$type, section-$section, index-$index";
   }
 }

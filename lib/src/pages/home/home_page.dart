@@ -7,7 +7,6 @@ import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/left_menu/left_menu.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
-import 'package:dream_music/src/pages/home/playlist/playlist_drawer.dart';
 import 'package:dream_music/src/pages/home/right_content/right_content.dart';
 import 'package:dream_music/src/pages/home/window_navigation_bar/window_navigation_bar.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
@@ -81,7 +80,6 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
               child: CommonMaterialApp(
                 home: Scaffold(
                   key: kHomeBodyScaffoldKey,
-                  endDrawer: const PlaylistDrawer(),
                   drawerScrimColor: Colors.black12,
                   body: Row(
                   children: [

@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
+import 'package:dream_music/src/pages/home/playlist/playlist_drawer.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
 
@@ -199,8 +201,7 @@ class SongPlayer extends BaseChangeNotifier {
       if (source != null) {
         player.play(source);
       }
-          debugPrint(
-"""[play]ready to play id=${_currentSong?.track?.id}, 
+      debugPrint("""[play]ready to play id=${_currentSong?.track?.id}, 
   name=${_currentSong?.track?.name}
   url=${source?.url}
   index=$_playSongIndex, all=$allSongsLength
@@ -341,6 +342,42 @@ class SongPlayer extends BaseChangeNotifier {
   void _switchSong(SingleSongModel song) {
     stack.previousSong = stack.currentSong;
     stack.currentSong = song;
+  }
+
+  /// 打开的播放列表浮层
+  OverlayEntry? _songlistEntry;
+
+  void openSonglist() {
+    if (_songlistEntry != null) {
+      closeSonglist();
+    } else {
+      if (kTopPageScaffoldKey.currentContext != null) {
+        final entry = OverlayEntry(
+          builder: (context) {
+            return const PlaylistDrawer();
+          },
+        );
+        _songlistEntry = entry;
+        Overlay.of(kTopPageScaffoldKey.currentContext!)?.insert(entry);
+      }
+    }
+  }
+
+  void closeSonglist() {
+    if (_disposeSonglistListener != null) {
+      _disposeSonglistListener!();
+    }
+    Future.delayed(Duration(milliseconds: _disposeSonglistListener != null ? 200 : 0), () {
+       // 消失要做动画，可以先向组件发送要消失的通知，并在组件消失动画结束后移除
+    _songlistEntry?.remove();
+    _songlistEntry = null;
+    _disposeSonglistListener = null;
+    });
+  }
+  VoidCallback? _disposeSonglistListener;
+
+  void addDisposeSonglistListener(VoidCallback listener) {
+    _disposeSonglistListener = listener;
   }
 }
 

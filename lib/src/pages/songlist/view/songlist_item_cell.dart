@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/animation/magic_play_animation_icon.d
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
+import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -74,19 +75,22 @@ class _SonglistItemCellState extends State<SonglistItemCell>
         shouldRebuild: (previous, next) => previous != next,
         builder: (context, value, child) {
           final like = AppSharedManager().isLikeSong(widget.model?.track?.id ?? 0);
-          return SelectableIconButton(
-            selected:
-                like,
-            src: 'icon_like_full',
-            unsrc: 'icon_like_empty',
-            width: 22,
-            height: 22,
-            color: kRedColor,
-            onTap: (sel) {
-              if (widget.model?.track?.id != null) {
-                AppSharedManager().likeASong(widget.model!.track!.id!, like: !like);
-              }
-            },
+          return CustomTooltipWidget(
+            message: like ? '不喜欢' : '喜欢',
+            child: SelectableIconButton(
+              selected:
+                  like,
+              src: 'icon_like_full',
+              unsrc: 'icon_like_empty',
+              width: 22,
+              height: 22,
+              color: kRedColor,
+              onTap: (sel) {
+                if (widget.model?.track?.id != null) {
+                  AppSharedManager().likeASong(widget.model!.track!.id!, like: !like);
+                }
+              },
+            ),
           );
         },
       )

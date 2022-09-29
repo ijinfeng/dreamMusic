@@ -6,11 +6,13 @@ import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/emptyview/loading_view.dart';
+import 'package:dream_music/src/components/listview/list_view.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/find/model/find_recommend_model.dart';
 import 'package:dream_music/src/pages/find/model/find_state_model.dart';
 import 'package:dream_music/src/pages/find/request/find_request.dart';
+import 'package:dream_music/src/pages/find/view/find_daily_songs_widget.dart';
 import 'package:dream_music/src/pages/find/view/find_recommend_view.dart';
 import 'package:dream_music/src/pages/find/view/find_section_title_view.dart';
 import 'package:flutter/scheduler.dart';
@@ -27,7 +29,8 @@ class FindPage extends ProviderStatefulWidget {
   }
 }
 
-class _FindPageState extends ProviderState<FindPage, FindStateModel> with EasyInterface {
+class _FindPageState extends ProviderState<FindPage, FindStateModel>
+    with EasyInterface {
   @override
   void dispose() {
     super.dispose();
@@ -37,10 +40,94 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel> with EasyIn
   void initState() {
     super.initState();
     viewModel?.requestDailyRecommend();
+    viewModel?.requestDailySongs();
   }
 
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
+    Widget contentList = FFListView(
+      sectionCount: 2,
+      itemBuilder: (context, section, index) {
+        if (section == 0) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 30),
+            child: Selector<FindStateModel, bool>(
+              selector: (p0, p1) => p1.hasRequestDailySongs,
+              shouldRebuild: (previous, next) => previous != next,
+              builder: (context, value, child) {
+                if (value) {
+                  return const FindDailySongsWidget();
+                } else {
+                  return const LoadingView();
+                }
+              },
+            ),
+          );
+        } else {
+          return Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Selector<FindStateModel, bool>(
+              selector: (p0, p1) => p1.hasRequestRecommends,
+              shouldRebuild: (previous, next) => previous != next,
+              builder: (context, value, child) {
+                debugPrint(
+                    '[find]推荐列表刷新了, count=${viewModel?.recommendModels.length}');
+                return value
+                    ? FindRecommendView(
+                        models: viewModel?.recommendModels,
+                      )
+                    : const LoadingView();
+              },
+            ),
+          );
+        }
+      },
+      indexCountBuilder: (context, section) {
+        return 1;
+      },
+      sectionBuilder: (context, index) {
+        if (index == 0) {
+          return const FindSectionTitleView(title: '每日音乐');
+        } else {
+          return const FindSectionTitleView(title: '推荐歌单');
+        }
+      },
+    );
+
+    // Column(
+    //         children: [
+    //           const FindSectionTitleView(title: '每日音乐'),
+    //           heightSpace(10),
+    //           Selector<FindStateModel, bool>(
+    //             selector: (p0, p1) => p1.hasRequestDailySongs,
+    //             shouldRebuild: (previous, next) => previous != next,
+    //             builder: (context, value, child) {
+    //               if (value) {
+    //                 return const FindDailySongsWidget();
+    //               } else {
+    //                 return const LoadingView();
+    //               }
+    //             },
+    //           ),
+    //           const FindSectionTitleView(title: '推荐歌单'),
+    //           heightSpace(10),
+    //           Expanded(
+    //             child: Selector<FindStateModel, bool>(
+    //               selector: (p0, p1) => p1.hasRequestRecommends,
+    //               shouldRebuild: (previous, next) => previous != next,
+    //               builder: (context, value, child) {
+    //                 debugPrint(
+    //                     '[find]推荐列表刷新了, count=${viewModel?.recommendModels.length}');
+    //                 return value
+    //                     ? FindRecommendView(
+    //                         models: viewModel?.recommendModels,
+    //                       )
+    //                     : const LoadingView();
+    //               },
+    //             ),
+    //           )
+    //         ],
+    //       )
     return CommonScaffold(
       hideNavigationBar: true,
       body: Center(
@@ -48,22 +135,7 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel> with EasyIn
           constraints: const BoxConstraints(maxWidth: 850),
           color: kPageBackgroundColor,
           padding: kPageContentPadding,
-          child: Column(
-            children: [
-              const FindSectionTitleView(title: '推荐歌单'),
-              heightSpace(10),
-              Expanded(
-                child: Consumer<FindStateModel>(
-                  builder: (context, value, child) {
-                    debugPrint('[find]推荐列表刷新了, count=${value.recommendModels.length}');
-                    return value.hasRequestData ? FindRecommendView(
-                      models: value.recommendModels,
-                    ) : const LoadingView();
-                  },
-                ),
-              )
-            ],
-          ),
+          child: contentList,
         ),
       ),
     );

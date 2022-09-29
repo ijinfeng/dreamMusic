@@ -30,8 +30,7 @@ class FindSectionTitleView extends StatelessWidget with EasyInterface {
           widthSpace(5),
           const ImageView.asset(
             src: 'assets/icon_right_arrow_Normal.png',
-            width: 16,
-            height: 16,
+            width: 10,
             )
         ]
       ],
