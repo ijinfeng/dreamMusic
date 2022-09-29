@@ -55,11 +55,7 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel>
               selector: (p0, p1) => p1.hasRequestDailySongs,
               shouldRebuild: (previous, next) => previous != next,
               builder: (context, value, child) {
-                if (value) {
-                  return const FindDailySongsWidget();
-                } else {
-                  return const LoadingView();
-                }
+                return const FindDailySongsWidget();
               },
             ),
           );
@@ -93,41 +89,6 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel>
         }
       },
     );
-
-    // Column(
-    //         children: [
-    //           const FindSectionTitleView(title: '每日音乐'),
-    //           heightSpace(10),
-    //           Selector<FindStateModel, bool>(
-    //             selector: (p0, p1) => p1.hasRequestDailySongs,
-    //             shouldRebuild: (previous, next) => previous != next,
-    //             builder: (context, value, child) {
-    //               if (value) {
-    //                 return const FindDailySongsWidget();
-    //               } else {
-    //                 return const LoadingView();
-    //               }
-    //             },
-    //           ),
-    //           const FindSectionTitleView(title: '推荐歌单'),
-    //           heightSpace(10),
-    //           Expanded(
-    //             child: Selector<FindStateModel, bool>(
-    //               selector: (p0, p1) => p1.hasRequestRecommends,
-    //               shouldRebuild: (previous, next) => previous != next,
-    //               builder: (context, value, child) {
-    //                 debugPrint(
-    //                     '[find]推荐列表刷新了, count=${viewModel?.recommendModels.length}');
-    //                 return value
-    //                     ? FindRecommendView(
-    //                         models: viewModel?.recommendModels,
-    //                       )
-    //                     : const LoadingView();
-    //               },
-    //             ),
-    //           )
-    //         ],
-    //       )
     return CommonScaffold(
       hideNavigationBar: true,
       body: Center(

@@ -622,6 +622,10 @@ class SonglistDetailModelTracks {
     }
     return '佚名';
   }
+
+  String get songName {
+    return name ?? '未知歌名';
+  }
 }
 
 class SonlistDetailModelCreatorAvatarDetail {
