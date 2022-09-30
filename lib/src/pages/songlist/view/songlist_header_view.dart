@@ -177,30 +177,7 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
   void _updatePlaylistIfNeeded(BuildContext context) {
     final player = getPlayer(context);
     final state = Provider.of<SonglistStateModel>(context, listen: false);
-    if (player.songlistId == state.detailModel?.playlist?.id) {
-      showToast("当前正在播放中的列表");
-      return;
-    }
-    void playCallback() {
-      player.songlistId = state.detailModel?.playlist?.id;
-      player.songs = state.songs;
-      player.updatePlaySong(player.songs?.first);
-      player.play();
-    }
-    if (player.songlistId == null) {
-      playCallback();
-    } else {
-      showCommonDialog(context,
-          title: "替换播放列表",
-          content: "\"播放全部\"将会替换当前的播放列表，是否继续？",
-          actions: [
-            DialogAction.cancel(),
-            DialogAction.sure(
-                title: '继续',
-                onTap: () {
-                  playCallback();
-                })
-          ]);
-    }
+    player.replaceSonglistAndPlay(
+        context, state.detailModel?.playlist?.id, state.songs, null);
   }
 }

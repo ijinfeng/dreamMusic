@@ -1,3 +1,4 @@
+import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 
 /// 每日歌曲推荐
@@ -50,6 +51,26 @@ class DailySongsModel {
     }
     return data;
   }
+
+  /// 获取歌曲详情数组
+  List<SingleSongModel> getSongs() {
+    if (dailySongs == null) return [];
+    final tracks = dailySongs!;
+    List<SingleSongModel> ret = [];
+    for (int i = 0; i < tracks.length; i++) {
+      final track = tracks[i];
+      ret.add(
+            SingleSongModel(
+              track:track,
+              privilege: null
+            )
+        );
+    }
+    return ret;
+  }
+
+  /// 每日推荐歌曲的歌单id
+  int get songlistId => -1000;
 }
 
 class RecommendReasonModel {

@@ -52,21 +52,30 @@ class _LeftMenuBodyState extends ProviderState with EasyInterface {
                     color: kSideMenuBackgroundColor,
                     child: InkWell(
                       onTap: () {
-                        getHomeState(context).selectedIndex = index;
+                        getHomeState(context).selectedIndex = getHomeState(context).itemModels[section][index].index;
                       },
                       hoverColor: kMainThemeColor,
                       highlightColor: kMainThemeColor,
                       child: MenuCellWidegt(
-                        model: getHomeState(context).itemModels[index],
-                        selected: getHomeState(context).selectedIndex == index,
+                        model: getHomeState(context).itemModels[section][index],
+                        selected: getHomeState(context).selectedIndex ==
+                            getHomeState(context)
+                                .itemModels[section][index]
+                                .index,
                       ),
                     ),
                   );
                 },
                 indexCountBuilder: (context, section) {
-                  return getHomeState(context).itemModels.length;
+                  return getHomeState(context).itemModels[section].length;
                 },
-                sectionCount: 1,
+                sectionBuilder: (context, index) {
+                  if (index != 0) {
+                    return heightSpace(30);
+                  }
+                  return null;
+                },
+                sectionCount: getHomeState(context).itemModels.length,
               );
             },
           ),

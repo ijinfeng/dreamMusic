@@ -3,6 +3,7 @@ import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
+import 'package:dream_music/src/components/hover/hover_widget.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -155,22 +156,25 @@ class _SonglistItemCellState extends State<SonglistItemCell>
           widget.onDoubleTap(widget.model!);
         }
       },
-      child: Container(
+      child: SizedBox(
         height: 48,
-        padding: EdgeInsets.only(
-            left: kPageContentPadding.left, right: kPageContentPadding.right),
-        color: backgroundColor,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _boxAlignItem(
-                Row(
-                  children: left,
-                ),
-                Alignment.centerLeft),
-            _boxAlignItem(album, Alignment.center),
-            _boxAlignItem(time, Alignment.centerRight)
-          ],
+        child: Container(
+          height: 48,
+          padding: EdgeInsets.only(
+              left: kPageContentPadding.left, right: kPageContentPadding.right),
+          color: backgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _boxAlignItem(
+                  Row(
+                    children: left,
+                  ),
+                  Alignment.centerLeft),
+              _boxAlignItem(album, Alignment.center),
+              _boxAlignItem(time, Alignment.centerRight)
+            ],
+          ),
         ),
       ),
     );

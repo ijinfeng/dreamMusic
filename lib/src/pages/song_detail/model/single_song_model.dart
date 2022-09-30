@@ -9,6 +9,6 @@ class SingleSongModel {
 
   SingleSongModel({
     required this.track,
-    required this.privilege
+    this.privilege
   });
 }

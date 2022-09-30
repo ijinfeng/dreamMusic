@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
+import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
-import 'package:dream_music/src/components/util/utils.dart';
+import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/find/model/daily_songs_model.dart';
 import 'package:dream_music/src/pages/find/model/find_state_model.dart';
+import 'package:dream_music/src/pages/find/view/play_unit_hover_icon.dart';
+import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +19,86 @@ class FindDailySongsWidget extends StatelessWidget with EasyInterface {
 
   @override
   Widget build(BuildContext context) {
-    double maxHeight = 200;
+    double maxHeight = 160;
+    final dailySongs = Provider.of<FindStateModel>(context).dailySongs;
+    final reasons = dailySongs?.recommendReasons;
+    final songs = dailySongs?.getSongs();
+    List<Widget> children = [];
+    if (songs?.isNotEmpty == true) {
+      if (reasons?.isNotEmpty == true) {
+        for (int i = 0; i < min(3, reasons!.length); i++) {
+          final reason = reasons[i];
+          SingleSongModel? findSong;
+          for (var song in songs!) {
+            if (song.track?.id == reason?.songId) {
+              findSong = song;
+              break;
+            }
+          }
+          final reasonText = Text(
+            "${reason?.reason}",
+            style: const TextStyle(
+                fontSize: 15, color: kText3Color, fontWeight: FontWeight.w400),
+          );
+          final songButton = MainButton.icon(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            backgroundColor: kPageBackgroundColor,
+            fontSize: 15,
+            icon: const ImageView.asset(
+              src: "icon_music.png",
+              width: 14,
+              height: 14,
+              color: kHighlightThemeColor,
+            ),
+            title: findSong?.track?.songName,
+            onTap: () {
+              getPlayer(context).replaceSonglistAndPlay(
+                  context, dailySongs?.songlistId, songs, findSong,
+                  force: true);
+            },
+          );
+          children.add(Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Row(
+              children: [songButton, widthSpace(5), reasonText],
+            ),
+          ));
+        }
+      } else {
+        const textStyle = TextStyle(
+            fontSize: 15, color: kText3Color, fontWeight: FontWeight.normal);
+        final song = songs!.first;
+        return Row(
+          children: [
+            const Text(
+              '今日从',
+              style: textStyle,
+            ),
+            MainButton.icon(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              backgroundColor: kPageBackgroundColor,
+              fontSize: 15,
+              icon: const ImageView.asset(
+                src: "icon_music.png",
+                width: 18,
+                height: 18,
+                color: kHighlightThemeColor,
+              ),
+              title: song.track?.songName,
+              onTap: () {
+                getPlayer(context).replaceSonglistAndPlay(
+                    context, dailySongs?.songlistId, songs, song,
+                    force: true);
+              },
+            ),
+            const Text(
+              '听起',
+              style: textStyle,
+            )
+          ],
+        );
+      }
+    }
     return SizedBox(
       height: maxHeight,
       child: Row(
@@ -25,28 +109,56 @@ class FindDailySongsWidget extends StatelessWidget with EasyInterface {
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8), color: kThinGreyColor),
-            child: DailySongAnimationCover(
-              maxHeight: maxHeight,
+            child: Stack(
+              children: [
+                DailySongAnimationCover(
+                  maxHeight: maxHeight,
+                ),
+                Selector<FindStateModel, bool>(
+                  selector: (p0, p1) => p1.dailySongs != null,
+                  shouldRebuild: (previous, next) => previous != next,
+                  builder: (context, value, child) {
+                    return value
+                        ? PlayUnitHoverIcon(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, PageRouters.dailySongs);
+                            },
+                          )
+                        : const SizedBox.shrink();
+                  },
+                )
+              ],
             ),
           ),
           widthSpace(20),
           Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                '每日歌曲推荐',
-                style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600,
-                    color: kText3Color),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '每日歌曲推荐',
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        color: kText3Color),
+                  ),
+                  heightSpace(6),
+                  const Text(
+                    '根据您的音乐口味生成，每日6:00更新',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: kText6Color),
+                  )
+                ],
               ),
-              heightSpace(10),
-              const Text(
-                '根据您的音乐口味生成，每日6:00更新',
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: kText6Color),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: children,
               )
             ],
           )
@@ -69,11 +181,9 @@ class DailySongAnimationCover extends StatefulWidget {
 }
 
 class DailySongAnimationCoverState extends State<DailySongAnimationCover> {
-  late final Timer? timer;
+  Timer? timer;
 
   int index = 0;
-
-  bool firstShowCover = false;
 
   SonglistDetailModelTracks? lastSong;
 
@@ -81,20 +191,29 @@ class DailySongAnimationCoverState extends State<DailySongAnimationCover> {
 
   @override
   void dispose() {
+    cancelTimer();
+    super.dispose();
+  }
+
+  void cancelTimer() {
     timer?.cancel();
     timer = null;
-    super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    cancelTimer();
     timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       setState(() {
         updateCurrentSong();
       });
     });
-    updateCurrentSong();
+    context.read<FindStateModel>().addListener(() {
+      setState(() {
+        updateCurrentSong();
+      });
+    });
   }
 
   void updateCurrentSong() {
@@ -124,7 +243,7 @@ class DailySongAnimationCoverState extends State<DailySongAnimationCover> {
 
   Widget _buildSwitchCover(Widget switchChild) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 1300),
       transitionBuilder: (child, animation) {
         return FadeTransition(
           opacity: Tween<double>(begin: 0, end: 1).animate(
@@ -157,14 +276,15 @@ class DailySongAnimationCoverState extends State<DailySongAnimationCover> {
         ),
       );
     } else {
-      Widget showCover = _buildSwitchCover(ImageView.network(
-        key: ValueKey(currentSong?.al?.picUrl),
+      Widget showCover = ImageView.network(
         src: currentSong?.al?.picUrl,
         width: widget.maxHeight,
         height: widget.maxHeight,
-      ));
+        placeholder: const SizedBox.shrink(),
+      );
 
       current = Stack(
+        key: ValueKey(index),
         children: [
           showCover,
           Positioned(
@@ -188,10 +308,12 @@ class DailySongAnimationCoverState extends State<DailySongAnimationCover> {
                     color: Colors.white),
               ),
             ),
-          )
+          ),
         ],
       );
     }
+
+    current = _buildSwitchCover(current);
 
     return current;
   }

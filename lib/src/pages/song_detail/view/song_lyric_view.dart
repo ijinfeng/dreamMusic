@@ -44,6 +44,25 @@ class SongLyricView extends StatelessWidget with EasyInterface {
                     child: Text('正在获取歌词...'),
                   );
                 } else {
+                  if (value.isAbsoluteMusic) {
+                    final rows = context.read<SongLyricStateModel>().rows;
+                    String? text;
+                    if (rows?.isNotEmpty == true) {
+                      text = rows!.first.mainLyric;
+                    }
+                    if (text?.isEmpty == true) {
+                      text = '纯音乐，请鉴赏';
+                    }
+                    return Center(
+                      child: Text(
+                        text!,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: kText9Color,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    );
+                  }
                   return Padding(
                     padding:
                         const EdgeInsets.only(left: 15, top: 40, bottom: 40),

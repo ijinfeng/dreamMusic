@@ -16,6 +16,7 @@ import 'package:dream_music/src/pages/home/right_content/model/right_content_sta
 import 'package:dream_music/src/pages/home/window_navigation_bar/window_buttons.dart';
 import 'package:dream_music/src/pages/mylike/Mylike_page.dart';
 import 'package:dream_music/src/pages/privateFM/private_fm_page.dart';
+import 'package:dream_music/src/pages/setting/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,7 +62,11 @@ class _RightContentBodyState
       return const MylikePage();
     } else if (index == 3) {
       return const MyCollectionPage();
-    } else {
+    }  else if (index == 4) {
+      return const SettingPage();
+    }
+    
+    else {
       return const Center(
         child: MainButton.title(title: '正在搭建'),
       );

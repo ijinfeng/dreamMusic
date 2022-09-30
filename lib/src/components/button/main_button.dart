@@ -13,6 +13,7 @@ class MainButton extends StatelessWidget {
     this.fontSize,
     this.padding,
     this.highlight = true,
+    this.backgroundColor,
   }) : child = null, icon = null, ltr = true, super(key: key);
 
   const MainButton.icon({
@@ -28,6 +29,7 @@ class MainButton extends StatelessWidget {
     this.padding,
     this.ltr = true,
     this.highlight = true,
+    this.backgroundColor,
   }) : child = null, super(key: key);
 
 
@@ -42,6 +44,7 @@ class MainButton extends StatelessWidget {
     this.fontSize,
     this.padding,
     this.highlight = true,
+    this.backgroundColor
   }) : title = null, icon = null, ltr = true, super(key: key);
 
   final Widget? child;
@@ -57,6 +60,7 @@ class MainButton extends StatelessWidget {
   final bool ltr;
   /// 这个属性只有在[enable=true]时才生效，表示按钮可用下的颜色状态
   final bool highlight;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -99,12 +103,13 @@ class MainButton extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        color: (enable && highlight) ? kMainThemeColor : kDisableColor
+        // color: (enable && highlight) ? kMainThemeColor : kDisableColor
       ),
       child: TextButton(onPressed: enable ? onTap : null,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all((enable && highlight) ? kMainThemeColor : kDisableColor),
-        padding: MaterialStateProperty.all(padding ?? EdgeInsets.zero)
+        backgroundColor: MaterialStateProperty.all(backgroundColor ?? ((enable && highlight) ? kMainThemeColor : kDisableColor)),
+        padding: MaterialStateProperty.all(padding ?? EdgeInsets.zero),
+        minimumSize: MaterialStateProperty.all(Size.zero),
       ),
        child: current),
     );

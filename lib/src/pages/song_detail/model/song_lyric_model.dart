@@ -333,4 +333,14 @@ class SongLyricModel {
     }
     return rows;
   }
+
+  /// 是否是纯音乐
+  bool get isAbsoluteMusic {
+    if (lrc?.lyric != null) {
+      if (lrc?.lyric?.contains("纯音乐") == true || lrc?.lyric?.isEmpty == true) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

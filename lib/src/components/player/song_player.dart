@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
+import 'package:dream_music/src/components/dialog/dialog.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/playlist/playlist_drawer.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
@@ -18,7 +20,7 @@ enum PlayMode {
   random,
 }
 
-class SongPlayer extends BaseChangeNotifier {
+class SongPlayer extends BaseChangeNotifier with EasyInterface {
   SongPlayer() {
     player.stop();
 
@@ -165,6 +167,53 @@ class SongPlayer extends BaseChangeNotifier {
     }
     notifyListeners();
     stop();
+  }
+
+  /// 更换播放列表，并且播放指定音乐
+  /// - songlistId: 歌单id，如果传入的歌单id和当前正在播放的歌单id一致，那么将不做修改
+  /// - songs: 播放列表
+  /// - playSong: 指定播放的音乐，如果传入空，那么从[songs]的第一首开始播放
+  /// - force: 是否强制替换，如果为[true]，那么将不会有弹窗提示
+  void replaceSonglistAndPlay(BuildContext context, int? songlistId,
+      List<SingleSongModel>? songs, SingleSongModel? playSong, {bool force = false}) {
+    if (songlistId == this.songlistId && (playSong == null || playSong.track?.id == currentSong?.track?.id)) {
+      showToast("当前正在播放中的列表");
+      return;
+    }
+    if ((songs == null || songs.isEmpty) && playSong == null) {
+      return;
+    }
+    void playCallback() {
+      this.songlistId = songlistId;
+      this.songs = songs;
+      if (playSong != null) {
+        if (songs?.isEmpty == true) {
+          this.songs = [playSong];
+        }
+        updatePlaySong(playSong);
+      } else {
+        if (songs?.isNotEmpty == true) {
+          updatePlaySong(songs?.first);
+        }
+      }
+      play();
+    }
+
+    if (this.songlistId == null || force) {
+      playCallback();
+    } else {
+      showCommonDialog(context,
+          title: "替换播放列表",
+          content: "\"播放全部\"将会替换当前的播放列表，是否继续？",
+          actions: [
+            DialogAction.cancel(),
+            DialogAction.sure(
+                title: '继续',
+                onTap: () {
+                  playCallback();
+                })
+          ]);
+    }
   }
 
   /// 初始化部分变量
@@ -367,13 +416,15 @@ class SongPlayer extends BaseChangeNotifier {
     if (_disposeSonglistListener != null) {
       _disposeSonglistListener!();
     }
-    Future.delayed(Duration(milliseconds: _disposeSonglistListener != null ? 200 : 0), () {
-       // 消失要做动画，可以先向组件发送要消失的通知，并在组件消失动画结束后移除
-    _songlistEntry?.remove();
-    _songlistEntry = null;
-    _disposeSonglistListener = null;
+    Future.delayed(
+        Duration(milliseconds: _disposeSonglistListener != null ? 200 : 0), () {
+      // 消失要做动画，可以先向组件发送要消失的通知，并在组件消失动画结束后移除
+      _songlistEntry?.remove();
+      _songlistEntry = null;
+      _disposeSonglistListener = null;
     });
   }
+
   VoidCallback? _disposeSonglistListener;
 
   void addDisposeSonglistListener(VoidCallback listener) {

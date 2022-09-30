@@ -12,28 +12,29 @@ class HomeStateModel extends BaseChangeNotifier {
   }
 
   /// *********************** Left content
-  List<LeftMenuItemModel> get itemModels => [
-    LeftMenuItemModel(
-      icon: 'assets/leftmenu/my_icn_radio.png',
-      title: '发现音乐'),
-    LeftMenuItemModel(
-      icon: 'assets/leftmenu/my_icn_fm.png',
-       title: '私人FM'),
-    LeftMenuItemModel(
-      icon: 'assets/leftmenu/my_icn_like.png', 
-      title: '我喜欢的音乐'),
-    LeftMenuItemModel(
-      icon: 'assets/leftmenu/my_icn_fav.png', 
-      title: '我的收藏'),
-  ];
+  List<List<LeftMenuItemModel>> get itemModels => [
+        [
+          LeftMenuItemModel(
+              icon: 'assets/leftmenu/my_icn_radio.png', title: '发现音乐', index: 0),
+          LeftMenuItemModel(
+              icon: 'assets/leftmenu/my_icn_fm.png', title: '私人FM', index: 1),
+          LeftMenuItemModel(
+              icon: 'assets/leftmenu/my_icn_like.png', title: '我喜欢的音乐', index: 2),
+          LeftMenuItemModel(
+              icon: 'assets/leftmenu/my_icn_fav.png', title: '我的收藏', index: 3),
+        ],
+        [
+          LeftMenuItemModel(
+              icon: 'assets/leftmenu/my_icn_setting.png', title: '设置', index: 4)
+        ]
+      ];
+
   /// 选中了left content侧边栏第几个栏目
   int _selectedIndex = 0;
   set selectedIndex(int value) {
     if (value == _selectedIndex) return;
     _selectedIndex = value;
-    RouteControlManager().pushAction(
-      TabRouteAction(index: value)
-    );
+    RouteControlManager().pushAction(TabRouteAction(index: value));
     notifyListeners();
   }
 

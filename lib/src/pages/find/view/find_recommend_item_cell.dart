@@ -17,23 +17,18 @@ class FindRecommendItemCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerUp: onTap != null
-          ? (event) {
-              onTap!(model);
-            }
-          : null,
-      child: Column(
-        children: [
-          _BackPicture(model: model),
-          Text(
-            model.name ?? '',
-            maxLines: 2,
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w400, color: kText3Color),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        _BackPicture(model: model, onTap: onTap != null ? () {
+          onTap!(model);
+        } : null,),
+        Text(
+          model.name ?? '',
+          maxLines: 2,
+          style: const TextStyle(
+              fontSize: 14, fontWeight: FontWeight.w400, color: kText3Color),
+        )
+      ],
     );
   }
 }
@@ -42,9 +37,12 @@ class _BackPicture extends StatefulWidget {
   const _BackPicture({
     Key? key,
     required this.model,
+    this.onTap,
   }) : super(key: key);
 
   final FindRecommendModel model;
+
+  final VoidCallback? onTap;
 
   @override
   State<StatefulWidget> createState() {
@@ -97,8 +95,10 @@ class _BackPictureState extends State<_BackPicture> {
                 ],
               ),
             )),
-        const Positioned.fill(
-          child: PlayUnitHoverIcon(),
+        Positioned.fill(
+          child: PlayUnitHoverIcon(
+            onTap: widget.onTap,
+          ),
         )
       ],
     );

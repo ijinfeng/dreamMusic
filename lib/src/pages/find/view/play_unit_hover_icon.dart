@@ -6,12 +6,16 @@ class PlayUnitHoverIcon extends StatelessWidget {
   const PlayUnitHoverIcon({
     Key? key,
     this.playIconWidth = 40,
+    this.onTap,
   }) : super(key: key);
 
   final double playIconWidth;
+  final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
     return HoverWidget(
+      onTap: onTap,
       child: Center(
         child: PlayUnitIcon(playIconWidth: playIconWidth,),
       ),
