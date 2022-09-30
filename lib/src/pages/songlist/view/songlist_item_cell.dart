@@ -4,6 +4,7 @@ import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/hover/hover_widget.dart';
+import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -75,12 +76,12 @@ class _SonglistItemCellState extends State<SonglistItemCell>
         },
         shouldRebuild: (previous, next) => previous != next,
         builder: (context, value, child) {
-          final like = AppSharedManager().isLikeSong(widget.model?.track?.id ?? 0);
+          final like =
+              AppSharedManager().isLikeSong(widget.model?.track?.id ?? 0);
           return CustomTooltipWidget(
             message: like ? '不喜欢' : '喜欢',
             child: SelectableIconButton(
-              selected:
-                  like,
+              selected: like,
               src: 'icon_like_full',
               unsrc: 'icon_like_empty',
               width: 22,
@@ -88,7 +89,8 @@ class _SonglistItemCellState extends State<SonglistItemCell>
               color: kRedColor,
               onTap: (sel) {
                 if (widget.model?.track?.id != null) {
-                  AppSharedManager().likeASong(widget.model!.track!.id!, like: !like);
+                  AppSharedManager()
+                      .likeASong(widget.model!.track!.id!, like: !like);
                 }
               },
             ),
@@ -96,6 +98,32 @@ class _SonglistItemCellState extends State<SonglistItemCell>
         },
       )
     ]);
+    Widget songName = Text(
+      widget.model?.track?.songName ?? '',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(
+          fontSize: 15, fontWeight: FontWeight.w600, color: kText3Color),
+    );
+    songName = CustomTooltipWidget(
+      message: widget.model?.track?.songName ?? '',
+      child: songName,
+    );
+    // VIP
+    if (widget.model?.track?.fee == 1) {
+      songName = Row(
+        children: [
+          const ImageView.asset(
+            src: 'icon_vip',
+            width: 14,
+            height: 14,
+            color: kDarkgoldColor,
+          ),
+          widthSpace(2),
+          Expanded(child: songName)
+        ],
+      );
+    }
     // 歌曲名/歌手
     left.addAll([
       widthSpace(10),
@@ -104,24 +132,19 @@ class _SonglistItemCellState extends State<SonglistItemCell>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.model?.track?.name ?? '',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: kText3Color),
-            ),
+            songName,
             heightSpace(2),
-            Text(
-              widget.model?.track?.authorName ?? '',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: kText9Color),
+            CustomTooltipWidget(
+              message: widget.model?.track?.authorName ?? '',
+              child: Text(
+                widget.model?.track?.authorName ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: kText9Color),
+              ),
             ),
           ],
         ),
@@ -135,6 +158,10 @@ class _SonglistItemCellState extends State<SonglistItemCell>
       textAlign: TextAlign.center,
       style: const TextStyle(
           fontSize: 14, fontWeight: FontWeight.w500, color: kText9Color),
+    );
+    album = CustomTooltipWidget(
+      message: widget.model?.track?.al?.name ?? '',
+      child: album,
     );
 
     // 时长

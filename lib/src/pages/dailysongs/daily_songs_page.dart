@@ -86,14 +86,15 @@ class _DailySongsPageState
   /// 添加播放列表，开始播放音乐
   void _selectedOneSongFromSonglist(SingleSongModel model) {
     final player = getPlayer(context);
-    final dailySongs = viewModel?.dailySongs;
-    int? songlistId = player.songlistId;
-    if (songlistId != dailySongs?.songlistId) {
-      // 更新播放列表
-      player.songlistId = dailySongs?.songlistId;
-      player.songs = dailySongs?.getSongs();
-    }
-    player.updatePlaySong(model);
-    player.play();
+    // final dailySongs = viewModel?.dailySongs;
+    // int? songlistId = player.songlistId;
+    // if (songlistId != dailySongs?.songlistId) {
+    //   // 更新播放列表
+    //   player.songlistId = dailySongs?.songlistId;
+    //   player.songs = dailySongs?.getSongs();
+    // }
+    // player.updatePlaySong(model);
+    // player.play();
+    player.replaceSonglistAndPlay(context, viewModel?.dailySongs?.songlistId, viewModel?.dailySongs?.getSongs(), model, force: true);
   }
 }

@@ -33,3 +33,6 @@ const Color kRedColor = Color(0xFFF20000);
 
 /// 分割线颜色
 const Color kDividerColor = Color(0xffcccccc);
+
+/// 暗金色
+const Color kDarkgoldColor = Color(0xFFDAA520);

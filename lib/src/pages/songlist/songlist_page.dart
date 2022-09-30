@@ -96,13 +96,14 @@ class _SonglistState extends ProviderState<SonglistPage, SonglistStateModel> {
   /// 添加播放列表，开始播放音乐
   void _selectedOneSongFromSonglist(SingleSongModel model) {
     final player = getPlayer(context);
-    int? songlistId = player.songlistId;
-    if (songlistId != viewModel?.detailModel?.playlist?.id) {
-      // 更新播放列表
-      player.songlistId = viewModel?.detailModel?.playlist?.id;
-      player.songs = viewModel?.songs;
-    }
-    player.updatePlaySong(model);
-    player.play();
+    // int? songlistId = player.songlistId;
+    // if (songlistId != viewModel?.detailModel?.playlist?.id) {
+    //   // 更新播放列表
+    //   player.songlistId = viewModel?.detailModel?.playlist?.id;
+    //   player.songs = viewModel?.songs;
+    // }
+    // player.updatePlaySong(model);
+    // player.play();
+    player.replaceSonglistAndPlay(context, viewModel?.detailModel?.playlist?.id, viewModel?.songs, model, force: true);
   }
 }

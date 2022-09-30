@@ -183,6 +183,10 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
     if ((songs == null || songs.isEmpty) && playSong == null) {
       return;
     }
+    if (playSong != null && playSong.canPlay.canPlay == false) {
+      showToast(playSong.canPlay.reason);
+      return;
+    }
     void playCallback() {
       this.songlistId = songlistId;
       this.songs = songs;
@@ -193,7 +197,15 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
         updatePlaySong(playSong);
       } else {
         if (songs?.isNotEmpty == true) {
-          updatePlaySong(songs?.first);
+          // 这里是全部播放，默认从第一首开始播放，此时需要判断下播放权限
+          SingleSongModel? song;
+          for (var s in songs!) {
+            if (s.canPlay.canPlay) {
+              song = s;
+              break;
+            }
+          }
+          updatePlaySong(song);
         }
       }
       play();
@@ -317,16 +329,36 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
   /// - ignoreOneloop: 忽略单曲循环
   void playNext({bool ignoreOneloop = true}) {
     _playSongIndex = _getAPlaySongIndex(true, ignoreOneloop: ignoreOneloop);
-    _readyToPlayNewSong();
-    play();
+    final song = _readyToPlayNewSong();
+    if (song == null) {
+      return;
+    }
+    if (song.canPlay.canPlay) {
+      updatePlaySong(song);
+      play();
+    } else {
+      if (ignoreOneloop || playMode != PlayMode.oneloop) {
+        playNext(ignoreOneloop: ignoreOneloop);
+      }
+    }
   }
 
   /// 播放上一首
   /// /// - ignoreOneloop: 忽略单曲循环
   void playPrevious({bool ignoreOneloop = true}) {
     _playSongIndex = _getAPlaySongIndex(false, ignoreOneloop: ignoreOneloop);
-    _readyToPlayNewSong();
-    play();
+    final song = _readyToPlayNewSong();
+    if (song == null) {
+      return;
+    }
+    if (song.canPlay.canPlay) {
+      updatePlaySong(song);
+      play();
+    } else {
+      if (ignoreOneloop || playMode != PlayMode.oneloop) {
+        playPrevious(ignoreOneloop: ignoreOneloop);
+      }
+    }
   }
 
   /// 获取一个播放下标
@@ -377,13 +409,15 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
 
   /// 准备播放一首新歌
   /// 在 [播放结束｜下一首｜上一首] 触发
-  void _readyToPlayNewSong() {
+  SingleSongModel? _readyToPlayNewSong() {
     _fixPlaySongIndexIfNeeded();
     if (playlistIsEmpty) {
-      updatePlaySong(null);
+      // updatePlaySong(null);
+      return null;
     } else {
       final song = songs![_playSongIndex];
-      updatePlaySong(song);
+      // updatePlaySong(song);
+      return song;
     }
   }
 

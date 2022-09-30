@@ -71,7 +71,16 @@ class _LeftMenuBodyState extends ProviderState with EasyInterface {
                 },
                 sectionBuilder: (context, index) {
                   if (index != 0) {
-                    return heightSpace(30);
+                    return Container(
+                      height: 12,
+                      alignment: Alignment.center,
+                      child: const Divider(
+                        height: 0.5,
+                        color: kDividerColor,
+                        indent: 10,
+                        endIndent: 10,
+                      ),
+                    );
                   }
                   return null;
                 },

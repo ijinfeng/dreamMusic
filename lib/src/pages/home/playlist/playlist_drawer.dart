@@ -104,12 +104,12 @@ class _PlaylistDrawerState extends State<PlaylistDrawer>
                                           color: kText9Color,
                                           fontWeight: FontWeight.w400))
                                 ])),
-                            MainButton.title(
-                              title: '收藏全部',
-                              fontSize: 14,
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              onTap: () {},
-                            )
+                            // MainButton.title(
+                            //   title: '清空列表',
+                            //   fontSize: 14,
+                            //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                            //   onTap: () {},
+                            // )
                           ],
                         ),
                       ),
@@ -197,7 +197,8 @@ class _PlaylistDrawerState extends State<PlaylistDrawer>
   void _selectedOneSongFromSonglist(
       SingleSongModel model, BuildContext context) {
     final player = getPlayer(context);
-    player.updatePlaySong(model);
-    player.play();
+    // player.updatePlaySong(model);
+    // player.play();
+    player.replaceSonglistAndPlay(context, player.songlistId, player.songs, model, force: true);
   }
 }
