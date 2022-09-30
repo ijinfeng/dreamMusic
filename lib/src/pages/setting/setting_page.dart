@@ -6,6 +6,7 @@ import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
+import 'package:dream_music/src/pages/find/request/find_request.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
 import 'package:dream_music/src/pages/song_detail/request/song_detail_request.dart';
@@ -124,6 +125,11 @@ class SettingPage extends StatelessWidget with EasyInterface {
                 },
               ),
             ),
+            heightSpace(10),
+            MainButton.title(title: '私人FM',
+            onTap: () {
+             FindRequest.personalFM();
+            },)
           ],
         ),
       ),

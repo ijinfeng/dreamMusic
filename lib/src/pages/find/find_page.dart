@@ -15,6 +15,8 @@ import 'package:dream_music/src/pages/find/request/find_request.dart';
 import 'package:dream_music/src/pages/find/view/find_daily_songs_widget.dart';
 import 'package:dream_music/src/pages/find/view/find_recommend_view.dart';
 import 'package:dream_music/src/pages/find/view/find_section_title_view.dart';
+import 'package:dream_music/src/pages/find/view/personl_fm_widget.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +48,7 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel>
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     Widget contentList = FFListView(
-      sectionCount: 2,
+      sectionCount: 3,
       itemBuilder: (context, section, index) {
         if (section == 0) {
           return Padding(
@@ -59,6 +61,10 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel>
               },
             ),
           );
+        } else if (section == 1) {
+          return const Padding(
+              padding: EdgeInsets.only(top: 10, bottom: 30),
+              child: PersonlFMWidget());
         } else {
           return Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -66,8 +72,6 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel>
               selector: (p0, p1) => p1.hasRequestRecommends,
               shouldRebuild: (previous, next) => previous != next,
               builder: (context, value, child) {
-                debugPrint(
-                    '[find]推荐列表刷新了, count=${viewModel?.recommendModels.length}');
                 return value
                     ? FindRecommendView(
                         models: viewModel?.recommendModels,
@@ -84,6 +88,8 @@ class _FindPageState extends ProviderState<FindPage, FindStateModel>
       sectionBuilder: (context, index) {
         if (index == 0) {
           return const FindSectionTitleView(title: '每日音乐');
+        } else if (index == 1) {
+          return const FindSectionTitleView(title: '私人FM');
         } else {
           return const FindSectionTitleView(title: '推荐歌单');
         }

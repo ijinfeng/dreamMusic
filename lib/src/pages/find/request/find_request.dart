@@ -27,4 +27,12 @@ class FindRequest {
     );
     return res;
   }
+
+  /// 私人FM，需要登录
+  static Future<ResponseModel> personalFM() {
+    final res = neRequest.get(
+      '/personal_fm'
+    );
+    return res;
+  }
 }
