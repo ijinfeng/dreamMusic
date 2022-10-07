@@ -15,7 +15,8 @@ class SelectableIconButton extends StatelessWidget {
       this.onTap,
       this.width,
       this.height,
-      this.padding = const EdgeInsets.all(2)})
+      this.padding = const EdgeInsets.all(2),
+      this.enable = true,})
       : super(key: key);
 
   final bool selected;
@@ -32,16 +33,21 @@ class SelectableIconButton extends StatelessWidget {
   final double? width;
   final double? height;
   final EdgeInsetsGeometry? padding;
+  final bool enable;
 
   @override
   Widget build(BuildContext context) {
     Color selectedColor = color ?? kHighlightThemeColor;
     Color unselectedColor = unColor ?? kText9Color;
+    if (!enable) {
+      selectedColor = kDisableColor;
+      unselectedColor = kDisableColor;
+    }
     return TextButton(
         style: TextButton.styleFrom(padding: padding ?? EdgeInsets.zero,
           minimumSize: Size.zero
         ),
-        onPressed: onTap != null ? () {
+        onPressed: (onTap != null && enable) ? () {
             onTap!(selected);
         } : null,
         child: ImageView.asset(

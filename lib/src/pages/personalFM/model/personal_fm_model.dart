@@ -1,250 +1,11 @@
+import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
+import 'package:dream_music/src/pages/song_detail/model/song_detail_model.dart';
+import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
+
 ///
 ///2022-9-5 2022/9/30
 ///
 ///
-class PersonalFMModelPrivilegeChargeInfoList {
-  /*
-    {
-    "rate": 128000,
-    "chargeUrl": null,
-    "chargeMessage": null,
-    "chargeType": 0
-    }
-  */
-
-  int? rate;
-  String? chargeUrl;
-  String? chargeMessage;
-  int? chargeType;
-
-  PersonalFMModelPrivilegeChargeInfoList({
-    this.rate,
-    this.chargeUrl,
-    this.chargeMessage,
-    this.chargeType,
-  });
-  PersonalFMModelPrivilegeChargeInfoList.fromJson(Map<String, dynamic> json) {
-    rate = int.tryParse(json['rate']?.toString() ?? '');
-    chargeUrl = json['chargeUrl']?.toString();
-    chargeMessage = json['chargeMessage']?.toString();
-    chargeType = int.tryParse(json['chargeType']?.toString() ?? '');
-  }
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['rate'] = rate;
-    data['chargeUrl'] = chargeUrl;
-    data['chargeMessage'] = chargeMessage;
-    data['chargeType'] = chargeType;
-    return data;
-  }
-}
-
-class PersonalFMModelPrivilegeFreeTrialPrivilege {
-  /*
-    {
-    "resConsumable": false,
-    "userConsumable": false,
-    "listenType": null
-    }
-  */
-
-  bool? resConsumable;
-  bool? userConsumable;
-  String? listenType;
-
-  PersonalFMModelPrivilegeFreeTrialPrivilege({
-    this.resConsumable,
-    this.userConsumable,
-    this.listenType,
-  });
-  PersonalFMModelPrivilegeFreeTrialPrivilege.fromJson(Map<String, dynamic> json) {
-    resConsumable = json['resConsumable'];
-    userConsumable = json['userConsumable'];
-    listenType = json['listenType']?.toString();
-  }
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['resConsumable'] = resConsumable;
-    data['userConsumable'] = userConsumable;
-    data['listenType'] = listenType;
-    return data;
-  }
-}
-
-class PersonalFMModelPrivilege {
-  /*
-    {
-    "id": 1475596788,
-    "fee": 8,
-    "payed": 0,
-    "st": 0,
-    "pl": 128000,
-    "dl": 0,
-    "sp": 7,
-    "cp": 1,
-    "subp": 1,
-    "cs": false,
-    "maxbr": 999000,
-    "fl": 128000,
-    "toast": false,
-    "flag": 256,
-    "preSell": false,
-    "playMaxbr": 999000,
-    "downloadMaxbr": 999000,
-    "maxBrLevel": "hires",
-    "playMaxBrLevel": "hires",
-    "downloadMaxBrLevel": "hires",
-    "plLevel": "standard",
-    "dlLevel": "none",
-    "flLevel": "standard",
-    "rscl": null,
-    "freeTrialPrivilege": {
-        "resConsumable": false,
-        "userConsumable": false,
-        "listenType": null
-    },
-    "chargeInfoList": [
-        {
-            "rate": 128000,
-            "chargeUrl": null,
-            "chargeMessage": null,
-            "chargeType": 0
-        }
-    ]
-    }
-  */
-
-  int? id;
-  int? fee;
-  int? payed;
-  int? st;
-  int? pl;
-  int? dl;
-  int? sp;
-  int? cp;
-  int? subp;
-  bool? cs;
-  int? maxbr;
-  int? fl;
-  bool? toast;
-  int? flag;
-  bool? preSell;
-  int? playMaxbr;
-  int? downloadMaxbr;
-  String? maxBrLevel;
-  String? playMaxBrLevel;
-  String? downloadMaxBrLevel;
-  String? plLevel;
-  String? dlLevel;
-  String? flLevel;
-  String? rscl;
-  PersonalFMModelPrivilegeFreeTrialPrivilege? freeTrialPrivilege;
-  List<PersonalFMModelPrivilegeChargeInfoList?>? chargeInfoList;
-
-  PersonalFMModelPrivilege({
-    this.id,
-    this.fee,
-    this.payed,
-    this.st,
-    this.pl,
-    this.dl,
-    this.sp,
-    this.cp,
-    this.subp,
-    this.cs,
-    this.maxbr,
-    this.fl,
-    this.toast,
-    this.flag,
-    this.preSell,
-    this.playMaxbr,
-    this.downloadMaxbr,
-    this.maxBrLevel,
-    this.playMaxBrLevel,
-    this.downloadMaxBrLevel,
-    this.plLevel,
-    this.dlLevel,
-    this.flLevel,
-    this.rscl,
-    this.freeTrialPrivilege,
-    this.chargeInfoList,
-  });
-  PersonalFMModelPrivilege.fromJson(Map<String, dynamic> json) {
-    id = int.tryParse(json['id']?.toString() ?? '');
-    fee = int.tryParse(json['fee']?.toString() ?? '');
-    payed = int.tryParse(json['payed']?.toString() ?? '');
-    st = int.tryParse(json['st']?.toString() ?? '');
-    pl = int.tryParse(json['pl']?.toString() ?? '');
-    dl = int.tryParse(json['dl']?.toString() ?? '');
-    sp = int.tryParse(json['sp']?.toString() ?? '');
-    cp = int.tryParse(json['cp']?.toString() ?? '');
-    subp = int.tryParse(json['subp']?.toString() ?? '');
-    cs = json['cs'];
-    maxbr = int.tryParse(json['maxbr']?.toString() ?? '');
-    fl = int.tryParse(json['fl']?.toString() ?? '');
-    toast = json['toast'];
-    flag = int.tryParse(json['flag']?.toString() ?? '');
-    preSell = json['preSell'];
-    playMaxbr = int.tryParse(json['playMaxbr']?.toString() ?? '');
-    downloadMaxbr = int.tryParse(json['downloadMaxbr']?.toString() ?? '');
-    maxBrLevel = json['maxBrLevel']?.toString();
-    playMaxBrLevel = json['playMaxBrLevel']?.toString();
-    downloadMaxBrLevel = json['downloadMaxBrLevel']?.toString();
-    plLevel = json['plLevel']?.toString();
-    dlLevel = json['dlLevel']?.toString();
-    flLevel = json['flLevel']?.toString();
-    rscl = json['rscl']?.toString();
-    freeTrialPrivilege = (json['freeTrialPrivilege'] != null && (json['freeTrialPrivilege'] is Map)) ? PersonalFMModelPrivilegeFreeTrialPrivilege.fromJson(json['freeTrialPrivilege']) : null;
-  if (json['chargeInfoList'] != null && (json['chargeInfoList'] is List)) {
-  final v = json['chargeInfoList'];
-  final arr0 = <PersonalFMModelPrivilegeChargeInfoList>[];
-  v.forEach((v) {
-  arr0.add(PersonalFMModelPrivilegeChargeInfoList.fromJson(v));
-  });
-    chargeInfoList = arr0;
-    }
-  }
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['id'] = id;
-    data['fee'] = fee;
-    data['payed'] = payed;
-    data['st'] = st;
-    data['pl'] = pl;
-    data['dl'] = dl;
-    data['sp'] = sp;
-    data['cp'] = cp;
-    data['subp'] = subp;
-    data['cs'] = cs;
-    data['maxbr'] = maxbr;
-    data['fl'] = fl;
-    data['toast'] = toast;
-    data['flag'] = flag;
-    data['preSell'] = preSell;
-    data['playMaxbr'] = playMaxbr;
-    data['downloadMaxbr'] = downloadMaxbr;
-    data['maxBrLevel'] = maxBrLevel;
-    data['playMaxBrLevel'] = playMaxBrLevel;
-    data['downloadMaxBrLevel'] = downloadMaxBrLevel;
-    data['plLevel'] = plLevel;
-    data['dlLevel'] = dlLevel;
-    data['flLevel'] = flLevel;
-    data['rscl'] = rscl;
-    if (freeTrialPrivilege != null) {
-      data['freeTrialPrivilege'] = freeTrialPrivilege!.toJson();
-    }
-    if (chargeInfoList != null) {
-      final v = chargeInfoList;
-      final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v!.toJson());
-  });
-      data['chargeInfoList'] = arr0;
-    }
-    return data;
-  }
-}
-
 class PersonalFMModelLMusic {
   /*
     {
@@ -508,7 +269,8 @@ class PersonalFMModelOriginSongSimpleDataAlbumMeta {
     this.id,
     this.name,
   });
-  PersonalFMModelOriginSongSimpleDataAlbumMeta.fromJson(Map<String, dynamic> json) {
+  PersonalFMModelOriginSongSimpleDataAlbumMeta.fromJson(
+      Map<String, dynamic> json) {
     id = int.tryParse(json['id']?.toString() ?? '');
     name = json['name']?.toString();
   }
@@ -535,7 +297,8 @@ class PersonalFMModelOriginSongSimpleDataArtists {
     this.id,
     this.name,
   });
-  PersonalFMModelOriginSongSimpleDataArtists.fromJson(Map<String, dynamic> json) {
+  PersonalFMModelOriginSongSimpleDataArtists.fromJson(
+      Map<String, dynamic> json) {
     id = int.tryParse(json['id']?.toString() ?? '');
     name = json['name']?.toString();
   }
@@ -579,15 +342,18 @@ class PersonalFMModelOriginSongSimpleData {
   PersonalFMModelOriginSongSimpleData.fromJson(Map<String, dynamic> json) {
     songId = int.tryParse(json['songId']?.toString() ?? '');
     name = json['name']?.toString();
-  if (json['artists'] != null && (json['artists'] is List)) {
-  final v = json['artists'];
-  final arr0 = <PersonalFMModelOriginSongSimpleDataArtists>[];
-  v.forEach((v) {
-  arr0.add(PersonalFMModelOriginSongSimpleDataArtists.fromJson(v));
-  });
-    artists = arr0;
+    if (json['artists'] != null && (json['artists'] is List)) {
+      final v = json['artists'];
+      final arr0 = <PersonalFMModelOriginSongSimpleDataArtists>[];
+      v.forEach((v) {
+        arr0.add(PersonalFMModelOriginSongSimpleDataArtists.fromJson(v));
+      });
+      artists = arr0;
     }
-    albumMeta = (json['albumMeta'] != null && (json['albumMeta'] is Map)) ? PersonalFMModelOriginSongSimpleDataAlbumMeta.fromJson(json['albumMeta']) : null;
+    albumMeta = (json['albumMeta'] != null && (json['albumMeta'] is Map))
+        ? PersonalFMModelOriginSongSimpleDataAlbumMeta.fromJson(
+            json['albumMeta'])
+        : null;
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -596,9 +362,9 @@ class PersonalFMModelOriginSongSimpleData {
     if (artists != null) {
       final v = artists;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v!.toJson());
-  });
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
       data['artists'] = arr0;
     }
     if (albumMeta != null) {
@@ -1021,25 +787,27 @@ class PersonalFMModelAlbum {
     tags = json['tags']?.toString();
     company = json['company']?.toString();
     briefDesc = json['briefDesc']?.toString();
-    artist = (json['artist'] != null && (json['artist'] is Map)) ? PersonalFMModelAlbumArtist.fromJson(json['artist']) : null;
-  if (json['alias'] != null && (json['alias'] is List)) {
-  final v = json['alias'];
-  final arr0 = <String>[];
-  v.forEach((v) {
-  arr0.add(v.toString());
-  });
-    alias = arr0;
+    artist = (json['artist'] != null && (json['artist'] is Map))
+        ? PersonalFMModelAlbumArtist.fromJson(json['artist'])
+        : null;
+    if (json['alias'] != null && (json['alias'] is List)) {
+      final v = json['alias'];
+      final arr0 = <String>[];
+      v.forEach((v) {
+        arr0.add(v.toString());
+      });
+      alias = arr0;
     }
     status = int.tryParse(json['status']?.toString() ?? '');
     copyrightId = int.tryParse(json['copyrightId']?.toString() ?? '');
     commentThreadId = json['commentThreadId']?.toString();
-  if (json['artists'] != null && (json['artists'] is List)) {
-  final v = json['artists'];
-  final arr0 = <PersonalFMModelAlbumArtists>[];
-  v.forEach((v) {
-  arr0.add(PersonalFMModelAlbumArtists.fromJson(v));
-  });
-    artists = arr0;
+    if (json['artists'] != null && (json['artists'] is List)) {
+      final v = json['artists'];
+      final arr0 = <PersonalFMModelAlbumArtists>[];
+      v.forEach((v) {
+        arr0.add(PersonalFMModelAlbumArtists.fromJson(v));
+      });
+      artists = arr0;
     }
     subType = json['subType']?.toString();
     transName = json['transName']?.toString();
@@ -1070,9 +838,9 @@ class PersonalFMModelAlbum {
     if (alias != null) {
       final v = alias;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v);
-  });
+      v!.forEach((v) {
+        arr0.add(v);
+      });
       data['alias'] = arr0;
     }
     data['status'] = status;
@@ -1081,9 +849,9 @@ class PersonalFMModelAlbum {
     if (artists != null) {
       final v = artists;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v!.toJson());
-  });
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
       data['artists'] = arr0;
     }
     data['subType'] = subType;
@@ -1466,7 +1234,7 @@ class PersonalFMModel {
   PersonalFMModelMMusic? mMusic;
   PersonalFMModelLMusic? lMusic;
   String? reason;
-  PersonalFMModelPrivilege? privilege;
+  SongDetailModelPrivileges? privilege;
   String? alg;
 
   PersonalFMModel({
@@ -1522,28 +1290,30 @@ class PersonalFMModel {
     name = json['name']?.toString();
     id = int.tryParse(json['id']?.toString() ?? '');
     position = int.tryParse(json['position']?.toString() ?? '');
-  if (json['alias'] != null && (json['alias'] is List)) {
-  final v = json['alias'];
-  final arr0 = <String>[];
-  v.forEach((v) {
-  arr0.add(v.toString());
-  });
-    alias = arr0;
+    if (json['alias'] != null && (json['alias'] is List)) {
+      final v = json['alias'];
+      final arr0 = <String>[];
+      v.forEach((v) {
+        arr0.add(v.toString());
+      });
+      alias = arr0;
     }
     status = int.tryParse(json['status']?.toString() ?? '');
     fee = int.tryParse(json['fee']?.toString() ?? '');
     copyrightId = int.tryParse(json['copyrightId']?.toString() ?? '');
     disc = json['disc']?.toString();
     no = int.tryParse(json['no']?.toString() ?? '');
-  if (json['artists'] != null && (json['artists'] is List)) {
-  final v = json['artists'];
-  final arr0 = <PersonalFMModelArtists>[];
-  v.forEach((v) {
-  arr0.add(PersonalFMModelArtists.fromJson(v));
-  });
-    artists = arr0;
+    if (json['artists'] != null && (json['artists'] is List)) {
+      final v = json['artists'];
+      final arr0 = <PersonalFMModelArtists>[];
+      v.forEach((v) {
+        arr0.add(PersonalFMModelArtists.fromJson(v));
+      });
+      artists = arr0;
     }
-    album = (json['album'] != null && (json['album'] is Map)) ? PersonalFMModelAlbum.fromJson(json['album']) : null;
+    album = (json['album'] != null && (json['album'] is Map))
+        ? PersonalFMModelAlbum.fromJson(json['album'])
+        : null;
     starred = json['starred'];
     popularity = int.tryParse(json['popularity']?.toString() ?? '');
     score = int.tryParse(json['score']?.toString() ?? '');
@@ -1552,8 +1322,12 @@ class PersonalFMModel {
     playedNum = int.tryParse(json['playedNum']?.toString() ?? '');
     dayPlays = int.tryParse(json['dayPlays']?.toString() ?? '');
     hearTime = int.tryParse(json['hearTime']?.toString() ?? '');
-    sqMusic = (json['sqMusic'] != null && (json['sqMusic'] is Map)) ? PersonalFMModelSqMusic.fromJson(json['sqMusic']) : null;
-    hrMusic = (json['hrMusic'] != null && (json['hrMusic'] is Map)) ? PersonalFMModelHrMusic.fromJson(json['hrMusic']) : null;
+    sqMusic = (json['sqMusic'] != null && (json['sqMusic'] is Map))
+        ? PersonalFMModelSqMusic.fromJson(json['sqMusic'])
+        : null;
+    hrMusic = (json['hrMusic'] != null && (json['hrMusic'] is Map))
+        ? PersonalFMModelHrMusic.fromJson(json['hrMusic'])
+        : null;
     ringtone = json['ringtone']?.toString();
     crbt = json['crbt']?.toString();
     audition = json['audition']?.toString();
@@ -1566,19 +1340,33 @@ class PersonalFMModel {
     sign = json['sign']?.toString();
     mark = int.tryParse(json['mark']?.toString() ?? '');
     originCoverType = int.tryParse(json['originCoverType']?.toString() ?? '');
-    originSongSimpleData = (json['originSongSimpleData'] != null && (json['originSongSimpleData'] is Map)) ? PersonalFMModelOriginSongSimpleData.fromJson(json['originSongSimpleData']) : null;
+    originSongSimpleData = (json['originSongSimpleData'] != null &&
+            (json['originSongSimpleData'] is Map))
+        ? PersonalFMModelOriginSongSimpleData.fromJson(
+            json['originSongSimpleData'])
+        : null;
     single = int.tryParse(json['single']?.toString() ?? '');
     noCopyrightRcmd = json['noCopyrightRcmd']?.toString();
     rtype = int.tryParse(json['rtype']?.toString() ?? '');
     rurl = json['rurl']?.toString();
     mvid = int.tryParse(json['mvid']?.toString() ?? '');
-    bMusic = (json['bMusic'] != null && (json['bMusic'] is Map)) ? PersonalFMModelBMusic.fromJson(json['bMusic']) : null;
+    bMusic = (json['bMusic'] != null && (json['bMusic'] is Map))
+        ? PersonalFMModelBMusic.fromJson(json['bMusic'])
+        : null;
     mp3Url = json['mp3Url']?.toString();
-    hMusic = (json['hMusic'] != null && (json['hMusic'] is Map)) ? PersonalFMModelHMusic.fromJson(json['hMusic']) : null;
-    mMusic = (json['mMusic'] != null && (json['mMusic'] is Map)) ? PersonalFMModelMMusic.fromJson(json['mMusic']) : null;
-    lMusic = (json['lMusic'] != null && (json['lMusic'] is Map)) ? PersonalFMModelLMusic.fromJson(json['lMusic']) : null;
+    hMusic = (json['hMusic'] != null && (json['hMusic'] is Map))
+        ? PersonalFMModelHMusic.fromJson(json['hMusic'])
+        : null;
+    mMusic = (json['mMusic'] != null && (json['mMusic'] is Map))
+        ? PersonalFMModelMMusic.fromJson(json['mMusic'])
+        : null;
+    lMusic = (json['lMusic'] != null && (json['lMusic'] is Map))
+        ? PersonalFMModelLMusic.fromJson(json['lMusic'])
+        : null;
     reason = json['reason']?.toString();
-    privilege = (json['privilege'] != null && (json['privilege'] is Map)) ? PersonalFMModelPrivilege.fromJson(json['privilege']) : null;
+    privilege = (json['privilege'] != null && (json['privilege'] is Map))
+        ? SongDetailModelPrivileges.fromJson(json['privilege'])
+        : null;
     alg = json['alg']?.toString();
   }
   Map<String, dynamic> toJson() {
@@ -1589,9 +1377,9 @@ class PersonalFMModel {
     if (alias != null) {
       final v = alias;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v);
-  });
+      v!.forEach((v) {
+        arr0.add(v);
+      });
       data['alias'] = arr0;
     }
     data['status'] = status;
@@ -1602,9 +1390,9 @@ class PersonalFMModel {
     if (artists != null) {
       final v = artists;
       final arr0 = [];
-  v!.forEach((v) {
-  arr0.add(v!.toJson());
-  });
+      v!.forEach((v) {
+        arr0.add(v!.toJson());
+      });
       data['artists'] = arr0;
     }
     if (album != null) {
@@ -1663,5 +1451,96 @@ class PersonalFMModel {
     }
     data['alg'] = alg;
     return data;
+  }
+
+  /// 转换成音乐播放模型
+  SingleSongModel toSongModel() {
+    List<SonglistDetailModelTracksAr?>? ar;
+    if (artists != null) {
+      ar = [];
+      for (var artist in artists!) {
+        ar.add(SonglistDetailModelTracksAr(name: artist?.name, id: artist?.id));
+      }
+    }
+
+    SonglistDetailModelTracksAl? al;
+    if (album != null) {
+      al = SonglistDetailModelTracksAl(
+          name: album?.name,
+          id: album?.id,
+          picUrl: album?.picUrl,
+          picStr: album?.picIdStr,
+          pic: album?.pic);
+    }
+    return SingleSongModel(
+        track: SonglistDetailModelTracks(
+            name: name,
+            id: id,
+            pst: null,
+            t: null,
+            ar: ar,
+            pop: popularity,
+            st: null,
+            rt: null,
+            fee: fee,
+            v: null,
+            crbt: crbt,
+            cf: copyFrom,
+            al: al,
+            dt: duration,
+            h: hMusic != null
+                ? SonglistDetailModelTracksH(
+                    br: hMusic?.bitrate,
+                    fid: hMusic?.id,
+                    size: hMusic?.size,
+                    vd: hMusic?.volumeDelta)
+                : null,
+            m: mMusic != null
+                ? SonglistDetailModelTracksM(
+                    br: mMusic?.bitrate,
+                    fid: mMusic?.id,
+                    size: mMusic?.size,
+                    vd: mMusic?.volumeDelta)
+                : null,
+            l: lMusic != null
+                ? SonglistDetailModelTracksL(
+                    br: lMusic?.bitrate,
+                    fid: lMusic?.id,
+                    size: lMusic?.size,
+                    vd: lMusic?.volumeDelta)
+                : null,
+            sq: sqMusic != null
+                ? SonglistDetailModelTracksSq(
+                    br: sqMusic?.bitrate,
+                    fid: sqMusic?.id,
+                    size: sqMusic?.size,
+                    vd: sqMusic?.volumeDelta)
+                : null,
+            hr: null,
+            a: null,
+            cd: null,
+            no: no,
+            rtUrl: rtUrl,
+            rtype: rtype,
+            ftype: ftype,
+            djId: null,
+            copyright: copyright,
+            sId: null,
+            mark: mark,
+            originCoverType: originCoverType,
+            originSongSimpleData: null,
+            tagPicList: null,
+            resourceState: null,
+            version: null,
+            songJumpInfo: null,
+            entertainmentTags: null,
+            single: single,
+            noCopyrightRcmd: noCopyrightRcmd,
+            rurl: rurl,
+            mst: null,
+            cp: null,
+            mv: null,
+            publishTime: null),
+        privilege: privilege);
   }
 }

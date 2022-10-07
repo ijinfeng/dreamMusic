@@ -10,14 +10,21 @@ class BaseChangeNotifier extends ChangeNotifier {
 
   @override
   void dispose() {
-    disposed = true;
-    super.dispose();
-    debugPrint('[disposed]$this');
+    context = null;
+    if (needAutoDispose()) {
+      disposed = true;
+      super.dispose();
+      debugPrint('[disposed]$this');
+    }
   }
 
   @override
   void notifyListeners() {
     if (disposed) return;
     super.notifyListeners();
+  }
+
+  bool needAutoDispose() {
+    return true;
   }
 }

@@ -13,19 +13,27 @@ class CommonScaffold extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final Widget? endDrawer;
 
-  const CommonScaffold({
-    Key? key,
-    required this.body,
-    this.title,
-    this.leftItem,
-    this.centerItem,
-    this.rightItem,
-    this.hideNavigationBar = false,
-    this.floatingActionButton,
-    this.backgroundColor,
-    this.padding,
-    this.endDrawer,
-  }) : super(key: key);
+  /// 限制内容区域的最大宽度，当达到最大时，内容区域将剧中显示并不再变宽
+  final bool limitBodyWidth;
+
+  /// 最大宽度，默认850
+  final double? limitBodyMaxWidth;
+
+  const CommonScaffold(
+      {Key? key,
+      required this.body,
+      this.title,
+      this.leftItem,
+      this.centerItem,
+      this.rightItem,
+      this.hideNavigationBar = false,
+      this.floatingActionButton,
+      this.backgroundColor,
+      this.padding,
+      this.endDrawer,
+      this.limitBodyWidth = false,
+      this.limitBodyMaxWidth})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +52,21 @@ class CommonScaffold extends StatelessWidget {
           )
         : centerItem;
 
+    Widget current = body;
+    if (limitBodyWidth) {
+      current = Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: limitBodyMaxWidth ?? 850),
+          child: current,
+        ),
+      );
+    }
+    if (padding != null) {
+      current = Padding(
+        padding: padding!,
+        child: current,
+      );
+    }
     return Scaffold(
       floatingActionButton: floatingActionButton,
       backgroundColor: backgroundColor ?? Colors.white,
@@ -65,10 +88,10 @@ class CommonScaffold extends StatelessWidget {
                             height: 23,
                           )),
                 ),
-                Expanded(child: padding != null ? Padding(padding: padding!, child: body,) : body)
+                Expanded(child: current)
               ],
             )
-          : padding != null ? Padding(padding: padding!, child: body,) : body,
+          : current,
     );
   }
 }

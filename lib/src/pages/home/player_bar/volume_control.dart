@@ -29,7 +29,7 @@ class _VolumeControlState extends State<VolumeControl> with EasyInterface {
           ),
           widthSpace(2),
           CustomTooltipWidget(
-            message: '音量控制',
+            message: "音量控制(${(getPlayer(context).volume * 100).toInt()})",
             child: SizedBox(
               width: 100,
               child: SliderTheme(

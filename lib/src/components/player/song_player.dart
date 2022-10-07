@@ -20,6 +20,14 @@ enum PlayMode {
   random,
 }
 
+
+enum PlayType {
+  /// 正常播放模式
+  normal,
+  /// 私人FM
+  personlFM,
+}
+
 class SongPlayer extends BaseChangeNotifier with EasyInterface {
   SongPlayer() {
     player.stop();
@@ -110,6 +118,17 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
     }
   }
 
+  /// 播放类型
+  PlayType _playType = PlayType.normal;
+  PlayType get playType => _playType;
+  set playType(PlayType value) {
+    if (_playType == value) {
+      return;
+    }
+    _playType = value;
+    notifyListeners();
+  }
+
   /// 当播完一首歌后自动播放下一首
   bool autoPlayNextSong = true;
 
@@ -167,65 +186,6 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
     }
     notifyListeners();
     stop();
-  }
-
-  /// 更换播放列表，并且播放指定音乐
-  /// - songlistId: 歌单id，如果传入的歌单id和当前正在播放的歌单id一致，那么将不做修改
-  /// - songs: 播放列表
-  /// - playSong: 指定播放的音乐，如果传入空，那么从[songs]的第一首开始播放
-  /// - force: 是否强制替换，如果为[true]，那么将不会有弹窗提示
-  void replaceSonglistAndPlay(BuildContext context, int? songlistId,
-      List<SingleSongModel>? songs, SingleSongModel? playSong, {bool force = false}) {
-    if (songlistId == this.songlistId && (playSong == null || playSong.track?.id == currentSong?.track?.id)) {
-      showToast("当前正在播放中的列表");
-      return;
-    }
-    if ((songs == null || songs.isEmpty) && playSong == null) {
-      return;
-    }
-    if (playSong != null && playSong.canPlay.canPlay == false) {
-      showToast(playSong.canPlay.reason);
-      return;
-    }
-    void playCallback() {
-      this.songlistId = songlistId;
-      this.songs = songs;
-      if (playSong != null) {
-        if (songs?.isEmpty == true) {
-          this.songs = [playSong];
-        }
-        updatePlaySong(playSong);
-      } else {
-        if (songs?.isNotEmpty == true) {
-          // 这里是全部播放，默认从第一首开始播放，此时需要判断下播放权限
-          SingleSongModel? song;
-          for (var s in songs!) {
-            if (s.canPlay.canPlay) {
-              song = s;
-              break;
-            }
-          }
-          updatePlaySong(song);
-        }
-      }
-      play();
-    }
-
-    if (this.songlistId == null || force) {
-      playCallback();
-    } else {
-      showCommonDialog(context,
-          title: "替换播放列表",
-          content: "\"播放全部\"将会替换当前的播放列表，是否继续？",
-          actions: [
-            DialogAction.cancel(),
-            DialogAction.sure(
-                title: '继续',
-                onTap: () {
-                  playCallback();
-                })
-          ]);
-    }
   }
 
   /// 初始化部分变量
@@ -463,6 +423,86 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
 
   void addDisposeSonglistListener(VoidCallback listener) {
     _disposeSonglistListener = listener;
+  }
+
+  /// 更换播放列表，并且播放指定音乐
+  /// - songlistId: 歌单id，如果传入的歌单id和当前正在播放的歌单id一致，那么将不做修改
+  /// - songs: 播放列表
+  /// - playSong: 指定播放的音乐，如果传入空，那么从[songs]的第一首开始播放
+  /// - force: 是否强制替换，如果为[true]，那么将不会有弹窗提示
+  void replaceSonglistAndPlay(BuildContext context, int? songlistId,
+      List<SingleSongModel>? songs, SingleSongModel? playSong, {bool force = false}) {
+    if (songlistId == this.songlistId && (playSong == null || playSong.track?.id == currentSong?.track?.id)) {
+      showToast("当前正在播放中的列表");
+      return;
+    }
+    if ((songs == null || songs.isEmpty) && playSong == null) {
+      return;
+    }
+    if (playSong != null && playSong.canPlay.canPlay == false) {
+      showToast(playSong.canPlay.reason);
+      return;
+    }
+
+    playType = PlayType.normal;
+
+    void playCallback() {
+      this.songlistId = songlistId;
+      this.songs = songs;
+      if (playSong != null) {
+        if (songs?.isEmpty == true) {
+          this.songs = [playSong];
+        }
+        updatePlaySong(playSong);
+      } else {
+        if (songs?.isNotEmpty == true) {
+          // 这里是全部播放，默认从第一首开始播放，此时需要判断下播放权限
+          SingleSongModel? song;
+          for (var s in songs!) {
+            if (s.canPlay.canPlay) {
+              song = s;
+              break;
+            }
+          }
+          updatePlaySong(song);
+        }
+      }
+      play();
+    }
+
+    if (this.songlistId == null || force) {
+      playCallback();
+    } else {
+      showCommonDialog(context,
+          title: "替换播放列表",
+          content: "\"播放全部\"将会替换当前的播放列表，是否继续？",
+          actions: [
+            DialogAction.cancel(),
+            DialogAction.sure(
+                title: '继续',
+                onTap: () {
+                  playCallback();
+                })
+          ]);
+    }
+  }
+
+  /// 播放私人FM
+  /// - songs: 播放列表，私人FM也是有播放列表的，只是这个播放列表是在不停的更新的
+  /// - playSong: 选中的播放音乐
+  void replaceSonglistAndPlayPersonalFM(List<SingleSongModel>? songs, SingleSongModel? playSong) {
+    if (songs == null || songs.isEmpty || playSong == null) {
+      return;
+    }
+    if (playSong.canPlay.canPlay == false) {
+      showToast(playSong.canPlay.reason);
+      return;
+    }
+    playType = PlayType.personlFM;
+    songlistId = null;
+    this.songs = songs;
+    updatePlaySong(playSong);
+    play();
   }
 }
 

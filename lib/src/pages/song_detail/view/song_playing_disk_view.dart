@@ -230,6 +230,14 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
           ),
           SelectableIconButton(
             selected: false,
+            src: 'icon_comment',
+            width: 30,
+            height: 30,
+            color: kHighlightThemeColor,
+            onTap: (sel) {},
+          ),
+          SelectableIconButton(
+            selected: false,
             src: 'icon_shared',
             width: 30,
             height: 30,

@@ -227,6 +227,7 @@ class SonglistDetailModelTracksAl {
 
   int? id;
   String? name;
+  /// 封面图
   String? picUrl;
   String? picStr;
   int? pic;

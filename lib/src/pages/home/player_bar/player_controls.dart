@@ -28,9 +28,13 @@ class PlayerControl extends StatelessWidget with EasyInterface {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CustomTooltipWidget(
+          Selector<SongPlayer, PlayType>(
+            selector: (p0, p1) => p1.playType,
+            builder: (context, value, child) {
+              return CustomTooltipWidget(
             message: '上一曲',
             child: SelectableIconButton(
+              enable: value == PlayType.normal,
               selected: true,
               src: 'song_control_previous.png',
               width: width,
@@ -40,6 +44,8 @@ class PlayerControl extends StatelessWidget with EasyInterface {
                 getPlayer(context).playPrevious();
               },
             ),
+          );
+            },
           ),
           widthSpace(space),
           Selector<SongPlayer, bool>(

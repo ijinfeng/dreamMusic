@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
 import 'package:dream_music/src/pages/find/model/daily_songs_model.dart';
 import 'package:dream_music/src/pages/find/model/find_recommend_model.dart';
+import 'package:dream_music/src/pages/personalFM/model/personal_fm_model.dart';
 
 class FindRequest {
   /// 每日推荐歌单
@@ -24,14 +25,6 @@ class FindRequest {
       builder: (json) {
         return DailySongsModel.fromJson(json);
       },
-    );
-    return res;
-  }
-
-  /// 私人FM，需要登录
-  static Future<ResponseModel> personalFM() {
-    final res = neRequest.get(
-      '/personal_fm'
     );
     return res;
   }

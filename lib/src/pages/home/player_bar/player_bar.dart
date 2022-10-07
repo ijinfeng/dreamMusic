@@ -81,53 +81,65 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Selector<SongPlayer, PlayMode>(
-          selector: (p0, p1) {
-            return p1.playMode;
-          },
-          shouldRebuild: (previous, next) => previous != next,
-          builder: (context, mode, child) {
-            String message;
-            if (mode == PlayMode.loop) {
-              playmodeSrc = "play_mode_loop.png";
-              message = "顺序播放";
-            } else if (mode == PlayMode.oneloop) {
-              playmodeSrc = "play_mode_oneloop.png";
-              message = "单曲循环";
-            } else {
-              playmodeSrc = "play_mode_random.png";
-              message = "随机播放";
-            }
-            return CustomTooltipWidget(
-              message: message,
-              child: SelectableIconButton(
-                selected: true,
-                src: playmodeSrc,
-                width: width,
-                height: width,
-                color: kText3Color,
-                onTap: (p0) {
-                  getPlayer(context).switchPlayMode();
-                },
-              ),
+        Selector<SongPlayer, PlayType>(
+          selector: (p0, p1) => p1.playType,
+          builder: (context, type, child) {
+            return Selector<SongPlayer, PlayMode>(
+              selector: (p0, p1) {
+                return p1.playMode;
+              },
+              shouldRebuild: (previous, next) => previous != next,
+              builder: (context, mode, child) {
+                String message;
+                if (mode == PlayMode.loop) {
+                  playmodeSrc = "play_mode_loop.png";
+                  message = "顺序播放";
+                } else if (mode == PlayMode.oneloop) {
+                  playmodeSrc = "play_mode_oneloop.png";
+                  message = "单曲循环";
+                } else {
+                  playmodeSrc = "play_mode_random.png";
+                  message = "随机播放";
+                }
+                return CustomTooltipWidget(
+                  message: message,
+                  child: SelectableIconButton(
+                    selected: true,
+                    enable: type == PlayType.normal,
+                    src: playmodeSrc,
+                    width: width,
+                    height: width,
+                    color: kText3Color,
+                    onTap: (p0) {
+                      getPlayer(context).switchPlayMode();
+                    },
+                  ),
+                );
+              },
             );
           },
         ),
         widthSpace(space),
-        CustomTooltipWidget(
-          message: '播放列表',
-          child: SelectableIconButton(
-            selected: true,
-            src: 'icon_songlist.png',
-            width: width,
-            height: width,
-            color: kText3Color,
-            unColor: kText3Color,
-            onTap: (p0) {
-              // kHomeBodyScaffoldKey.currentState?.openEndDrawer();
-              getPlayer(context).openSonglist();
-            },
-          ),
+        Selector<SongPlayer, PlayType>(
+          selector: (p0, p1) => p1.playType,
+          builder: (context, type, child) {
+            return CustomTooltipWidget(
+              message: '播放列表',
+              child: SelectableIconButton(
+                // enable: type == PlayType.normal,
+                selected: true,
+                src: 'icon_songlist.png',
+                width: width,
+                height: width,
+                color: kText3Color,
+                unColor: kText3Color,
+                onTap: (p0) {
+                  // kHomeBodyScaffoldKey.currentState?.openEndDrawer();
+                  getPlayer(context).openSonglist();
+                },
+              ),
+            );
+          },
         ),
         widthSpace(space),
         const VolumeControl(),

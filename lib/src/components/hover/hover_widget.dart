@@ -2,12 +2,13 @@ import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:flutter/material.dart';
 
 class HoverWidget extends StatefulWidget {
-  const HoverWidget({Key? key, this.child, this.hoverColor, this.splashColor, this.onTap}) : super(key: key);
+  const HoverWidget({Key? key, this.child, this.hoverColor, this.splashColor, this.onTap, this.alwaysShowChild = false}) : super(key: key);
 
   final Widget? child;
   final Color? hoverColor;
   final Color? splashColor;
   final VoidCallback? onTap;
+  final bool alwaysShowChild;
 
   @override
   State<StatefulWidget> createState() {
@@ -34,7 +35,7 @@ class _HoverWidget extends State<HoverWidget> {
           }
         },
         onLongPress: () {},
-        child:  _hover ? widget.child : null,
+        child:  (_hover || widget.alwaysShowChild) ? widget.child : null,
       ),
     );
   }

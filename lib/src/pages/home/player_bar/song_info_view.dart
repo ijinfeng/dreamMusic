@@ -92,40 +92,41 @@ class SongInfoView extends StatelessWidget with EasyInterface {
                       height: coverWidth,
                       radius: 6,
                     ),
-                    Selector<RouteControlManager, bool>(
-                      selector: (p0, p1) => p1.hasOpenSongDetailRoute(),
-                      shouldRebuild: (previous, next) => previous != next,
-                      builder: (context, value, child) {
-                        return CustomTooltipWidget(
-                          message: value ? '关闭音乐详情' : '展开音乐详情',
-                          child: Positioned.fill(
-                              child: HoverWidget(
-                            hoverColor: Colors.black45,
-                            child: Center(
-                              child: ImageView.asset(
-                                src: value ? 'icon_fold' : 'icon_unfold.png',
-                                width: 16,
-                                height: 16,
-                                color: Colors.white,
-                              ),
+                    Positioned.fill(
+                      child: Selector<RouteControlManager, bool>(
+                        selector: (p0, p1) => p1.hasOpenSongDetailRoute(),
+                        shouldRebuild: (previous, next) => previous != next,
+                        builder: (context, value, child) {
+                          return CustomTooltipWidget(
+                            message: value ? '关闭音乐详情' : '展开音乐详情',
+                            child: HoverWidget(
+                              hoverColor: Colors.black45,
+                              child: Center(
+                            child: ImageView.asset(
+                              src: value ? 'icon_fold' : 'icon_unfold.png',
+                              width: 16,
+                              height: 16,
+                              color: Colors.white,
                             ),
-                            onTap: () {
-                              if (kHomeBodyScaffoldKey.currentContext != null) {
-                                if (RouteControlManager()
-                                    .hasOpenSongDetailRoute()) {
-                                  Navigator.pop(
-                                      kHomeBodyScaffoldKey.currentContext!);
-                                } else {
-                                  Navigator.pushNamed(
-                                      kHomeBodyScaffoldKey.currentContext!,
-                                      PageRouters.songDetail,
-                                      arguments: model?.id);
-                                }
+                              ),
+                              onTap: () {
+                            if (kHomeBodyScaffoldKey.currentContext != null) {
+                              if (RouteControlManager()
+                                  .hasOpenSongDetailRoute()) {
+                                Navigator.pop(
+                                    kHomeBodyScaffoldKey.currentContext!);
+                              } else {
+                                Navigator.pushNamed(
+                                    kHomeBodyScaffoldKey.currentContext!,
+                                    PageRouters.songDetail,
+                                    arguments: model?.id);
                               }
-                            },
-                          )),
-                        );
-                      },
+                            }
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     )
                   ],
                 ),

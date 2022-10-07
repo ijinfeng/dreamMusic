@@ -15,7 +15,7 @@ import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/home/right_content/model/right_content_state_model.dart';
 import 'package:dream_music/src/pages/home/window_navigation_bar/window_buttons.dart';
 import 'package:dream_music/src/pages/mylike/Mylike_page.dart';
-import 'package:dream_music/src/pages/privateFM/private_fm_page.dart';
+import 'package:dream_music/src/pages/personalFM/personal_fm_page.dart';
 import 'package:dream_music/src/pages/setting/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +57,7 @@ class _RightContentBodyState
     if (index == 0) {
       return FindPage();
     } else if (index == 1) {
-      return const PrivateFMPage();
+      return const PersonalFMPage();
     } else if (index == 2) {
       return const MylikePage();
     } else if (index == 3) {
