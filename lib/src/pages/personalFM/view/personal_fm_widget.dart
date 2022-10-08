@@ -4,6 +4,7 @@ import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/personalFM/model/personal_fm_state_model.dart';
 import 'package:dream_music/src/pages/personalFM/view/personal_fm_animation_pic.dart';
+import 'package:dream_music/src/pages/personalFM/view/personal_fm_playinfo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,12 +27,17 @@ class PersonalFMWidget extends StatelessWidget with EasyInterface {
         shouldRebuild: (previous, next) {
           return previous != next && getPlayer(context).playType == PlayType.personlFM;
         },
-        builder: (context, value, child) {
+        builder: (context, songId, child) {
           // 切换歌曲的时候需要更新歌单
           final state = context.read<PersonalFMStateModel>();
-          state.updatePlaySongIndex(value);
+          state.updatePlaySongIndex(songId);
           state.requestNewDataIfNeeded();
-          return PersonFMAnimationPic();
+          return Row(
+            children:const [
+               PersonFMAnimationPic(),
+               Expanded(child: PersonalFMPlayInfoWidget())
+            ],
+          );
         },
       ),
     );

@@ -1,125 +1,158 @@
-import 'dart:math';
-
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
-import 'package:dream_music/src/components/button/main_button.dart';
-import 'package:dream_music/src/components/button/selectable_icon_button.dart';
-import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
-import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
-import 'package:dream_music/src/pages/find/view/play_unit_hover_icon.dart';
-import 'package:dream_music/src/pages/find/view/play_unit_icon.dart';
 import 'package:dream_music/src/pages/personalFM/model/personal_fm_state_model.dart';
-import 'package:dream_music/src/pages/personalFM/view/personal_fm_tool_bar.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PersonFMAnimationPic extends StatelessWidget with EasyInterface {
-  PersonFMAnimationPic({Key? key}) : super(key: key);
+class PersonFMAnimationPic extends StatefulWidget {
+  const PersonFMAnimationPic({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return PersonFMAnimationPicState();
+  }
+}
+
+class PersonFMAnimationPicState extends State<PersonFMAnimationPic>
+    with SingleTickerProviderStateMixin, EasyInterface {
+  late final AnimationController animationController;
+  late final Animation<RelativeRect> leftAn;
+  late final Animation<RelativeRect> centerAn;
+  late final Animation<RelativeRect> rightAn;
+
+  final double stackWidth = 290;
+  final double picWidth = 200;
+  final double changeWidthDiff = 20;
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 350), vsync: this);
+    animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          animationController.animateBack(0, duration: Duration.zero);
+        });
+      }
+    });
+
+    double leftDefaultWidth = picWidth - changeWidthDiff;
+    double centerDefaultWidth = picWidth;
+    double rightDefaultWidth = picWidth + changeWidthDiff;
+    leftAn = RelativeRectTween(
+            begin: RelativeRect.fromSize(
+                Offset(changeWidthDiff, (stackWidth - leftDefaultWidth) / 2) &
+                    Size(leftDefaultWidth, leftDefaultWidth),
+                Size(stackWidth, stackWidth)),
+            end: RelativeRect.fromSize(
+                Offset(0, (stackWidth - centerDefaultWidth) / 2) &
+                    Size(centerDefaultWidth, centerDefaultWidth),
+                Size(stackWidth, stackWidth)))
+        .animate(animationController);
+    centerAn = RelativeRectTween(
+            begin: RelativeRect.fromSize(
+                Offset(0, (stackWidth - centerDefaultWidth) / 2) &
+                    Size(centerDefaultWidth, centerDefaultWidth),
+                Size(stackWidth, stackWidth)),
+            end: RelativeRect.fromSize(
+                Offset(changeWidthDiff, (stackWidth - rightDefaultWidth) / 2) &
+                    Size(rightDefaultWidth, rightDefaultWidth),
+                Size(stackWidth, stackWidth)))
+        .animate(animationController);
+    rightAn = RelativeRectTween(
+            begin: RelativeRect.fromSize(
+                Offset(changeWidthDiff, (stackWidth - rightDefaultWidth) / 2) &
+                    Size(rightDefaultWidth, rightDefaultWidth),
+                Size(stackWidth, stackWidth)),
+            end: RelativeRect.fromSize(
+                Offset(stackWidth, (stackWidth - rightDefaultWidth) / 2) &
+                    Size(rightDefaultWidth, rightDefaultWidth),
+                Size(stackWidth, stackWidth)))
+        .animate(animationController);
+  }
 
   @override
   Widget build(BuildContext context) {
     final state = context.read<PersonalFMStateModel>();
-    double stackWidth = 290;
-    double picWidth = 200;
+    final player = getPlayer(context);
+    bool widgetBuild = true;
 
-    List<Widget> children = [];
-    // 最多显示两首歌，右侧的是播放中的音乐，左侧为排队列表
-    final showModels = state.getShowCoverSongs(2);
+    return Padding(
+      padding: const EdgeInsets.only(left: 20),
+      child: SizedBox(
+        width: stackWidth,
+        child: Selector<SongPlayer, SingleSongModel?>(
+          selector: (p0, p1) => p1.currentSong,
+          shouldRebuild: (previous, next) {
+            bool ret =
+                previous != next && player.playType == PlayType.personlFM;
+            return ret;
+          },
+          builder: (context, value, child) {
+            bool needStartAnimation = !widgetBuild &&
+                value != null &&
+                state.currentPlayIndex > 0 &&
+                !state.clickPlay;
+            debugPrint(
+                "[FM]歌曲切换了-----curIndex: ${state.currentPlayIndex}, songId: ${getPlayer(context).currentSong?.track?.id}, widgetBuild: $widgetBuild ,an: $needStartAnimation, clickPlay: ${state.clickPlay}");
 
-    for (int i = 0; i < showModels.length; i++) {
-      Widget current = PersonalFMSongPic(
-        model: showModels[i],
-        width: picWidth + i * 20,
-      );
-      current = Positioned(
-        left: i * 20 + 20,
-        child: current,
-      );
-      children.add(current);
-    }
+            if (widgetBuild) {
+              widgetBuild = false;
+            }
+            if (state.clickPlay) {
+              state.clickPlay = false;
+            }
 
-    final currentSong = state.getPlaySong;
+            List<Widget> children = [];
+            // 最多显示两首歌，右侧的是播放中的音乐，左侧为排队列表
+            final showModels = state.getShowCoverSongs(3,
+                startIndex:
+                    !needStartAnimation ? null : state.currentPlayIndex - 1);
 
-    return Row(
-      children: [
-        SizedBox(
-          width: stackWidth,
-          child: Stack(
-            alignment: Alignment.centerLeft,
-            children: children,
-          ),
+            for (int i = 0; i < showModels.length; i++) {
+              Widget current = PersonalFMSongPic(
+                model: showModels[i],
+                width: i == 0
+                    ? picWidth - changeWidthDiff
+                    : picWidth + (i - 1) * changeWidthDiff,
+              );
+              if (i == 0) {
+                current = PositionedTransition(rect: leftAn, child: current);
+              } else if (i == 1) {
+                current = PositionedTransition(
+                  rect: centerAn,
+                  child: current,
+                );
+              } else {
+                current = PositionedTransition(
+                  rect: rightAn,
+                  child: current,
+                );
+              }
+              children.add(current);
+            }
+            if (needStartAnimation) {
+              animationController.forward();
+            }
+            return Stack(
+              alignment: Alignment.centerLeft,
+              children: children,
+            );
+          },
         ),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const ImageView.asset(
-                          src: 'icon_fm',
-                          width: 32,
-                          height: 32,
-                        ),
-                        widthSpace(5),
-                        const Text(
-                          '私人FM',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: kText3Color,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        widthSpace(5),
-                        Text(
-                          '今日已收听${state.listenMusicCount}首歌',
-                          style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: kText9Color),
-                        )
-                      ],
-                    ),
-                    heightSpace(5),
-                    const Divider(
-                      endIndent: 20,
-                    ),
-                    heightSpace(5),
-                    Text(
-                      currentSong?.track?.songName ?? '',
-                      style: const TextStyle(
-                          color: kText3Color,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w500),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    heightSpace(10),
-                    Text(
-                      currentSong?.track?.authorName ?? '',
-                      style: const TextStyle(
-                          color: kText6Color,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                PersonalFMToolBar(model: currentSong)
-              ],
-            ),
-          ),
-        )
-      ],
+      ),
     );
   }
-
 }
 
 class PersonalFMSongPic extends StatelessWidget {

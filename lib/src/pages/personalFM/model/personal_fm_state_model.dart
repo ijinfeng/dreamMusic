@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
+import 'package:dream_music/src/components/extension/num_extension.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/pages/personalFM/request/personal_request.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
@@ -33,7 +35,11 @@ class PersonalFMStateModel extends BaseChangeNotifier with EasyInterface {
     return _listenMusicCount;
   }
   set listenMusicCount(int value) {
+    if (_listenMusicCount == value) {
+      return;
+    }
     _listenMusicCount = value;
+    notifyListeners();
   }
 
   bool hasRequestPersonalFM = false;
@@ -57,9 +63,9 @@ class PersonalFMStateModel extends BaseChangeNotifier with EasyInterface {
   }
 
   /// 是否需要请求下一波数据
-  /// 当fm模型剩余<=1时，将会触发下一波请求
+  /// 当fm模型剩余<=2时，将会触发下一波请求
   bool ifNeedRequestNewData() {
-    return currentPlayIndex >= fmModels.length - 2;
+    return currentPlayIndex >= fmModels.length - 3;
   }
 
   /// 是否请求下一页数据
@@ -105,18 +111,27 @@ class PersonalFMStateModel extends BaseChangeNotifier with EasyInterface {
 
   /// 获取展示封面的两首歌
   /// - length: 最多显示歌曲数
-  List<SingleSongModel> getShowCoverSongs(int length) {
+  /// - startIndex: 起始下标
+  List<SingleSongModel> getShowCoverSongs(int length, {int? startIndex}) {
     List<SingleSongModel> models = [];
-    final leftCount = fmModels.length - 1 - currentPlayIndex;
-    for (int i = currentPlayIndex; i < currentPlayIndex + min(length, leftCount); i++) {
+    final leftCount = fmModels.length - currentPlayIndex;
+    String indexStr = '';
+    int index = startIndex ?? currentPlayIndex;
+    for (int i = index; i < index + min(length, leftCount); i++) {
       models.insert(0, fmModels[i]);
+      indexStr += "$i; ";
     }
+    debugPrint("[FM]show cover indexs: $indexStr");
     return models;
   }
 
+  bool clickPlay = false;
   void play() {
     if (context == null) {
       return;
+    }
+    if (getPlayer(context!).playType != PlayType.personlFM) {
+      clickPlay = true;
     }
     getPlayer(context!).replaceSonglistAndPlayPersonalFM(fmModels, getPlaySong);
   }
