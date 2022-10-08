@@ -67,17 +67,24 @@ class PersonalFMToolBar extends StatelessWidget with EasyInterface {
         Selector<SongPlayer, bool>(
           selector: (p0, p1) => p1.playing && p1.playType == PlayType.personlFM,
           builder: (context, value, child) {
-            return SelectableIconButton(
-              selected: value,
-              src: 'song_control_pause.png',
-              unsrc: 'song_control_play.png',
-              width: buttonWidth + 4,
-              height: buttonWidth + 4,
-              color: kText3Color,
-              unColor: kText3Color,
-              onTap: (sel) {
-                state.play();
-              },
+            return CustomTooltipWidget(
+              message: value ? "暂停" : "播放",
+              child: SelectableIconButton(
+                selected: value,
+                src: 'song_control_pause.png',
+                unsrc: 'song_control_play.png',
+                width: buttonWidth + 4,
+                height: buttonWidth + 4,
+                color: kText3Color,
+                unColor: kText3Color,
+                onTap: (sel) {
+                  if (sel) {
+                    state.pause();
+                  } else {
+                    state.play();
+                  }
+                },
+              ),
             );
           },
         ),

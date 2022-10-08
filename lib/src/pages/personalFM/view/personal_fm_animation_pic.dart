@@ -79,7 +79,7 @@ class PersonFMAnimationPic extends StatelessWidget with EasyInterface {
                         ),
                         widthSpace(5),
                         Text(
-                          '今日已收听${state.currentPlayIndex}首歌',
+                          '今日已收听${state.listenMusicCount}首歌',
                           style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w400,

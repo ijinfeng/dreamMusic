@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
+import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/pages/personalFM/request/personal_request.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,15 @@ class PersonalFMStateModel extends BaseChangeNotifier with EasyInterface {
     }
     _currentPlayIndex = value;
     notifyListeners();
+  }
+
+  int _listenMusicCount = 0;
+  int get listenMusicCount {
+    _listenMusicCount = max(_listenMusicCount, _currentPlayIndex);
+    return _listenMusicCount;
+  }
+  set listenMusicCount(int value) {
+    _listenMusicCount = value;
   }
 
   bool hasRequestPersonalFM = false;
@@ -57,6 +67,19 @@ class PersonalFMStateModel extends BaseChangeNotifier with EasyInterface {
     if (ifNeedRequestNewData()) {
       requestFM();
     }
+  }
+
+  /// 根据传入的音乐id来更新播放index，当顶部播放栏控制播放时会调用
+  /// - songId: 音乐id
+  void updatePlaySongIndex(int? songId) {
+    if (songId == null) return;
+    for (int i = 0; i < fmModels.length; i++) {
+      final id = fmModels[i].track?.id;
+      if (id == songId) {
+        _currentPlayIndex = i;
+        return;
+      }
+    } 
   }
 
   @override
@@ -96,7 +119,13 @@ class PersonalFMStateModel extends BaseChangeNotifier with EasyInterface {
       return;
     }
     getPlayer(context!).replaceSonglistAndPlayPersonalFM(fmModels, getPlaySong);
-    requestNewDataIfNeeded();
+  }
+
+  void pause() {
+    if (context == null) {
+      return;
+    }
+    getPlayer(context!).pause();
   }
 
   void playNext() {
@@ -104,6 +133,5 @@ class PersonalFMStateModel extends BaseChangeNotifier with EasyInterface {
       return;
     }
     getPlayer(context!).replaceSonglistAndPlayPersonalFM(fmModels, getNextPlaySong);
-    requestNewDataIfNeeded();
   }
 }

@@ -102,8 +102,9 @@ class _SonglistItemCellState extends State<SonglistItemCell>
       widget.model?.track?.songName ?? '',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(
-          fontSize: 15, fontWeight: FontWeight.w600, color: kText3Color),
+      style: TextStyle(
+          fontSize: 15, fontWeight: FontWeight.w600, 
+          color: widget.model?.hasCopyright == true ? kText3Color : kText9Color),
     );
     songName = CustomTooltipWidget(
       message: widget.model?.track?.songName ?? '',

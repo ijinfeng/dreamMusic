@@ -126,7 +126,7 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
             return CustomTooltipWidget(
               message: '播放列表',
               child: SelectableIconButton(
-                // enable: type == PlayType.normal,
+                enable: type == PlayType.normal,
                 selected: true,
                 src: 'icon_songlist.png',
                 width: width,
@@ -134,7 +134,6 @@ class _PlayerBarState extends ProviderState<PlayerBar, SongPlayer>
                 color: kText3Color,
                 unColor: kText3Color,
                 onTap: (p0) {
-                  // kHomeBodyScaffoldKey.currentState?.openEndDrawer();
                   getPlayer(context).openSonglist();
                 },
               ),
