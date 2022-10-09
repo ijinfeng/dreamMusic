@@ -83,6 +83,9 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
   /// 是否存在账号信息
   bool get hasAccount => userModel?.account != null;
 
+  /// 获取用户id
+  int? get uid => hasAccount ? AppSharedManager().userModel?.account?.id : null;
+
   /// 清除账号数据
   void clearAccount() {
     userModel = null;

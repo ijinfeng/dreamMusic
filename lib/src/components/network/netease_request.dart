@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/network/network.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
 
 NeteaseRequest neRequest = NeteaseRequest();
+
 /// 这是根据业务二次封装的网络请求类，做一些业务相关处理
 class NeteaseRequest {
   Future<ResponseModel<T>> get<T>(String url,

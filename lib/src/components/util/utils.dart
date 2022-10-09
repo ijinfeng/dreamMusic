@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:dream_music/src/components/extension/num_extension.dart';
 
 class Utils {
   static Color get randomColor {
@@ -19,5 +20,23 @@ class Utils {
       ret = "$ret.png";
     }
     return ret;
+  }
+
+  static String getDateDesc(int? timestamp, {
+    bool customCharSub = true,
+    String sub = '-',
+  }) {
+    if (timestamp == null) return "";
+    var timestampInt = timestamp.toInt();
+    final length = timestampInt.toString().length;
+    if (length <= 10) {
+      timestampInt = timestampInt * 1000;
+    } 
+    final time = DateTime.fromMillisecondsSinceEpoch(timestampInt);
+    if (customCharSub) {
+      return "${time.year}$sub${time.month}$sub${time.day}";
+    } else {
+      return "${time.year}年${time.month}月${time.day}日";
+    }
   }
 }

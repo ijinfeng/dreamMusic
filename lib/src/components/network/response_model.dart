@@ -26,6 +26,8 @@ class ResponseModel<T> {
 
   ResponseModel.empty();
 
+  ResponseModel.unlogin() : message = "用户未登录";
+
   bool get success {
     return code >= 200 && code < 400;
   }

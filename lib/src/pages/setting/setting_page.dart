@@ -129,6 +129,11 @@ class SettingPage extends StatelessWidget with EasyInterface {
             MainButton.title(title: '私人FM',
             onTap: () {
              PersonalFMRequest.personalFM();
+            },),
+            MainButton.title(title: '歌单详情动态', onTap: () {
+              neRequest.get('/user/playlist', queryParameters: {
+                "uid": AppSharedManager().userModel?.account?.id
+              });
             },)
           ],
         ),

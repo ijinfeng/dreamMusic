@@ -1,6 +1,5 @@
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
-import 'package:dream_music/src/components/dialog/dialog.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/rich_text/ff_rich_label.dart';
 import 'package:dream_music/src/components/rich_text/rich_text_define.dart';

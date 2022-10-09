@@ -25,6 +25,7 @@ dependencies:
   cookie_jar: ^3.0.1
   path_provider: ^2.0.11
   audioplayers: ^1.0.1
+  easy_refresh: ^3.0.4+2
 
 dev_dependencies:
   flutter_test:

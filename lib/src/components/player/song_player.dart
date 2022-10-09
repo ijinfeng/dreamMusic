@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/dialog/dialog.dart';
+import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/playlist/playlist_drawer.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
@@ -502,7 +503,7 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
       return;
     }
     playType = PlayType.personlFM;
-    songlistId = null;
+    songlistId = kPersonalFMSonglistId;
     this.songs = songs;
     updatePlaySong(playSong);
     play();

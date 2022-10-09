@@ -1,7 +1,9 @@
 import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
+import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_detail_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
+import 'package:dream_music/src/pages/songlist/model/songlist_simple_info_model.dart';
 
 class SonglistRequest {
   /// 歌单详情
@@ -35,6 +37,26 @@ class SonglistRequest {
       },
       builder: (json) {
         return SongDetailModel.fromJson(json);
+      },
+    );
+    return res;
+  }
+
+  /// 获取用户歌单，没有歌曲信息
+  static Future<ResponseModel<SonglistSimpleInfoModel>> userSonglist({int limit = 30, int offset = 0}) {
+    if (AppSharedManager().hasAccount == false) {
+      return Future.value(ResponseModel.unlogin());
+    }
+    final res = neRequest.get(
+      '/user/playlist',
+      queryParameters: {
+        "limit": limit,
+        "offset": offset,
+        "uid": AppSharedManager().uid
+      },
+      searchKeyPath: "playlist",
+      builder: (json) {
+        return SonglistSimpleInfoModel.fromJson(json);
       },
     );
     return res;

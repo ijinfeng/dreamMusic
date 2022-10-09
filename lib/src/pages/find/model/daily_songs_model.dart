@@ -1,3 +1,4 @@
+import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 
@@ -70,7 +71,7 @@ class DailySongsModel {
   }
 
   /// 每日推荐歌曲的歌单id
-  int get songlistId => -1000;
+  int get songlistId => kDailySongsSonglistId;
 }
 
 class RecommendReasonModel {

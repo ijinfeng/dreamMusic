@@ -4,7 +4,6 @@ import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_detail_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_lyric_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_url_model.dart';
-import 'package:flutter/material.dart';
 
 class SongDetailRequest {
   /// 获取歌曲详情

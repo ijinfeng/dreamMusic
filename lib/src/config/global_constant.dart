@@ -14,3 +14,9 @@ typedef OneParamCallback<T> = void Function(T);
 
 /// 页面内间距
 const EdgeInsets kPageContentPadding = EdgeInsets.fromLTRB(20, 12, 20, 12);
+
+/// 每日音乐歌单id
+const int kDailySongsSonglistId = -1000;
+
+/// 私人FM歌单id
+const int? kPersonalFMSonglistId = null;
