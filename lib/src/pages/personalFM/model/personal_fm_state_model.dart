@@ -57,7 +57,10 @@ class PersonalFMStateModel extends BaseChangeNotifier with EasyInterface {
     }
     debugPrint("[FM]请求结束，当前FM播放列表长度-${fmModels.length},index-$currentPlayIndex");
     if (context != null) {
-      getPlayer(context!).songs = fmModels;
+      final player = getPlayer(context!);
+      if (player.playType == PlayType.personlFM) {
+        getPlayer(context!).songs = fmModels;
+      }
     }
     notifyListeners();
   }

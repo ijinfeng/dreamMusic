@@ -326,6 +326,9 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
   /// - ignoreOneloop: 忽略单曲循环
   int _getAPlaySongIndex(bool isNext, {bool ignoreOneloop = true}) {
     if (playlistIsEmpty) return 0;
+    if (playType == PlayType.personlFM) {
+      return _playSongIndex == allSongsLength - 1 ? 0 : _playSongIndex + 1;
+    }
     if (playMode == PlayMode.random) {
       return _getRandomPlaySongIndex();
     } else {
