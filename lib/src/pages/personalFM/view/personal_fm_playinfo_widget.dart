@@ -15,6 +15,7 @@ class PersonalFMPlayInfoWidget extends StatelessWidget with EasyInterface {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.read<PersonalFMStateModel>();
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
@@ -43,7 +44,7 @@ class PersonalFMPlayInfoWidget extends StatelessWidget with EasyInterface {
                   Selector<SongPlayer, SingleSongModel?>(
                     builder: (context, value, child) {
                       return Text(
-                        '今日已收听${context.read<PersonalFMStateModel>().listenMusicCount}首歌',
+                        '今日已收听${state.listenMusicCount}首歌',
                         style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
@@ -71,7 +72,7 @@ class PersonalFMPlayInfoWidget extends StatelessWidget with EasyInterface {
                 },
                 builder: (context, model, child) {
                   return Text(
-                    model?.track?.songName ?? '',
+                    state.getPlaySong?.track?.songName ?? '',
                     style: const TextStyle(
                         color: kText3Color,
                         fontSize: 25,
@@ -90,7 +91,7 @@ class PersonalFMPlayInfoWidget extends StatelessWidget with EasyInterface {
                 },
                 builder: (context, model, child) {
                   return Text(
-                    model?.track?.authorName ?? '',
+                    state.getPlaySong?.track?.authorName ?? '',
                     style: const TextStyle(
                         color: kText6Color,
                         fontSize: 18,
