@@ -3,6 +3,7 @@ import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/hover/hover_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
+import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/components/router/route_control_manager.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
@@ -20,6 +21,27 @@ class SongInfoView extends StatelessWidget with EasyInterface {
   @override
   Widget build(BuildContext context) {
     double coverWidth = 35;
+    Widget songName = Text(
+      model?.name ?? '未知歌名',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(
+          fontSize: 14, color: kText3Color, fontWeight: FontWeight.w600),
+    );
+    if (getPlayer(context).playType == PlayType.personlFM) {
+      songName = Row(
+        children: [
+          const ImageView.asset(
+            src: 'icon_fm',
+            width: 20,
+            height: 20,
+            color: kText3Color,
+          ),
+          widthSpace(3),
+          Expanded(child: songName),
+        ],
+      );
+    }
     return model == null
         ? Row(
             children: [
@@ -102,26 +124,27 @@ class SongInfoView extends StatelessWidget with EasyInterface {
                             child: HoverWidget(
                               hoverColor: Colors.black45,
                               child: Center(
-                            child: ImageView.asset(
-                              src: value ? 'icon_fold' : 'icon_unfold.png',
-                              width: 16,
-                              height: 16,
-                              color: Colors.white,
-                            ),
+                                child: ImageView.asset(
+                                  src: value ? 'icon_fold' : 'icon_unfold.png',
+                                  width: 16,
+                                  height: 16,
+                                  color: Colors.white,
+                                ),
                               ),
                               onTap: () {
-                            if (kHomeBodyScaffoldKey.currentContext != null) {
-                              if (RouteControlManager()
-                                  .hasOpenSongDetailRoute()) {
-                                Navigator.pop(
-                                    kHomeBodyScaffoldKey.currentContext!);
-                              } else {
-                                Navigator.pushNamed(
-                                    kHomeBodyScaffoldKey.currentContext!,
-                                    PageRouters.songDetail,
-                                    arguments: model?.id);
-                              }
-                            }
+                                if (kHomeBodyScaffoldKey.currentContext !=
+                                    null) {
+                                  if (RouteControlManager()
+                                      .hasOpenSongDetailRoute()) {
+                                    Navigator.pop(
+                                        kHomeBodyScaffoldKey.currentContext!);
+                                  } else {
+                                    Navigator.pushNamed(
+                                        kHomeBodyScaffoldKey.currentContext!,
+                                        PageRouters.songDetail,
+                                        arguments: model?.id);
+                                  }
+                                }
                               },
                             ),
                           );
@@ -133,29 +156,24 @@ class SongInfoView extends StatelessWidget with EasyInterface {
               ),
               widthSpace(6),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      model!.name ?? '未知歌名',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: kText3Color,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      model!.authorName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 12,
-                          color: kText6Color,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
+                child: CustomTooltipWidget(
+                  message: getPlayer(context).playType == PlayType.personlFM ? "(私人FM)正在收听：${model?.songName}" : "正在收听：${model?.songName}",
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      songName,
+                      Text(
+                        model!.authorName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 12,
+                            color: kText6Color,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
