@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 
 /// 最顶层
 final GlobalKey<ScaffoldState> kTopPageScaffoldKey = GlobalKey(debugLabel: "top-page-gkey");
+/// 不包含导航栏
 final GlobalKey<ScaffoldState> kHomeBodyScaffoldKey = GlobalKey(debugLabel: 'home-body-gkey');
 
 class HomePage extends StatelessWidget {

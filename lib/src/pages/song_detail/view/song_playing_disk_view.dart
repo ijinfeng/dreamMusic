@@ -3,6 +3,7 @@ import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
+import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/player_bar/play_progress_indicator.dart';
@@ -234,7 +235,9 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
             width: 30,
             height: 30,
             color: kHighlightThemeColor,
-            onTap: (sel) {},
+            onTap: (sel) {
+              Navigator.pushNamed(context, PageRouters.comment, arguments: player.currentSong?.track?.id);
+            },
           ),
           SelectableIconButton(
             selected: false,

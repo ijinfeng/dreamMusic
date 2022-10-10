@@ -1,4 +1,5 @@
 import 'package:dream_music/src/components/network/network_env_route.dart';
+import 'package:dream_music/src/pages/comment/comment_page.dart';
 import 'package:dream_music/src/pages/dailysongs/daily_songs_page.dart';
 import 'package:dream_music/src/pages/login/login_page.dart';
 import 'package:dream_music/src/pages/setting/setting_page.dart';
@@ -14,6 +15,7 @@ class PageRouters {
   static const String songlist = "songlist";
   static const String songDetail = "songDetail";
   static const String dailySongs = "dailySongs";
+  static const String comment = "comment";
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final name = settings.name;
@@ -48,7 +50,13 @@ class PageRouters {
               ));
         }
       case dailySongs:
-        return NoneAnimateRoute(child: const DailySongsPage());
+        return NoneAnimateRoute(settings: settings, child: const DailySongsPage());
+      case comment:
+        int id = 0;
+          if (args is int) {
+            id = args;
+          }
+        return ModelRoute(settings: settings, child: CommentPage(id: id,));
       default:
         return MaterialPageRoute(
             settings: settings,

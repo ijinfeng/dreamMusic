@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/badge/badge_container.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
@@ -6,6 +7,8 @@ import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
+import 'package:dream_music/src/pages/comment/request/comment_request.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
 import 'package:dream_music/src/pages/personalFM/request/personal_request.dart';
@@ -126,15 +129,20 @@ class SettingPage extends StatelessWidget with EasyInterface {
               ),
             ),
             heightSpace(10),
-            MainButton.title(title: '私人FM',
+            MainButton.title(title: '评论也',
             onTap: () {
-             PersonalFMRequest.personalFM();
+              CommentRequest.musicComment(347230);
+              CommentRequest.hotComments(347230);
             },),
-            MainButton.title(title: '歌单详情动态', onTap: () {
-              neRequest.get('/user/playlist', queryParameters: {
-                "uid": AppSharedManager().userModel?.account?.id
-              });
-            },)
+            heightSpace(20),
+            BadgeContainer(
+              count: 10,
+              child: MainButton.title(title: '歌单详情动态', onTap: () {
+                neRequest.get('/user/playlist', queryParameters: {
+                  "uid": AppSharedManager().userModel?.account?.id
+                });
+              },),
+            )
           ],
         ),
       ),
