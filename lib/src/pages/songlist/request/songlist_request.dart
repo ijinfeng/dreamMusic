@@ -13,6 +13,7 @@ class SonglistRequest {
       queryParameters: {
         "id": id
       },
+      addTimestamp: true,
       builder: (json) {
         return SonglistModel.fromJson(json);
       },
@@ -43,7 +44,7 @@ class SonglistRequest {
   }
 
   /// 获取用户歌单，没有歌曲信息
-  static Future<ResponseModel<SonglistSimpleInfoModel>> userSonglist({int limit = 30, int offset = 0}) {
+  static Future<ResponseModel<SonglistSimpleInfoModel>> userSonglist({int limit = 30, int offset = 0, bool noCache = false}) {
     if (AppSharedManager().hasAccount == false) {
       return Future.value(ResponseModel.unlogin());
     }
@@ -54,10 +55,28 @@ class SonglistRequest {
         "offset": offset,
         "uid": AppSharedManager().uid
       },
+      addTimestamp: noCache,
       searchKeyPath: "playlist",
       builder: (json) {
         return SonglistSimpleInfoModel.fromJson(json);
       },
+    );
+    return res;
+  }
+
+  /// 收藏/取消收藏歌单
+  /// - songlistId: 歌单id，
+  /// - subscribe: true收藏，false取消
+  static Future<ResponseModel> subscribe(int? songlistId, bool subscribe)  {
+    if (songlistId == null) {
+      return Future.value(ResponseModel.empty());
+    }
+    final res = neRequest.get(
+      "/playlist/subscribe",
+      queryParameters: {
+        "id": songlistId,
+        "t": subscribe ? 1 : 2
+      }
     );
     return res;
   }

@@ -7,7 +7,8 @@ class MyCollectionRequest {
   static Future<ResponseModel<SonglistSimpleInfoModel>> songlists() {
     final res = SonglistRequest.userSonglist(
       offset: 1, 
-      limit: 1000
+      limit: 1000,
+      noCache: true
     );
     return res;
   }

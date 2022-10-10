@@ -1,10 +1,11 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 import 'package:dream_music/src/pages/songlist/request/songlist_request.dart';
 import 'package:flutter/material.dart';
 
-class SonglistStateModel extends BaseChangeNotifier {
+class SonglistStateModel extends BaseChangeNotifier with EasyInterface {
 
   SonglistModel? detailModel;
   List<SingleSongModel>? songs;
@@ -35,6 +36,34 @@ class SonglistStateModel extends BaseChangeNotifier {
       }
       refreshCode += 1;
       notifyListeners();
+    }
+  }
+
+  /// 请求修改收藏歌单/取消收藏歌单
+  void updateSubscribeSonglist() async {
+    if (detailModel?.playlist == null) {
+      return;
+    }
+    if (detailModel!.playlist!.subscribed == true) {
+       final res = await SonglistRequest.subscribe(detailModel?.playlist?.id, false);
+       if (res.success) {
+        detailModel!.playlist!.subscribed = false;
+        if (detailModel!.playlist!.subscribedCount != null) {
+          detailModel!.playlist!.subscribedCount = detailModel!.playlist!.subscribedCount! - 1;
+        }
+        showToast("取消收藏成功");
+        notifyListeners();
+       }
+    } else {
+      final res = await SonglistRequest.subscribe(detailModel?.playlist?.id, true);
+       if (res.success) {
+        detailModel!.playlist!.subscribed = true;
+        if (detailModel!.playlist!.subscribedCount != null) {
+          detailModel!.playlist!.subscribedCount = detailModel!.playlist!.subscribedCount! + 1;
+        }
+        showToast("收藏成功");
+        notifyListeners();
+       }
     }
   }
 }

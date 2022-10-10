@@ -150,23 +150,29 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
           },
         ),
         widthSpace(10),
-        MainButton.icon(
-          icon: ImageView.asset(
-            src: 'assets/icon_full_collection.png',
-            width: iconWidth,
-            height: iconWidth,
-            color: (model?.subscribed ?? false)
-                ? kText6Color
-                : kHighlightThemeColor,
-          ),
-          title:
-              "${(model?.subscribed ?? false) ? '已收藏' : '收藏'}(${(model?.subscribedCount ?? 0).longNumShow})",
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          height: buttonHeight,
-          highlight: !(model?.subscribed ?? false),
-          fontSize: fontSize,
-          onTap: () {
-            showToast('点击收藏');
+        Selector<SonglistStateModel, bool?>(
+          selector: (p0, p1) => p1.detailModel?.playlist?.subscribed,
+          builder: (context, value, child) {
+            return MainButton.icon(
+              icon: ImageView.asset(
+                src: 'assets/icon_full_collection.png',
+                width: iconWidth,
+                height: iconWidth,
+                color: (value ?? false)
+                    ? kText6Color
+                    : kHighlightThemeColor,
+              ),
+              title:
+                  "${(value ?? false) ? '已收藏' : '收藏'}(${(model?.subscribedCount ?? 0).longNumShow})",
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              height: buttonHeight,
+              highlight: !(value ?? false),
+              fontSize: fontSize,
+              onTap: () {
+                final state = context.read<SonglistStateModel>();
+                state.updateSubscribeSonglist();
+              },
+            );
           },
         ),
       ],
