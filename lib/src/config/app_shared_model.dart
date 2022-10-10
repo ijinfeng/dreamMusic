@@ -163,7 +163,7 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
   }
 
   /// 喜欢/不喜欢一首歌
-  void likeASong(int id, {bool like = true}) async {
+  Future<bool> likeASong(int id, {bool like = true}) async {
     if (isUserLogin() && hasAccount) {
       final res = await SongDetailRequest.like(id, like: like);
       if (res.success) {
@@ -177,9 +177,11 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
           showToast("取消喜欢成功");
         }
         needRefreshLikelist();
+        return Future.value(true);
       }
     } else {
       debugPrint("[error]未登录-调用喜欢音乐接口");
     }
+    return Future.value(false);
   }
 }

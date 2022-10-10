@@ -40,7 +40,7 @@ class MyLikeStateModel extends BaseChangeNotifier {
 
   int offset = 0;
 
-  final int limit = 10;
+  final int limit = 50;
 
   /// 获取我喜欢的音乐列表
   void requestLikeSongs() async {
@@ -66,4 +66,27 @@ class MyLikeStateModel extends BaseChangeNotifier {
   }
 
   EasyRefreshController? refreshController;
+
+  void deleteSong(SingleSongModel? model) {
+    if (model == null) return;
+    int? deleteIndex;
+    for (int i = 0; i < songs.length; i++) {
+      final song = songs[i];
+      if (song.track?.id == model.track?.id) {
+        deleteIndex = i;
+        break;
+      }
+    }
+    if (deleteIndex != null) {
+      songs.removeAt(deleteIndex);
+    }
+    likeSongsRefreshCode += 1;
+    // 更新歌曲数
+    if (songlist?.trackCount != null) {
+      songlist?.trackCount = songlist!.trackCount! - 1;
+    }
+    // 更新时间
+    songlist?.updateTime = DateTime.now().millisecondsSinceEpoch;
+    notifyListeners();
+  }
 }

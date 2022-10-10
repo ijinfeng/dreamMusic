@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
+import 'package:dream_music/src/components/emptyview/empty_view.dart';
 import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
@@ -80,6 +81,10 @@ class MyLikePageState extends ProviderState<MylikePage, MyLikeStateModel> with E
                                 onDoubleTap: (model) {
                                   getPlayer(context).replaceSonglistAndPlay(context, viewModel?.songlist?.id, viewModel?.songs, model, force: true);
                                 },
+                                onLikeTap: (model) {
+                                  // debugPrint("取消喜欢成功--${model.track?.id}");
+                                  viewModel?.deleteSong(model);
+                                },
                               );
                             },
                           );
@@ -89,7 +94,7 @@ class MyLikePageState extends ProviderState<MylikePage, MyLikeStateModel> with E
                         if (section == 0) {
                           return 1;
                         } else {
-                          return viewModel?.songs?.length ?? 0;
+                          return viewModel?.songs.isEmpty == true ? 0 : viewModel!.songs.length;
                         }
                       },
                     );

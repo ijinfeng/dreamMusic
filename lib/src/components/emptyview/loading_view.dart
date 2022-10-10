@@ -1,6 +1,5 @@
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class LoadingView extends StatelessWidget {
   const LoadingView({

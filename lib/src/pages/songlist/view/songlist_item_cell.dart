@@ -3,7 +3,6 @@ import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
-import 'package:dream_music/src/components/hover/hover_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/global_constant.dart';
@@ -18,11 +17,14 @@ class SonglistItemCell extends StatefulWidget {
     required this.model,
     required this.onDoubleTap,
     this.index,
+    this.onLikeTap,
   }) : super(key: key);
 
   final int? index;
   final SingleSongModel? model;
   final OneParamCallback<SingleSongModel> onDoubleTap;
+  /// 点击喜欢的回调，这个可以在这个回调中做删除等操作，不需要自己处理喜欢｜不喜欢的接口调用
+  final OneParamCallback<SingleSongModel>? onLikeTap;
 
   @override
   State<StatefulWidget> createState() {
@@ -90,7 +92,11 @@ class _SonglistItemCellState extends State<SonglistItemCell>
               onTap: (sel) {
                 if (widget.model?.track?.id != null) {
                   AppSharedManager()
-                      .likeASong(widget.model!.track!.id!, like: !like);
+                      .likeASong(widget.model!.track!.id!, like: !like).then((value) {
+                        if (value && widget.onLikeTap != null) {
+                          widget.onLikeTap!(widget.model!);
+                        }
+                      });
                 }
               },
             ),

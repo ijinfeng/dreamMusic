@@ -113,10 +113,17 @@ class MyLikeHeaderView extends StatelessWidget with EasyInterface {
           ],
         ),
         heightSpace(10),
-        Text(
-          "${state.songlist?.trackCount ?? 0}首歌 · 最近更新于 ${Utils.getDateDesc(state.songlist?.updateTime)}",
-          style: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w400, color: kDisableColor),
+        Selector<MyLikeStateModel, int?>(
+          selector: (p0, p1) => p1.songlist?.trackCount,
+          builder: (context, value, child) {
+            return Text(
+              "${state.songlist?.trackCount ?? 0}首歌 · 最近更新于 ${Utils.getDateDesc(state.songlist?.updateTime)}",
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: kDisableColor),
+            );
+          },
         ),
         heightSpace(30),
         _buildButtons(context),
