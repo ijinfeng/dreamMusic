@@ -5,6 +5,7 @@ import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/personalFM/model/personal_fm_state_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,9 @@ class PersonalFMToolBar extends StatelessWidget with EasyInterface {
                 height: buttonWidth - 4,
                 color: kText3Color,
                 onTap: (sel) {
-                  Navigator.pushNamed(context, PageRouters.comment, arguments: state.getPlaySong?.track?.id);
+                  if (kHomeBodyScaffoldKey.currentContext != null) {
+                    Navigator.pushNamed(kHomeBodyScaffoldKey.currentContext!, PageRouters.comment, arguments: state.getPlaySong);
+                  }
                 },
               ),
             ),

@@ -236,7 +236,7 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
             height: 30,
             color: kHighlightThemeColor,
             onTap: (sel) {
-              Navigator.pushNamed(context, PageRouters.comment, arguments: player.currentSong?.track?.id);
+              Navigator.pushNamed(context, PageRouters.comment, arguments: player.currentSong);
             },
           ),
           SelectableIconButton(

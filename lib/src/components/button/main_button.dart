@@ -11,6 +11,7 @@ class MainButton extends StatelessWidget {
     this.width,
     this.height,
     this.fontSize,
+    this.textStyle,
     this.padding,
     this.highlight = true,
     this.backgroundColor,
@@ -26,6 +27,7 @@ class MainButton extends StatelessWidget {
     this.width,
     this.height,
     this.fontSize,
+    this.textStyle,
     this.padding,
     this.ltr = true,
     this.highlight = true,
@@ -42,6 +44,7 @@ class MainButton extends StatelessWidget {
     this.width,
     this.height,
     this.fontSize,
+    this.textStyle,
     this.padding,
     this.highlight = true,
     this.backgroundColor
@@ -56,6 +59,7 @@ class MainButton extends StatelessWidget {
   final double? width;
   final double? height;
   final double? fontSize;
+  final TextStyle? textStyle;
   final EdgeInsetsGeometry? padding;
   final bool ltr;
   /// 这个属性只有在[enable=true]时才生效，表示按钮可用下的颜色状态
@@ -66,7 +70,7 @@ class MainButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget titleWidget = Text(
         title ?? '',
-        style: TextStyle(
+        style: textStyle ?? TextStyle(
           fontSize: fontSize ?? 17,
           fontWeight: FontWeight.w600,
           color: (enable && highlight) ? kHighlightThemeColor : kText6Color

@@ -43,6 +43,13 @@ class SelectableIconButton extends StatelessWidget {
       selectedColor = kDisableColor;
       unselectedColor = kDisableColor;
     }
+
+    Widget current = ImageView.asset(
+          src: selected ? src : (unsrc ?? src),
+          width: width,
+          height: height,
+          color: selected ? selectedColor : unselectedColor
+        );
     return TextButton(
         style: TextButton.styleFrom(padding: padding ?? EdgeInsets.zero,
           minimumSize: Size.zero
@@ -50,11 +57,6 @@ class SelectableIconButton extends StatelessWidget {
         onPressed: (onTap != null && enable) ? () {
             onTap!(selected);
         } : null,
-        child: ImageView.asset(
-          src: selected ? src : (unsrc ?? src),
-          width: width,
-          height: height,
-          color: selected ? selectedColor : unselectedColor
-        ));
+        child: current);
   }
 }

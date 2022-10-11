@@ -6,13 +6,18 @@ import 'package:dream_music/src/pages/comment/model/comment_hot_model.dart';
 class CommentRequest {
   /// 获取歌曲的评论详情
   /// - id：歌曲id
-  static Future<ResponseModel<CommentDetailModel>> musicComment(int id) {
+  static Future<ResponseModel<CommentDetailModel>> musicComment(int id, {
+    int offset = 0,
+    int limit = 20,
+  }) {
     final res = neRequest.get(
       "/comment/music",
       queryParameters: {
         "id": id,
-        "limit": 20
+        "offset": offset,
+        "limit": limit
       },
+      addTimestamp: true,
       builder: (json) {
         return CommentDetailModel.fromJson(json);
       },
@@ -34,6 +39,23 @@ class CommentRequest {
       builder: (json) {
         return CommentHotModel.fromJson(json);
       },
+    );
+    return res;
+  }
+
+  /// 给评论点赞
+  /// - id：歌曲id
+  /// - cid：评论id
+  /// - like：true点赞，false取消点赞
+  static Future<ResponseModel> like(int id, int cid, bool like) {
+    final res = neRequest.get(
+      "/comment/like",
+      queryParameters: {
+        "id": id,
+        "cid": cid,
+        "type": 0,
+        "t": like ? 1 : 0
+      }
     );
     return res;
   }

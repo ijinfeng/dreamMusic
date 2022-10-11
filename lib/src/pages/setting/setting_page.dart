@@ -131,8 +131,9 @@ class SettingPage extends StatelessWidget with EasyInterface {
             heightSpace(10),
             MainButton.title(title: '评论也',
             onTap: () {
-              CommentRequest.musicComment(347230);
-              CommentRequest.hotComments(347230);
+              // 5254811
+              // https://music.163.com/song?id=5254811&userid=270135795
+              Navigator.pushNamed(context, PageRouters.songDetail, arguments: 5254811);
             },),
             heightSpace(20),
             BadgeContainer(

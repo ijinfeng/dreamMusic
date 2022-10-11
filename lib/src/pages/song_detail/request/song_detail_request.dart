@@ -1,6 +1,8 @@
 import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
+import 'package:dream_music/src/pages/comment/model/comment_detail_model.dart';
+import 'package:dream_music/src/pages/comment/request/comment_request.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_detail_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_lyric_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_url_model.dart';

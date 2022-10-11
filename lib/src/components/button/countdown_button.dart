@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/config/global_constant.dart';
+import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:flutter/material.dart';
 
 
@@ -82,7 +83,11 @@ class _CountdownButtonState extends State<CountdownButton> {
             },
       width: widget.width,
       height: widget.height,
-      fontSize: 14,
+      textStyle: const TextStyle(
+        fontSize: 14,
+        color: kHighlightThemeColor,
+        fontWeight: FontWeight.w600
+      ),
     );
   }
 }

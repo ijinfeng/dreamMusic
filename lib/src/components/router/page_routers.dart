@@ -3,6 +3,7 @@ import 'package:dream_music/src/pages/comment/comment_page.dart';
 import 'package:dream_music/src/pages/dailysongs/daily_songs_page.dart';
 import 'package:dream_music/src/pages/login/login_page.dart';
 import 'package:dream_music/src/pages/setting/setting_page.dart';
+import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/song_detail/song_detail_page.dart';
 import 'package:dream_music/src/pages/songlist/songlist_page.dart';
 import 'package:flutter/material.dart';
@@ -50,13 +51,18 @@ class PageRouters {
               ));
         }
       case dailySongs:
-        return NoneAnimateRoute(settings: settings, child: const DailySongsPage());
+        return NoneAnimateRoute(
+            settings: settings, child: const DailySongsPage());
       case comment:
-        int id = 0;
-          if (args is int) {
-            id = args;
-          }
-        return ModelRoute(settings: settings, child: CommentPage(id: id,));
+        SingleSongModel? model;
+        if (args is SingleSongModel?) {
+          model = args;
+        }
+        return ModelRoute(
+            settings: settings,
+            child: CommentPage(
+              model: model,
+            ));
       default:
         return MaterialPageRoute(
             settings: settings,

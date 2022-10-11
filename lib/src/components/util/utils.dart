@@ -22,9 +22,15 @@ class Utils {
     return ret;
   }
 
+  /// 格式化时间戳
+  /// - timstamp： 时间戳，秒和毫秒都可以
+  /// - customCharSub：是否自定义年月日的分隔符
+  /// - sub：分隔符的字符
+  /// - showDetail：是否显示时/分
   static String getDateDesc(int? timestamp, {
     bool customCharSub = true,
     String sub = '-',
+    bool showDetail = false,
   }) {
     if (timestamp == null) return "";
     var timestampInt = timestamp.toInt();
@@ -33,10 +39,31 @@ class Utils {
       timestampInt = timestampInt * 1000;
     } 
     final time = DateTime.fromMillisecondsSinceEpoch(timestampInt);
+    String ret;
     if (customCharSub) {
-      return "${time.year}$sub${time.month}$sub${time.day}";
+      ret = "${time.year}$sub${time.month}$sub${time.day}";
     } else {
-      return "${time.year}年${time.month}月${time.day}日";
+      ret = "${time.year}年${time.month}月${time.day}日";
+    }
+    if (showDetail) {
+      ret = "$ret ${time.hour}:${time.minute}";
+    }
+    return ret;
+  }
+
+  /// 格式化长数字
+  static String formatLongNum(int? number) {
+    if (number == null) {
+      return '0';
+    }
+    if (number < 10000) {
+      return '$number';
+    } else if (number < 100000000) {
+      final ret = number ~/ 10000;
+      return '$ret万+';
+    } else {
+      final ret = number ~/ 100000000;
+      return '$ret亿+';
     }
   }
 }
