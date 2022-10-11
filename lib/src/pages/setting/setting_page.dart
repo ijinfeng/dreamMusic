@@ -8,10 +8,12 @@ import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/comment/request/comment_request.dart';
+import 'package:dream_music/src/pages/comment/view/comment_paging_control.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
 import 'package:dream_music/src/pages/personalFM/request/personal_request.dart';
+import 'package:dream_music/src/pages/setting/model/setting_state_model.dart';
 import 'package:dream_music/src/pages/song_detail/request/song_detail_request.dart';
 import 'package:dream_music/src/pages/songlist/request/songlist_request.dart';
 import 'package:dream_music/src/pages/user/request/user_request.dart';
@@ -24,7 +26,11 @@ class SettingPage extends StatelessWidget with EasyInterface {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      body: Center(
+      body: ChangeNotifierProvider(
+        create: (context) => SettingStateModel(),
+        builder: (context, child) {
+          final state = context.read<SettingStateModel>();
+          return Center(
         child: Column(
           children: [
             MainButton.title(
@@ -143,9 +149,19 @@ class SettingPage extends StatelessWidget with EasyInterface {
                   "uid": AppSharedManager().userModel?.account?.id
                 });
               },),
+            ),
+            Selector<SettingStateModel, int>(
+              selector: (p0, p1) => p1.page,
+              builder: (context, page, child) {
+                return CommentPagingControl(total: state.total, pageLimit: state.limit, currentPage: page, onPageChanged: (page) {
+              state.page = page;
+            },);
+              },
             )
           ],
         ),
+      );
+        },
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:dream_music/src/components/listview/list_view.dart';
 import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/pages/comment/model/comment_state_model.dart';
 import 'package:dream_music/src/pages/comment/view/comment_cell.dart';
+import 'package:dream_music/src/pages/comment/view/comment_paging_control.dart';
 import 'package:dream_music/src/pages/comment/view/comment_section_title.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +53,13 @@ class CommentListView extends StatelessWidget {
                       );
                     }
                   } else {
+                    if (index == state.comments.length) {
+                      return CommentPagingControl(
+                        total: state.commentDetailModel?.total ?? 0,
+                        currentPage: state.page,
+                        pageLimit: state.limit,
+                        onPageChanged: (page) {},);
+                    }
                     return CommentCell(
                       model: state.comments[index],
                     );
@@ -65,7 +73,7 @@ class CommentListView extends StatelessWidget {
                     }
                     return count;
                   } else {
-                    return state.comments.length;
+                    return state.comments.length + 1;
                   }
                 },
                 sectionCount: 2,

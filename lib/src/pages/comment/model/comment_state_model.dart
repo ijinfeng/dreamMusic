@@ -16,8 +16,10 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
 
   bool hasRequestData = false;
 
-  int offset = 0;
+  int get offset => page * limit;
   final int limit = 20;
+
+  int page = 0;
 
   /// 是否需要展示热门评论
   bool get needShowHotComments => offset == 0;
