@@ -46,7 +46,9 @@ class Utils {
       ret = "${time.year}年${time.month}月${time.day}日";
     }
     if (showDetail) {
-      ret = "$ret ${time.hour}:${time.minute}";
+      String hourStr = "${time.hour}".padLeft(2, '0');
+      String minuteStr = "${time.minute}".padLeft(2, '0');
+      ret = "$ret $hourStr:$minuteStr";
     }
     return ret;
   }

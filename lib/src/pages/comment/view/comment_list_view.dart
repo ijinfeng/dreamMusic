@@ -28,7 +28,7 @@ class CommentListView extends StatelessWidget {
               final state = context.read<CommentStateModel>();
               return FFListView(
                 itemBuilder: (context, section, index) {
-                  if (section == 0) {
+                  if (section == 0 && state.needShowHotComments) {
                     if (state.needShowMoreHotComments &&
                         index == (state.hotComments?.length ?? 0)) {
                       return Center(
@@ -53,32 +53,40 @@ class CommentListView extends StatelessWidget {
                       );
                     }
                   } else {
-                    if (index == state.comments.length) {
-                      return CommentPagingControl(
-                        total: state.commentDetailModel?.total ?? 0,
-                        currentPage: state.page,
-                        pageLimit: state.limit,
-                        onPageChanged: (page) {},);
+                    if (index == state.commentLength) {
+                      return Selector<CommentStateModel, int>(
+                        selector: (p0, p1) => p1.page,
+                        builder: (context, value, child) {
+                          return CommentPagingControl(
+                            total: state.commentDetailModel?.total ?? 0,
+                            currentPage: state.page,
+                            pageLimit: state.limit,
+                            onPageChanged: (page) {
+                              state.page = page;
+                            },
+                          );
+                        },
+                      );
                     }
                     return CommentCell(
-                      model: state.comments[index],
+                      model: state.comments?[index],
                     );
                   }
                 },
                 indexCountBuilder: (context, section) {
-                  if (section == 0) {
+                  if (section == 0 && state.needShowHotComments) {
                     int count = state.hotComments?.length ?? 0;
                     if (state.needShowMoreHotComments) {
                       count += 1;
                     }
                     return count;
                   } else {
-                    return state.comments.length + 1;
+                    return state.commentLength + 1;
                   }
                 },
-                sectionCount: 2,
+                sectionCount: state.needShowHotComments ? 2 : 1,
                 sectionBuilder: (context, index) {
-                  if (index == 0) {
+                  if (index == 0 && state.needShowHotComments) {
                     return const CommentSectionTitle(
                         icon: ImageView.asset(
                           src: 'icon_hot_comment',
@@ -90,7 +98,7 @@ class CommentListView extends StatelessWidget {
                     return CommentSectionTitle(
                       title: "所有评论",
                       subTitle:
-                          "(共${Utils.formatLongNum(state.commentDetailModel?.total)}条听友评论)",
+                          "(共${Utils.formatLongNum(state.commentDetailModel?.total)}听友评论)",
                     );
                   }
                 },

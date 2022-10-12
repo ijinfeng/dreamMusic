@@ -30,7 +30,6 @@ class CommentToolBar extends StatelessWidget {
                   return previous != next && model?.commentId == cid;
                 },
                 builder: (context, value, child) {
-                  debugPrint("[comment]cid-${model?.commentId}变更,liked-${model?.liked},count-${model?.likedCount}");
                   return MainButton.icon(
                     backgroundColor: Colors.transparent,
                     icon: ImageView.asset(

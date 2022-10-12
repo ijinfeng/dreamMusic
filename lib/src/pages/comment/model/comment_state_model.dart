@@ -9,6 +9,7 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
   final int songId;
 
   CommentStateModel(this.songId) {
+    debugPrint("[comment]初始化CommentStateModel");
     requestComment();
   }
 
@@ -19,7 +20,17 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
   int get offset => page * limit;
   final int limit = 20;
 
-  int page = 0;
+  int _page = 0;
+  int get page => _page;
+  set page(int value) {
+    if (_page == value) {
+      return;
+    }
+    _page = value;
+    hasRequestData = false;
+    notifyListeners();
+    requestComment();
+  }
 
   /// 是否需要展示热门评论
   bool get needShowHotComments => offset == 0;
@@ -28,18 +39,18 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
   bool get needShowMoreHotComments => (hotComments?.length ?? 0) >= 15;
 
   List<CommentModel?>? get hotComments => commentDetailModel?.hotComments;
+  int get hotCommentLength => hotComments?.length ?? 0;
 
-  final List<CommentModel?> comments = []; 
+  List<CommentModel?>? comments;
+  int get commentLength => comments?.length ?? 0; 
 
   void requestComment() async {
-    debugPrint("[comment]正在获取歌曲[$songId]的评论...");
+    debugPrint("[comment]正在获取歌曲[$songId]的评论,当前offset=$offset,limit=$limit...");
     final res = await CommentRequest.musicComment(songId, offset: offset, limit: limit);
     hasRequestData = true;
     if (res.success) {
       commentDetailModel = res.data;
-      if (commentDetailModel?.comments != null) {
-        comments.addAll(commentDetailModel!.comments!);
-      }
+      comments = commentDetailModel?.comments;
       debugPrint("[comment]评论获取成功");
     }
     notifyListeners();
