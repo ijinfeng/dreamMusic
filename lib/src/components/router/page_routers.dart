@@ -1,5 +1,6 @@
 import 'package:dream_music/src/components/network/network_env_route.dart';
 import 'package:dream_music/src/pages/comment/comment_page.dart';
+import 'package:dream_music/src/pages/comment/hot_comment/hot_comment_page.dart';
 import 'package:dream_music/src/pages/dailysongs/daily_songs_page.dart';
 import 'package:dream_music/src/pages/login/login_page.dart';
 import 'package:dream_music/src/pages/setting/setting_page.dart';
@@ -17,6 +18,7 @@ class PageRouters {
   static const String songDetail = "songDetail";
   static const String dailySongs = "dailySongs";
   static const String comment = "comment";
+  static const String hotComment = "hotComment";
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final name = settings.name;
@@ -63,6 +65,14 @@ class PageRouters {
             child: CommentPage(
               model: model,
             ));
+      case hotComment:
+        {
+          int id = 0;
+          if (args is int) {
+            id = args;
+          }
+          return NoneAnimateRoute(settings: settings, child: HotCommentPage(songId: id));
+        }
       default:
         return MaterialPageRoute(
             settings: settings,

@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
+import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/pages/comment/model/comment_state_model.dart';
 import 'package:dream_music/src/pages/comment/view/comment_cell.dart';
@@ -19,7 +20,7 @@ class CommentListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => CommentStateModel(songId),
+      create: (context) => CommentStateModel(songId, type: CommentStateType.all),
       builder: (context, child) {
         return Selector<CommentStateModel, bool>(
           selector: (p0, p1) => p1.hasRequestData,
@@ -31,19 +32,24 @@ class CommentListView extends StatelessWidget {
                   if (section == 0 && state.needShowHotComments) {
                     if (state.needShowMoreHotComments &&
                         index == (state.hotComments?.length ?? 0)) {
-                      return Center(
-                        child: SizedBox(
-                          height: 40,
-                          child: MainButton.icon(
-                            backgroundColor: Colors.transparent,
-                            icon: const ImageView.asset(
-                              src: "icon_hot_comment",
-                              width: 16,
-                              height: 16,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Center(
+                          child: SizedBox(
+                            height: 40,
+                            child: MainButton.icon(
+                              backgroundColor: Colors.transparent,
+                              icon: const ImageView.asset(
+                                src: "icon_hot_comment",
+                                width: 16,
+                                height: 16,
+                              ),
+                              title: "查看更多精彩评论",
+                              fontSize: 14,
+                              onTap: () {
+                                Navigator.pushNamed(context, PageRouters.hotComment, arguments: songId);
+                              },
                             ),
-                            title: "查看更多精彩评论",
-                            fontSize: 14,
-                            onTap: () {},
                           ),
                         ),
                       );

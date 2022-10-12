@@ -27,6 +27,7 @@ class CommentRequest {
 
   /// 热门评论
   /// 0: 歌曲 1: mv 2: 歌单 3: 专辑 4: 电台节目 5: 视频 6: 动态 7: 电台
+  /// - id: 歌曲id
   static Future<ResponseModel<CommentHotModel>> hotComments(int id, {int offset = 0, int limit = 50}) {
     final res = neRequest.get(
       "/comment/hot",

@@ -1,19 +1,37 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/pages/comment/model/comment_detail_model.dart';
+import 'package:dream_music/src/pages/comment/model/comment_hot_model.dart';
 import 'package:dream_music/src/pages/comment/model/comment_model.dart';
 import 'package:dream_music/src/pages/comment/request/comment_request.dart';
 import 'package:flutter/material.dart';
 
-class CommentStateModel extends BaseChangeNotifier with EasyInterface {
-  final int songId;
+enum CommentStateType {
+  /// 所有评论
+  all,
+  /// 热门评论
+  hot
+}
 
-  CommentStateModel(this.songId) {
+class CommentStateModel extends BaseChangeNotifier with EasyInterface {
+  CommentStateModel(this.songId, {
+    required this.type
+  }) {
     debugPrint("[comment]初始化CommentStateModel");
-    requestComment();
+    if (type == CommentStateType.all) {
+      requestComment();
+    } else {
+      requestHotComment();
+    }
   }
 
+  final int songId;
+
+  final CommentStateType type;
+
   CommentDetailModel? commentDetailModel;
+
+  CommentHotModel? hotModel;
 
   bool hasRequestData = false;
 
@@ -29,7 +47,11 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
     _page = value;
     hasRequestData = false;
     notifyListeners();
-    requestComment();
+    if (type == CommentStateType.all) {
+      requestComment();
+    } else {
+      requestHotComment();
+    }
   }
 
   /// 是否需要展示热门评论
@@ -38,7 +60,7 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
   /// 是否展示查看更多热门评论的入口
   bool get needShowMoreHotComments => (hotComments?.length ?? 0) >= 15;
 
-  List<CommentModel?>? get hotComments => commentDetailModel?.hotComments;
+  List<CommentModel?>? hotComments;
   int get hotCommentLength => hotComments?.length ?? 0;
 
   List<CommentModel?>? comments;
@@ -50,7 +72,20 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
     hasRequestData = true;
     if (res.success) {
       commentDetailModel = res.data;
+      hotComments = commentDetailModel?.hotComments;
       comments = commentDetailModel?.comments;
+      debugPrint("[comment]评论获取成功");
+    }
+    notifyListeners();
+  }
+
+  void requestHotComment() async {
+    debugPrint("[comment]正在获取歌曲[$songId]的热门评论,当前offset=$offset,limit=$limit...");
+    final res = await CommentRequest.hotComments(songId, offset: offset, limit: limit);
+    hasRequestData = true;
+    if (res.success) {
+      hotModel = res.data;
+      hotComments = hotModel?.hotComments;
       debugPrint("[comment]评论获取成功");
     }
     notifyListeners();

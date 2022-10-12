@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/basic/common_material_app.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
@@ -7,6 +8,7 @@ import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/comment/comment_state_scaffold.dart';
 import 'package:dream_music/src/pages/comment/model/comment_page_state_model.dart';
 import 'package:dream_music/src/pages/comment/view/comment_list_view.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
@@ -20,80 +22,17 @@ class CommentPage extends StatelessWidget with EasyInterface {
 
   @override
   Widget build(BuildContext context) {
-    const style = TextStyle(
-        fontSize: 16, color: kText3Color, fontWeight: FontWeight.w600);
     return ChangeNotifierProvider(
-      create: (context) => CommentPageStateModel(model: model),
-      builder: (context, child) {
-        return Consumer<CommentPageStateModel>(
-          builder: (context, state, child) {
-            final currentSong = state.model;
-            return CommonScaffold(
-              centerItem: currentSong != null
-                  ? RichText(
-                      text: TextSpan(style: style, children: [
-                      const TextSpan(text: "歌曲"),
-                      TextSpan(
-                          text: "\"${currentSong.track?.songName}\"",
-                          style: const TextStyle(color: kHighlightThemeColor)),
-                      const TextSpan(text: "的评论")
-                    ]))
-                  : const Text(
-                      '暂无歌曲播放',
-                      style: style,
-                    ),
-              rightItem: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Selector<SongPlayer, int?>(
-                    selector: (p0, p1) => p1.currentSong?.track?.id,
-                    builder: (context, value, child) {
-                      return currentSong?.track?.id != value
-                          ? MainButton.icon(
-                              backgroundColor: Colors.transparent,
-                              icon: const ImageView.asset(
-                                src: 'icon_update_comment',
-                                width: 17,
-                                height: 17,
-                                color: kText6Color,
-                              ),
-                              title: "当前歌曲和评论不一致，点击切换",
-                              textStyle: const TextStyle(
-                                fontSize: 13,
-                                color: kText6Color,
-                              ),
-                              onTap: () {
-                                state.model = getPlayer(context).currentSong;
-                              },
-                            )
-                          : const Spacer();
-                    },
-                  ),
-                  widthSpace(10),
-                  CustomTooltipWidget(
-                    message: '关闭',
-                    child: SelectableIconButton(
-                      selected: true,
-                      src: "icon_down_arrow.png",
-                      width: 25,
-                      height: 25,
-                      color: kText3Color,
-                      onTap: (value) {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  )
-                ],
-              ),
-              limitBodyWidth: true,
-              body: currentSong?.track?.id == null
-                  ? const EmptyView(
-                      title: '暂无评论',
-                    )
-                  : CommentListView(key: Key("${currentSong!.track!.id!}"), songId: currentSong.track!.id!));
-          },
-        );
-      },
+        create: (context) => CommentPageStateModel(model: model),
+        builder: (context, child) {
+          return CommonMaterialApp(
+            title: '评论页',
+            home: CommentStateScaffold(builder:(context, state) {
+              final currentSong = state.model;
+                return CommentListView(key: Key("${currentSong!.track!.id!}"), songId: currentSong.track!.id!);
+            },),
+          );
+        },
     );
   }
 }
