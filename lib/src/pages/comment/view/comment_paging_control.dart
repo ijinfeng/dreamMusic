@@ -37,7 +37,6 @@ class CommentPagingControl extends StatelessWidget {
   /// 页码变更回调
   final OneParamCallback<int> onPageChanged;
 
-  final double controlHeight = 50;
 
   /// 选中数字两侧最小显示页数
   final int minimumShowCount = 3;
@@ -138,10 +137,9 @@ class CommentPagingControl extends StatelessWidget {
     ]);
 
     return Container(
-      height: controlHeight,
+      padding: const EdgeInsets.symmetric(vertical: 20),
       alignment: Alignment.center,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Wrap(
         children: children,
       ),
     );
