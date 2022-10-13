@@ -59,7 +59,7 @@ class _RightContentBodyState
     } else if (index == 1) {
       return const PersonalFMPage();
     } else if (index == 2) {
-      return MylikePage();
+      return const MylikePage();
     } else if (index == 3) {
       return const MyCollectionPage();
     }  else if (index == 4) {

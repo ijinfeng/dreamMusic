@@ -6,6 +6,8 @@ import 'package:dream_music/src/components/emptyview/empty_view.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
+import 'package:dream_music/src/components/router/page_routers.dart';
+import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/comment/model/comment_page_state_model.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
@@ -13,11 +15,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CommentStateScaffold extends StatelessWidget with EasyInterface {
-  CommentStateScaffold({Key? key, required this.builder, this.isHotComment = false}) : super(key: key);
+  CommentStateScaffold(
+      {Key? key, required this.builder, this.isHotComment = false})
+      : super(key: key);
 
- final Widget Function(BuildContext context, CommentPageStateModel state) builder;
+  final Widget Function(BuildContext context, CommentPageStateModel state)
+      builder;
 
- final bool isHotComment;
+  final bool isHotComment;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +44,23 @@ class CommentStateScaffold extends StatelessWidget with EasyInterface {
                   '暂无歌曲播放',
                   style: style,
                 ),
+          leftItem: MainButton.icon(
+            width: 110,
+            backgroundColor: Colors.transparent,
+            icon: const ImageView.asset(
+              src: 'icon_write_comment',
+              width: 20,
+              height: 20,
+              color: kText6Color,
+            ),
+            textStyle: const TextStyle(
+              fontSize: 14,
+              color: kText6Color,
+              fontWeight: FontWeight.normal
+            ),
+            title: "发表评论",
+            onTap: () {},
+          ),
           rightItem: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -76,7 +98,14 @@ class CommentStateScaffold extends StatelessWidget with EasyInterface {
                   height: 25,
                   color: kText3Color,
                   onTap: (value) {
-                    Navigator.pop(kHomeBodyScaffoldKey.currentContext!);
+                    bool stop = false;
+                    Navigator.popUntil(context, (route) {
+                      if (stop) return true;
+                      if (route.settings.name == PageRouters.comment) {
+                        stop = true;
+                      }
+                      return false;
+                    });
                   },
                 ),
               )

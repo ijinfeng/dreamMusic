@@ -5,6 +5,7 @@ import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/comment/model/comment_page_state_model.dart';
 import 'package:dream_music/src/pages/home/left_menu/left_menu.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/home/right_content/right_content.dart';
@@ -78,7 +79,10 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
           children: [
             const WindowNavigationBar(),
             Expanded(
-              child: CommonMaterialApp(
+              child: MultiProvider(providers: [
+                ChangeNotifierProvider(create: (context) => CommentPageStateModel())
+              ], builder: (context, child) {
+                return CommonMaterialApp(
                 home: Scaffold(
                   key: kHomeBodyScaffoldKey,
                   drawerScrimColor: Colors.black12,
@@ -90,7 +94,8 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
                         : const Spacer()
                   ],
                 )),
-              ),
+              );
+              },),
             )
           ],
         );

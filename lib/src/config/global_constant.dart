@@ -20,3 +20,6 @@ const int kDailySongsSonglistId = -1000;
 
 /// 私人FM歌单id
 const int? kPersonalFMSonglistId = null;
+
+/// 评论页导航
+final GlobalKey<NavigatorState> kCommentNavigatorKey = GlobalKey(debugLabel: 'home-body-gkey');

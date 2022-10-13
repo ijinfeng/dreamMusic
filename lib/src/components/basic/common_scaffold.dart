@@ -19,8 +19,11 @@ class CommonScaffold extends StatelessWidget {
   /// 最大宽度，默认850
   final double? limitBodyMaxWidth;
 
+  final Key? scaffoldKey;
+
   const CommonScaffold(
       {Key? key,
+      this.scaffoldKey,
       required this.body,
       this.title,
       this.leftItem,
@@ -68,6 +71,7 @@ class CommonScaffold extends StatelessWidget {
       );
     }
     return Scaffold(
+      key: scaffoldKey,
       floatingActionButton: floatingActionButton,
       backgroundColor: backgroundColor ?? Colors.white,
       endDrawer: endDrawer,

@@ -136,8 +136,14 @@ class SongInfoView extends StatelessWidget with EasyInterface {
                                     null) {
                                   if (RouteControlManager()
                                       .hasOpenSongDetailRoute()) {
-                                    Navigator.pop(
-                                        kHomeBodyScaffoldKey.currentContext!);
+                                        bool stop = false;
+                                        Navigator.popUntil(kHomeBodyScaffoldKey.currentContext!, (route) {
+                                          if (stop) return true;
+                                          if (route.settings.name == PageRouters.songDetail) {
+                                            stop = true;
+                                          }
+                                          return route.isFirst;
+                                        });
                                   } else {
                                     Navigator.pushNamed(
                                         kHomeBodyScaffoldKey.currentContext!,

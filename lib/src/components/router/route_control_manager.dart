@@ -143,8 +143,18 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
       _backing = false;
       return;
     }
+    // 这里要注意，有可能一次性pop多个页面，比如使用顶层的[context]，或者使用[popUtil]这类API
+    // 因此不能简单的[-1]
     if (_actions.isNotEmpty) {
-      _currentIndex -= 1;
+      int fix = 0;
+      for (int i = _currentIndex; i >= 0; i--) {
+        final action = _actions[i];
+        if (action is PageRouteAction && action.settings.name == route.settings.name) {
+          break;
+        }
+        fix += 1;
+      }
+      _currentIndex -= 1 + fix;
       notifyListeners();
     }
     printRoutesDetail();
@@ -161,12 +171,13 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
   }
 
   /// 是否已经打开了音乐播放详情页
+  /// 当前的下标要在音乐详情之后表示详情页打开还没关闭
   bool hasOpenSongDetailRoute() {
     for (int i = _actions.length - 1; i >= 0; i--) {
       final action = _actions[i];
       if (action is PageRouteAction &&
-      action.settings.name == PageRouters.songDetail &&
-      i == _currentIndex) {
+      action.settings.name == PageRouters.songDetail
+        && i <= _currentIndex) {
         return true;
       }
     }

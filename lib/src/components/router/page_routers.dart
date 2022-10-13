@@ -46,7 +46,7 @@ class PageRouters {
           if (args is int) {
             id = args;
           }
-          return ModelDownRoute(
+          return ModelRoute(
               settings: settings,
               child: SongDetailPage(
                 id: id,

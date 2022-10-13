@@ -7,6 +7,7 @@ import 'package:dream_music/src/components/emptyview/empty_view.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
+import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/comment/comment_state_scaffold.dart';
 import 'package:dream_music/src/pages/comment/model/comment_page_state_model.dart';
@@ -22,17 +23,30 @@ class CommentPage extends StatelessWidget with EasyInterface {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => CommentPageStateModel(model: model),
-        builder: (context, child) {
-          return CommonMaterialApp(
-            title: '评论页',
-            home: CommentStateScaffold(builder:(context, state) {
+    final state = context.read<CommentPageStateModel>();
+    state.initialize(model);
+    return CommentStateScaffold(builder:(context, state) {
               final currentSong = state.model;
                 return CommentListView(key: Key("${currentSong!.track!.id!}"), songId: currentSong.track!.id!);
-            },),
-          );
-        },
-    );
+            },);
+    // return CommonMaterialApp(
+    //         title: '评论页',
+    //         home: CommentStateScaffold(builder:(context, state) {
+    //           final currentSong = state.model;
+    //             return CommentListView(key: Key("${currentSong!.track!.id!}"), songId: currentSong.track!.id!);
+    //         },),
+    //       );
+    // return ChangeNotifierProvider(
+    //     create: (context) => CommentPageStateModel(model: model),
+    //     builder: (context, child) {
+    //       return CommonMaterialApp(
+    //         title: '评论页',
+    //         home: CommentStateScaffold(builder:(context, state) {
+    //           final currentSong = state.model;
+    //             return CommentListView(key: Key("${currentSong!.track!.id!}"), songId: currentSong.track!.id!);
+    //         },),
+    //       );
+    //     },
+    // );
   }
 }

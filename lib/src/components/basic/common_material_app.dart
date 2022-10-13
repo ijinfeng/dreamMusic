@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class CommonMaterialApp extends StatelessWidget {
   const CommonMaterialApp({
     Key? key,
+    this.navigatorKey,
     this.title = '',
     required this.home,
     this.theme,
@@ -16,10 +17,12 @@ class CommonMaterialApp extends StatelessWidget {
   final String title;
   final TransitionBuilder? builder;
   final ThemeData? theme;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
           title: title,
           debugShowCheckedModeBanner: false,
           onGenerateRoute: PageRouters.generateRoute,

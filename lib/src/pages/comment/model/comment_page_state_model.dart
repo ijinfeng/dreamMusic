@@ -3,9 +3,11 @@ import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 
 class CommentPageStateModel extends BaseChangeNotifier {
 
-  CommentPageStateModel({
-    SingleSongModel? model,
-  }) : _model = model;
+  CommentPageStateModel();
+
+  void initialize(SingleSongModel? model) {
+    _model = model;
+  }
 
   SingleSongModel? _model;
   SingleSongModel? get model => _model;
