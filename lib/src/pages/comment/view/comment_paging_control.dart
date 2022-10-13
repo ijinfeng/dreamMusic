@@ -56,10 +56,10 @@ class CommentPagingControl extends StatelessWidget {
     // 左侧剩余的页数
     int left = currentPage;
     // 右侧剩余的页数
-    int right = totalPageCount - currentPage;
+    int right = totalPageCount - currentPage - 1;
 
     // debugPrint(
-        // "[page]pageCount-$totalPageCount, currentPage-$currentPage, left: $left, right: $right");
+    // "[page]pageCount-$totalPageCount, currentPage-$currentPage, left: $left, right: $right");
 
     List<_PageButtonModel> pageModels = [];
     if (left <= minimumShowCount + 1) {
@@ -71,7 +71,7 @@ class CommentPagingControl extends StatelessWidget {
     } else {
       pageModels.add(_PageButtonModel(type: PageButtonType.number, page: 0));
       pageModels.add(_PageButtonModel(type: PageButtonType.more));
-      for (int i = left - 3 - max((5 - right), 0); i < left; i++) {
+      for (int i = left - 3 - max((4 - right), 0); i < left; i++) {
         final model = _PageButtonModel(type: PageButtonType.number, page: i);
         pageModels.add(model);
       }
@@ -94,7 +94,7 @@ class CommentPagingControl extends StatelessWidget {
       if (end <= totalPageCount - 1) {
         pageModels.add(_PageButtonModel(type: PageButtonType.more));
         pageModels.add(_PageButtonModel(
-          type: PageButtonType.number, page: totalPageCount - 1));
+            type: PageButtonType.number, page: totalPageCount - 1));
       }
     }
 
@@ -103,18 +103,40 @@ class CommentPagingControl extends StatelessWidget {
       final pageModel = pageModels[i];
       if (pageModel.type == PageButtonType.number) {
         children.add(_NumberPageButton(
-            number: pageModel.page!, selected: pageModel.page! == currentPage, onTap: () {
-              onPageChanged(pageModel.page!);
-            },));
+          number: pageModel.page!,
+          selected: pageModel.page! == currentPage,
+          onTap: () {
+            onPageChanged(pageModel.page!);
+          },
+        ));
       } else {
         children.add(const _MorePageButton());
       }
       if (i != pageModels.length - 1) {
-        children.add(
-          const SizedBox(width: 5,)
-        );
+        children.add(const SizedBox(
+          width: 5,
+        ));
       }
     }
+
+    children.insertAll(0, [
+      _PreviousPageButton(
+        enabled: left > 0,
+        onTap: () {
+          onPageChanged(currentPage - 1);
+      },),
+      const SizedBox(width: 20,),
+    ]);
+
+    children.insertAll(children.length, [
+      const SizedBox(width: 20,),
+      _NextPageButton(
+        enabled: right > 0,
+        onTap: () {
+          onPageChanged(currentPage + 1);
+      },),
+    ]);
+
     return Container(
       height: controlHeight,
       alignment: Alignment.center,
@@ -178,4 +200,38 @@ class _MorePageButton extends _BasePageButton {
           child: const ImageView.asset(
               src: 'icon_page_more', width: 15, height: 15, color: kText6Color),
         );
+}
+
+class _PreviousPageButton extends _BasePageButton {
+  _PreviousPageButton({
+    Key? key,
+    VoidCallback? onTap,
+    bool enabled = true,
+  }) : super(
+            key: key,
+            selected: false,
+            onTap: enabled ? onTap : null,
+            child: ImageView.asset(
+              src: 'icon_nav_left_arrow',
+              width: 15,
+              height: 15,
+              color: enabled ? kText3Color : kText9Color,
+            ));
+}
+
+class _NextPageButton extends _BasePageButton {
+   _NextPageButton({
+    Key? key,
+    VoidCallback? onTap,
+    bool enabled = true,
+  }) : super(
+            key: key,
+            selected: false,
+            onTap: enabled ? onTap : null,
+            child:  ImageView.asset(
+              src: 'icon_nav_right_arrow',
+              width: 15,
+              height: 15,
+              color: enabled ? kText3Color : kText9Color,
+            ));
 }
