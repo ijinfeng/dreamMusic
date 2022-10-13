@@ -17,6 +17,17 @@ class CommentContentText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return SelectableText.rich(TextSpan(
+    //   style: const TextStyle(
+    //     fontSize: 13,
+    //     color: kText3Color,
+    //     fontWeight: FontWeight.w400
+    //   ),
+    //   children: [
+    //     _buildNickname(context),
+    //     _buildContent(context),
+    //   ]
+    // ));
     return RichText(text: TextSpan(
       style: const TextStyle(
         fontSize: 13,
