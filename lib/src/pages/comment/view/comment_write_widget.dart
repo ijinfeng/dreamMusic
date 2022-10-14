@@ -6,6 +6,8 @@ import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/textfield/text_view.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/comment/model/comment_model.dart';
+import 'package:dream_music/src/pages/comment/request/comment_request.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,14 +16,19 @@ class CommentWriteWidget extends StatelessWidget with EasyInterface {
 
   const CommentWriteWidget({
     Key? key,
-    required this.model
+    required this.model,
+    this.reply,
   }) : super(key: key);
 
   final SingleSongModel? model;
+  final CommentModelBeReplied? reply;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) => CommentWriteStateModel(), builder: (context, child) {
+    return ChangeNotifierProvider(create: (context) => CommentWriteStateModel(
+      model: model,
+      reply: reply
+    ), builder: (context, child) {
         return _buildBody(context);
     },);
   }
@@ -134,7 +141,17 @@ class CommentWriteWidget extends StatelessWidget with EasyInterface {
 }
 
 class CommentWriteStateModel extends BaseChangeNotifier {
+
+  CommentWriteStateModel({
+    required this.model,
+    this.reply,
+  });
+
   final int maxLength = 140;
+
+  final SingleSongModel? model;
+  final CommentModelBeReplied? reply;
+
 
   String? _currentText;
   String? get currentText => _currentText;
@@ -148,7 +165,11 @@ class CommentWriteStateModel extends BaseChangeNotifier {
     return currentText?.runes.length ?? 0;
   }
 
-  void sendComment() {
-
+  void sendComment() async {
+    if (model?.track?.id == null) return;
+    final res = await CommentRequest.comment(model?.track?.id ?? 0, reply?.beRepliedCommentId ?? 0, reply != null, currentText ?? '');
+    if (res.success) {
+      debugPrint("[comment]评论发表成功：$currentText");
+    }
   }
 }
