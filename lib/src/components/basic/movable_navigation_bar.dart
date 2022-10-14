@@ -9,6 +9,7 @@ class MovableNavigationBar extends StatelessWidget {
   final Widget? leftItem;
   final Widget? rightItem;
   final EdgeInsetsGeometry padding;
+  final int centerScale;
 
   const MovableNavigationBar({
     Key? key,
@@ -16,12 +17,15 @@ class MovableNavigationBar extends StatelessWidget {
     this.centerItem,
     this.leftItem,
     this.rightItem,
-    this.padding = const EdgeInsets.symmetric(horizontal: 12)
+    this.padding = const EdgeInsets.symmetric(horizontal: 12),
+    this.centerScale = 1
   }) : super(key: key);
 
   Widget _boxNavItem(Widget? child, AlignmentGeometry alignment) {
     Widget current = child ?? const SizedBox.shrink();
-    return Expanded(child: Align(
+    return Expanded(
+      flex: alignment == Alignment.center ? centerScale : 1,
+      child: Align(
       alignment: alignment,
       child: current,
     ),);

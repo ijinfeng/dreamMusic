@@ -60,4 +60,24 @@ class CommentRequest {
     );
     return res;
   }
+
+  /// 发送评论
+  /// - id：歌曲id
+  /// - cid：评论id
+  /// - isReply：true：回复，false：发送
+  /// - content：内容
+  static Future<ResponseModel> comment(int id, int cid, bool isReply, String content) {
+    final res = neRequest.post(
+      "/comment",
+      body: {
+        "t": isReply ? 2 : 1,
+        "type": 0,
+        "id": id,
+        "commentId": cid,
+        "content": content
+      }
+    );
+    return res;
+  }
+
 }

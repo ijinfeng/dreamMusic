@@ -9,6 +9,7 @@ import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/comment/request/comment_request.dart';
 import 'package:dream_music/src/pages/comment/view/comment_paging_control.dart';
+import 'package:dream_music/src/pages/comment/view/comment_write_widget.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
@@ -157,7 +158,14 @@ class SettingPage extends StatelessWidget with EasyInterface {
               state.page = page;
             },);
               },
-            )
+            ),
+            MainButton.title(title: "评论弹窗", onTap: () {
+              showDialog(context: context, builder:(context) {
+                  return CommentWriteWidget(
+                    model: getPlayer(context).currentSong,
+                  );
+              },);
+            },)
           ],
         ),
       );

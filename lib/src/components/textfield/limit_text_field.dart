@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
+enum MaxLengthCalculateMode {
+  /// 直接计算text.length的长度，表情的length>1
+  textLength,
+  /// 按字符的个数计算，一个表情也算一个字符
+  runLength,
+}
+
 class LimitedTextField extends StatefulWidget {
   const LimitedTextField({
     Key? key,
     this.text,
     this.textStyle,
+    this.strutStyle,
     this.backgroundColor,
     this.highlightColor,
     this.placeholder = '请输入',
@@ -27,10 +35,13 @@ class LimitedTextField extends StatefulWidget {
     this.leftSpace = 10,
     this.rightSpace = 10,
     this.obscureText = false,
+    this.maxLines,
+    this.maxLengthMode
   }) : super(key: key);
 
   final String? text;
   final TextStyle? textStyle;
+  final StrutStyle? strutStyle;
   final Color? backgroundColor;
   final Color? highlightColor;
   final String? placeholder;
@@ -53,6 +64,8 @@ class LimitedTextField extends StatefulWidget {
   final Widget? right;
   final double? rightSpace;
   final bool obscureText;
+  final int? maxLines;
+  final MaxLengthCalculateMode? maxLengthMode;
 
   @override
   State<StatefulWidget> createState() {
@@ -143,9 +156,11 @@ class _LimitedTextFieldState extends State<LimitedTextField> {
               onTap: null, // 每次点击textField都会触发
               onEditingComplete: null, // 点击enter的时候调用
               style: widget.textStyle,
+              strutStyle: widget.strutStyle,
               obscureText: widget.obscureText,
               cursorColor: widget.textStyle?.color ?? const Color(0xff333333),
               keyboardType: widget.keyboardType,
+              maxLines: widget.maxLines,
               decoration: InputDecoration(
                 hoverColor: fillColor,
                 fillColor: fillColor,
