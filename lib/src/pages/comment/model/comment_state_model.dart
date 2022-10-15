@@ -101,6 +101,32 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
     comments!.insert(0, model);
   }
 
+  int refreshListViewCode = 0;
+
+  void deleteComment(CommentModel? model) async {
+    if (model == null) return;
+    final res = await CommentRequest.deleteComment(songId, model.commentId!);
+    if (res.success == false) {
+      showToast(res.message);
+      return;
+    }
+    debugPrint("[comment]评论删除成功");
+    showToast("评论删除成功");
+    int? deleteIndex;
+    for (int i = 0; i < commentLength; i++) {
+      final comment = comments?[i];
+      if (comment?.commentId == model.commentId) {
+        deleteIndex = i;
+        break;
+      }
+    }
+    if (deleteIndex != null) {
+      comments?.removeAt(deleteIndex);
+      refreshListViewCode += 1;
+      notifyListeners();
+    }
+  }
+
   /// 每次点赞更新的时候更新
   int likeStatusRefreshCode = 0;
 

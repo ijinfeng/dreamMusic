@@ -19,6 +19,10 @@ mixin EasyInterface {
         toastPosition: EasyLoadingToastPosition.bottom);
   }
 
+  void showFutureToast() {
+    showToast("该功能正在开发中");
+  }
+
   void showLoading(String? text) {
     EasyLoading.show(status: text, dismissOnTap: false);
   }

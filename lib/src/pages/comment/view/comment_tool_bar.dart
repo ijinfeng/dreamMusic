@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/util/utils.dart';
+import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/comment/model/comment_model.dart';
 import 'package:dream_music/src/pages/comment/model/comment_page_state_model.dart';
@@ -11,9 +14,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CommentToolBar extends StatelessWidget {
-  const CommentToolBar({Key? key, required this.model}) : super(key: key);
+  const CommentToolBar({Key? key, required this.model, this.hover = false})
+      : super(key: key);
 
   final CommentModel? model;
+
+  final bool hover;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +79,63 @@ class CommentToolBar extends StatelessWidget {
                     },
                   );
                 },
-              )
+              ),
+              if (hover) ...[
+                const SizedBox(
+                  width: 20,
+                ),
+                PopupMenuButton(
+                  tooltip: '',
+                  color: kPageBackgroundColor,
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: const BorderSide(
+                      width: 0.5,
+                      color: kThinGreyColor,
+                      style: BorderStyle.solid
+                    )
+                  ),
+                  itemBuilder: (context) {
+                    const TextStyle textStyle = TextStyle(
+                        fontSize: 14,
+                        color: kText6Color,
+                        fontWeight: FontWeight.w400);
+                    if (model?.user?.userId ==
+                        AppSharedManager().userModel?.account?.id) {
+                      return [
+                        PopupMenuItem(
+                          height: 30,
+                          child: const Text(
+                            "删除",
+                            style: textStyle,
+                          ),
+                          onTap: () {
+                            state.deleteComment(model);
+                          },
+                        )
+                      ];
+                    } else {
+                      return [
+                        PopupMenuItem(
+                          height: 30,
+                          child: const Text(
+                            "举报",
+                            style: textStyle,
+                          ),
+                          onTap: () {},
+                        )
+                      ];
+                    }
+                  },
+                  child: const ImageView.asset(
+                    src: "icon_more_button",
+                    width: 15,
+                    height: 15,
+                    color: kText9Color,
+                  ),
+                )
+              ]
             ],
           ),
           Text(

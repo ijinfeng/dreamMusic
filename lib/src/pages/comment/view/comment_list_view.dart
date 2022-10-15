@@ -21,7 +21,8 @@ class CommentListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => CommentStateModel(songId, type: CommentStateType.all),
+      create: (context) =>
+          CommentStateModel(songId, type: CommentStateType.all),
       builder: (context, child) {
         return Selector<CommentStateModel, bool>(
           selector: (p0, p1) => p1.hasRequestData,
@@ -50,87 +51,93 @@ class CommentListView extends StatelessWidget {
   }
 
   Widget _buildListView(CommentStateModel state) {
-    return FFListView(
-              itemBuilder: (context, section, index) {
-                if (section == 0 && state.needShowHotComments) {
-                  if (state.needShowMoreHotComments &&
-                      index == (state.hotComments?.length ?? 0)) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Center(
-                        child: SizedBox(
-                          height: 40,
-                          child: MainButton.icon(
-                            backgroundColor: Colors.transparent,
-                            icon: const ImageView.asset(
-                              src: "icon_hot_comment",
-                              width: 16,
-                              height: 16,
-                            ),
-                            title: "查看更多精彩评论",
-                            fontSize: 14,
-                            onTap: () {
-                              Navigator.pushNamed(context, PageRouters.hotComment, arguments: songId);
-                            },
-                          ),
+    return Selector<CommentStateModel, int>(
+      selector: (p0, p1) => p1.refreshListViewCode,
+      builder: (context, value, child) {
+        return FFListView(
+          itemBuilder: (context, section, index) {
+            if (section == 0 && state.needShowHotComments) {
+              if (state.needShowMoreHotComments &&
+                  index == (state.hotComments?.length ?? 0)) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Center(
+                    child: SizedBox(
+                      height: 40,
+                      child: MainButton.icon(
+                        backgroundColor: Colors.transparent,
+                        icon: const ImageView.asset(
+                          src: "icon_hot_comment",
+                          width: 16,
+                          height: 16,
                         ),
+                        title: "查看更多精彩评论",
+                        fontSize: 14,
+                        onTap: () {
+                          Navigator.pushNamed(context, PageRouters.hotComment,
+                              arguments: songId);
+                        },
                       ),
-                    );
-                  } else {
-                    return CommentCell(
-                      model: state.hotComments?[index],
-                    );
-                  }
-                } else {
-                  if (index == state.commentLength) {
-                    return Selector<CommentStateModel, int>(
-                      selector: (p0, p1) => p1.page,
-                      builder: (context, value, child) {
-                        return CommentPagingControl(
-                          total: state.commentDetailModel?.total ?? 0,
-                          currentPage: state.page,
-                          pageLimit: state.limit,
-                          onPageChanged: (page) {
-                            state.page = page;
-                          },
-                        );
+                    ),
+                  ),
+                );
+              } else {
+                return CommentCell(
+                  model: state.hotComments?[index],
+                );
+              }
+            } else {
+              if (index == state.commentLength) {
+                return Selector<CommentStateModel, int>(
+                  selector: (p0, p1) => p1.page,
+                  builder: (context, value, child) {
+                    return CommentPagingControl(
+                      total: state.commentDetailModel?.total ?? 0,
+                      currentPage: state.page,
+                      pageLimit: state.limit,
+                      onPageChanged: (page) {
+                        state.page = page;
                       },
                     );
-                  }
-                  return CommentCell(
-                    model: state.comments?[index],
-                  );
-                }
-              },
-              indexCountBuilder: (context, section) {
-                if (section == 0 && state.needShowHotComments) {
-                  int count = state.hotComments?.length ?? 0;
-                  if (state.needShowMoreHotComments) {
-                    count += 1;
-                  }
-                  return count;
-                } else {
-                  return state.commentLength + 1;
-                }
-              },
-              sectionCount: state.needShowHotComments ? 2 : 1,
-              sectionBuilder: (context, index) {
-                if (index == 0 && state.needShowHotComments) {
-                  return const CommentSectionTitle(
-                      icon: ImageView.asset(
-                        src: 'icon_hot_comment',
-                        width: 23,
-                        height: 23,
-                      ),
-                      title: "热门评论");
-                } else {
-                  return CommentSectionTitle(
-                    title: "所有评论",
-                    subTitle:
-                        "(共${Utils.formatLongNum(state.commentDetailModel?.total)}听友评论)",
-                  );
-                }
-              },
-            );
+                  },
+                );
+              }
+              return CommentCell(
+                model: state.comments?[index],
+              );
+            }
+          },
+          indexCountBuilder: (context, section) {
+            if (section == 0 && state.needShowHotComments) {
+              int count = state.hotComments?.length ?? 0;
+              if (state.needShowMoreHotComments) {
+                count += 1;
+              }
+              return count;
+            } else {
+              return state.commentLength + 1;
+            }
+          },
+          sectionCount: state.needShowHotComments ? 2 : 1,
+          sectionBuilder: (context, index) {
+            if (index == 0 && state.needShowHotComments) {
+              return const CommentSectionTitle(
+                  icon: ImageView.asset(
+                    src: 'icon_hot_comment',
+                    width: 23,
+                    height: 23,
+                  ),
+                  title: "热门评论");
+            } else {
+              return CommentSectionTitle(
+                title: "所有评论",
+                subTitle:
+                    "(共${Utils.formatLongNum(state.commentDetailModel?.total)}听友评论)",
+              );
+            }
+          },
+        );
+      },
+    );
   }
 }
