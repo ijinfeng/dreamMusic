@@ -58,7 +58,10 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
   bool get needShowHotComments => offset == 0;
 
   /// 是否展示查看更多热门评论的入口
-  bool get needShowMoreHotComments => (hotComments?.length ?? 0) >= 15;
+  bool get needShowMoreHotComments => (hotComments?.length ?? 0) >= _hotCommentMaxLength;
+
+  /// 热门评论最大显示量
+  int get _hotCommentMaxLength => 10;
 
   List<CommentModel?>? hotComments;
   int get hotCommentLength => hotComments?.length ?? 0;
@@ -72,7 +75,7 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
     hasRequestData = true;
     if (res.success) {
       commentDetailModel = res.data;
-      hotComments = commentDetailModel?.hotComments;
+      hotComments = commentDetailModel?.hotComments?.sublist(0, _hotCommentMaxLength);
       comments = commentDetailModel?.comments;
       debugPrint("[comment]评论获取成功");
     }
@@ -89,6 +92,13 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
       debugPrint("[comment]评论获取成功");
     }
     notifyListeners();
+  }
+
+  void insertNewCommentIfNeeded(CommentModel? model) {
+    if (model == null || page != 0 || comments == null || type == CommentStateType.hot) {
+      return;
+    }
+    comments!.insert(0, model);
   }
 
   /// 每次点赞更新的时候更新

@@ -35,7 +35,7 @@ class LimitedTextField extends StatefulWidget {
     this.leftSpace = 10,
     this.rightSpace = 10,
     this.obscureText = false,
-    this.maxLines,
+    this.maxLines = 1,
     this.maxLengthMode
   }) : super(key: key);
 
@@ -160,7 +160,7 @@ class _LimitedTextFieldState extends State<LimitedTextField> {
               obscureText: widget.obscureText,
               cursorColor: widget.textStyle?.color ?? const Color(0xff333333),
               keyboardType: widget.keyboardType,
-              maxLines: widget.maxLines,
+              maxLines: widget.obscureText ? 1 : widget.maxLines,
               decoration: InputDecoration(
                 hoverColor: fillColor,
                 fillColor: fillColor,

@@ -163,6 +163,9 @@ class SettingPage extends StatelessWidget with EasyInterface {
               showDialog(context: context, builder:(context) {
                   return CommentWriteWidget(
                     model: getPlayer(context).currentSong,
+                    onCommentCallback: (commentModel) {
+                      
+                    },
                   );
               },);
             },)

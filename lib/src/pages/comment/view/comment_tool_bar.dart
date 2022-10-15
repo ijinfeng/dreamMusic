@@ -4,7 +4,9 @@ import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/comment/model/comment_model.dart';
+import 'package:dream_music/src/pages/comment/model/comment_page_state_model.dart';
 import 'package:dream_music/src/pages/comment/model/comment_state_model.dart';
+import 'package:dream_music/src/pages/comment/view/comment_write_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +42,7 @@ class CommentToolBar extends StatelessWidget {
                       height: 15,
                       color: (model?.liked ?? false) ? kRedColor : kText9Color,
                     ),
-                    title: "${model?.likedCount}",
+                    title: "${model?.likedCount ?? 0}",
                     textStyle: const TextStyle(
                         fontSize: 12,
                         color: kText9Color,
@@ -60,7 +62,17 @@ class CommentToolBar extends StatelessWidget {
                 height: 15,
                 color: kText9Color,
                 src: "icon_reply",
-                onTap: (value) {},
+                onTap: (value) {
+                  showCommentDialog(
+                    context,
+                    context.read<CommentPageStateModel?>()?.model,
+                    reply: model,
+                    onCommentCallback: (commentModel) {
+                      final pageState = context.read<CommentPageStateModel?>();
+                      pageState?.sendNewComment(commentModel);
+                    },
+                  );
+                },
               )
             ],
           ),

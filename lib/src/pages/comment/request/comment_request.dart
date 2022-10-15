@@ -2,6 +2,8 @@ import 'package:dream_music/src/components/network/netease_request.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
 import 'package:dream_music/src/pages/comment/model/comment_detail_model.dart';
 import 'package:dream_music/src/pages/comment/model/comment_hot_model.dart';
+import 'package:dream_music/src/pages/comment/model/comment_model.dart';
+import 'package:dream_music/src/pages/comment/model/comment_reply_model.dart';
 
 class CommentRequest {
   /// 获取歌曲的评论详情
@@ -63,10 +65,10 @@ class CommentRequest {
 
   /// 发送评论
   /// - id：歌曲id
-  /// - cid：评论id
+  /// - cid：回复评论id
   /// - isReply：true：回复，false：发送
   /// - content：内容
-  static Future<ResponseModel> comment(int id, int cid, bool isReply, String content) {
+  static Future<ResponseModel<CommentReplyModel>> comment(int id, int? cid, bool isReply, String content) {
     final res = neRequest.post(
       "/comment",
       body: {
@@ -75,6 +77,26 @@ class CommentRequest {
         "id": id,
         "commentId": cid,
         "content": content
+      },
+      searchKeyPath: "comment",
+      builder: (json) {
+        return CommentReplyModel.fromJson(json);
+      },
+    );
+    return res;
+  }
+
+  /// 删除评论
+  /// - id：资源id
+  /// - cid：评论id
+  static Future<ResponseModel> deleteComment(int id, int cid) {
+    final res = neRequest.post(
+      "/comment",
+      body: {
+        "t": 0,
+        "type": 0,
+        "id": id,
+        "commentId": cid,
       }
     );
     return res;
