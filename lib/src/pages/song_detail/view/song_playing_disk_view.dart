@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
+import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
@@ -229,15 +230,18 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
             color: kHighlightThemeColor,
             onTap: (sel) {},
           ),
-          SelectableIconButton(
-            selected: false,
-            src: 'icon_comment',
-            width: 30,
-            height: 30,
-            color: kHighlightThemeColor,
-            onTap: (sel) {
-              Navigator.pushNamed(context, PageRouters.comment, arguments: player.currentSong);
-            },
+          CustomTooltipWidget(
+            message: '评论',
+            child: SelectableIconButton(
+              selected: false,
+              src: 'icon_comment',
+              width: 30,
+              height: 30,
+              color: kHighlightThemeColor,
+              onTap: (sel) {
+                Navigator.pushNamed(context, PageRouters.comment, arguments: player.currentSong);
+              },
+            ),
           ),
           SelectableIconButton(
             selected: false,

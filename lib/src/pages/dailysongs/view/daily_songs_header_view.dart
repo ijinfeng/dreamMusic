@@ -48,7 +48,7 @@ class DailySongsHeaderView extends StatelessWidget with EasyInterface {
                 heightSpace(18),
                 UnconstrainedBox(
                   child: MainButton.icon(
-                    icon: ImageView.asset(
+                    icon: const ImageView.asset(
                       src: 'assets/icon_add.png',
                       width: 15,
                       height: 15,
@@ -102,7 +102,7 @@ class DailySongsHeaderView extends StatelessWidget with EasyInterface {
         Positioned(
           left: 0,
           right: 0,
-          bottom: 16,
+          bottom: 22,
           child: Container(
             height: 60,
             alignment: Alignment.center,
@@ -114,10 +114,48 @@ class DailySongsHeaderView extends StatelessWidget with EasyInterface {
                   fontWeight: FontWeight.bold),
             ),
           ),
-        )
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            height: 60,
+            alignment: Alignment.center,
+            child: Text(
+              getWeekDayStr(),
+              style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
       ],
     );
     current = _buildGradientMask(current);
     return current;
+  }
+
+  String getWeekDayStr() {
+    final int weekday = DateTime.now().weekday;
+    switch (weekday) {
+      case 1:
+        return "周一";
+      case 2:
+        return "周二";
+      case 3:
+        return "周三";
+      case 4:
+        return "周四";
+      case 5:
+        return "周五";
+      case 6:
+        return "周六";
+      case 7:
+        return "周日";
+      default:
+    }
+    return "";
   }
 }
