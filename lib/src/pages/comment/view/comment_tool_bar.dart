@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
@@ -13,7 +14,7 @@ import 'package:dream_music/src/pages/comment/view/comment_write_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CommentToolBar extends StatelessWidget {
+class CommentToolBar extends StatelessWidget with EasyInterface {
   const CommentToolBar({Key? key, required this.model, this.hover = false})
       : super(key: key);
 
@@ -123,7 +124,9 @@ class CommentToolBar extends StatelessWidget {
                             "举报",
                             style: textStyle,
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            showFutureToast();
+                          },
                         )
                       ];
                     }

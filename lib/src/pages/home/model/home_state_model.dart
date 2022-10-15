@@ -24,10 +24,15 @@ class HomeStateModel extends BaseChangeNotifier {
               icon: 'assets/leftmenu/my_icn_like.png', title: '我喜欢的音乐', index: 2),
           LeftMenuItemModel(
               icon: 'assets/leftmenu/my_icn_fav.png', title: '我收藏的歌单', index: 3),
+              LeftMenuItemModel(
+              icon: 'icon_download.png', title: '我的下载', index: 4)
         ],
         [
           LeftMenuItemModel(
-              icon: 'assets/leftmenu/my_icn_setting.png', title: '设置', index: 4)
+              icon: 'assets/leftmenu/my_icn_setting.png', title: '设置', index: 5)
+        ],
+        [
+          LeftMenuItemModel(icon: 'icon_test.png', title: '测试', index: 1000)
         ]
       ];
 

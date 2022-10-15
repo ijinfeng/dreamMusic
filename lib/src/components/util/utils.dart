@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
   static Color get randomColor {
@@ -67,5 +68,15 @@ class Utils {
       final ret = number ~/ 100000000;
       return '$ret亿+';
     }
+  }
+
+
+  static void openUrl(String url) {
+    if (url.isEmpty) return;
+    launchUrl(Uri.parse(url)).then((success) {
+      if (!success) {
+        debugPrint("[launch]Cound not launch $url");
+      }
+    });
   }
 }

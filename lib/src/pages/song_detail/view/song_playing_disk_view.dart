@@ -205,30 +205,37 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
             builder: (context, value, child) {
               final like = AppSharedManager()
                   .isLikeSong(player.currentSong?.track?.id ?? 0);
-              return SelectableIconButton(
-                selected: like,
-                src: 'icon_like_full',
-                unsrc: 'icon_like_empty',
-                width: 30,
-                height: 30,
-                color: kRedColor,
-                onTap: (sel) {
-                  if (player.currentSong?.track?.id != null) {
-                    AppSharedManager()
-                        .likeASong(player.currentSong!.track!.id!, like: !like);
-                  }
-                },
+              return CustomTooltipWidget(
+                message: like ? '不喜欢' : '喜欢',
+                child: SelectableIconButton(
+                  selected: like,
+                  src: 'icon_like_full',
+                  unsrc: 'icon_like_empty',
+                  width: 30,
+                  height: 30,
+                  color: kRedColor,
+                  onTap: (sel) {
+                    if (player.currentSong?.track?.id != null) {
+                      AppSharedManager()
+                          .likeASong(player.currentSong!.track!.id!, like: !like);
+                    }
+                  },
+                ),
               );
             },
           ),
-          SelectableIconButton(
-            selected: false,
-            src: 'icon_collection_full',
-            unsrc: 'icon_collection_empty',
-            width: 30,
-            height: 30,
-            color: kHighlightThemeColor,
-            onTap: (sel) {},
+          CustomTooltipWidget(
+            message: '下载',
+            child: SelectableIconButton(
+              selected: true,
+              src: 'icon_download',
+              width: 30,
+              height: 30,
+              color: kText9Color,
+              onTap: (sel) {
+                showFutureToast();
+              },
+            ),
           ),
           CustomTooltipWidget(
             message: '评论',
@@ -243,13 +250,16 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
               },
             ),
           ),
-          SelectableIconButton(
-            selected: false,
-            src: 'icon_shared',
-            width: 30,
-            height: 30,
-            color: kHighlightThemeColor,
-            onTap: (sel) {},
+          CustomTooltipWidget(
+            message: '分享',
+            child: SelectableIconButton(
+              selected: false,
+              src: 'icon_shared',
+              width: 30,
+              height: 30,
+              color: kHighlightThemeColor,
+              onTap: (sel) {},
+            ),
           ),
         ],
       ),
