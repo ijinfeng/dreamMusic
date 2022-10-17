@@ -10,6 +10,7 @@ import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/collection/my_collection_page.dart';
+import 'package:dream_music/src/pages/download/download_page.dart';
 import 'package:dream_music/src/pages/find/find_page.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/home/right_content/model/right_content_state_model.dart';
@@ -63,7 +64,10 @@ class _RightContentBodyState
       return const MylikePage();
     } else if (index == 3) {
       return const MyCollectionPage();
-    }  else if (index == 5) {
+    } else if (index == 4) {
+      return const DownloadPage();
+    }
+    else if (index == 5) {
       return const SettingPage();
     }
 
