@@ -26,7 +26,7 @@ import 'package:provider/provider.dart';
 
 class SettingPage extends StatelessWidget with EasyInterface {
   const SettingPage({Key? key}) : super(key: key);
-
+//
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
