@@ -90,7 +90,7 @@ class _HomeBodyState extends ProviderState<HomeBody, HomeStateModel> {
                   children: [
                     LeftMenu(),
                     AppSharedManager().initialized
-                        ? const Expanded(child: RightContent())
+                        ? Expanded(child: RightContent(key: Key(value),))
                         : const Spacer()
                   ],
                 )),

@@ -1,6 +1,5 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/pages/login/model/login_qrstatus_model.dart';
-import 'package:flutter/material.dart';
 import 'package:dream_music/src/components/regexp/regexp_util.dart';
 
 enum LoginType {

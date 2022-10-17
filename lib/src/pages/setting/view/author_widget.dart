@@ -12,14 +12,14 @@ class AuthorWidget extends StatelessWidget with EasyInterface {
   @override
   Widget build(BuildContext context) {
     const TextStyle textStyle = TextStyle(
-      fontSize: 16,
+      fontSize: 15,
       color: kText6Color,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w400,
       decoration: TextDecoration.underline
     );
-    const double iconWidth = 25;
+    const double iconWidth = 20;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         CustomTooltipWidget(
           message: kAuthorPageUrl,

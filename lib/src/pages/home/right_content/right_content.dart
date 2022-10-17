@@ -112,9 +112,4 @@ class _RightContentBodyState
     //     );
     // },);
   }
-
-  @override
-  RightContentStateModel? createViewModel() {
-    return RightContentStateModel();
-  }
 }

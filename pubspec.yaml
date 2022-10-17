@@ -46,6 +46,7 @@ flutter:
     - assets/
     - assets/leftmenu/
     - assets/json/
+    - assets/music/bgm.mp3
 
   fonts:
     - family: DINAlternate

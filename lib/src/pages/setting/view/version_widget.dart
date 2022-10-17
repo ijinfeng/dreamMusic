@@ -8,12 +8,10 @@ class VersionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SizedBox(
       height: 30,
-      child: Center(
-        child: Text(
-          "version 1.0.0",
-          style: TextStyle(
-              fontSize: 16, color: kText3Color, fontWeight: FontWeight.w600),
-        ),
+      child: Text(
+        "当前版本 1.0.0",
+        style: TextStyle(
+            fontSize: 15, color: kText6Color, fontWeight: FontWeight.w400),
       ),
     );
   }
