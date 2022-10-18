@@ -3,21 +3,19 @@ import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
-import 'package:dream_music/src/pages/download/model/download_page_state_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
-class DownloadPage extends ProviderStatefulWidget {
+class DownloadPage extends StatefulWidget {
   const DownloadPage({Key? key}) : super(key: key);
-
+  
   @override
-  ProviderState<ProviderStatefulWidget, BaseChangeNotifier> createState() {
+  State<StatefulWidget> createState() {
     return _DownloadPageState();
-  }
+  } 
 }
 
 class _DownloadPageState
-    extends ProviderState<DownloadPage, DownloadPageStateModel> with SingleTickerProviderStateMixin {
+    extends State<DownloadPage> with SingleTickerProviderStateMixin {
 
   late final TabController _tabController;
 
@@ -39,7 +37,7 @@ class _DownloadPageState
   }
 
   @override
-  Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
+  Widget build(BuildContext context) {
 
     final List<Widget> tabs = [];
     for (String tabName in tabNames) {
@@ -83,10 +81,5 @@ class _DownloadPageState
                 }).toList()),
             )],
         ));
-  }
-
-  @override
-  DownloadPageStateModel? createViewModel() {
-    return DownloadPageStateModel();
   }
 }

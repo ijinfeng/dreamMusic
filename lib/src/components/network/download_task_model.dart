@@ -10,8 +10,6 @@ class DownloadTaskModel {
   final String url;
   final String savePath;
 
-  ProgressCallback? processCallback;
-
   final CancelToken cancelToken = CancelToken();
 
   void cancelTask() {

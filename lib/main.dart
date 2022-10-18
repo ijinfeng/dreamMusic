@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dream_music/src/components/basic/common_material_app.dart';
+import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/network/network_env_route.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/router/custom_navigator_observer.dart';
@@ -43,7 +44,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: RouteControlManager()),
         ChangeNotifierProvider(create: (context) {
           return FindStateModel();
-        })
+        }),
+        ChangeNotifierProvider.value(value: DownloadManager()),
       ],
       builder: (context, child) {
         return CommonMaterialApp(

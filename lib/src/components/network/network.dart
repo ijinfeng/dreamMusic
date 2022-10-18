@@ -161,13 +161,14 @@ class Network {
   Future<ResponseModel<DownloadTaskModel>> download<T>(
     String url,
     String savePath, {
+    ProgressCallback? onReceiveProgress,
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? headers,
   }) async {
     final DownloadTaskModel task =
         DownloadTaskModel(url: url, savePath: savePath);
     final response =
-        await _dio.download(url, savePath, onReceiveProgress: task.processCallback, queryParameters: queryParameters, 
+        await _dio.download(url, savePath, onReceiveProgress: onReceiveProgress, queryParameters: queryParameters, 
     cancelToken: task.cancelToken,
     options: Options(headers: headers));
     if (response.statusCode == 200) {

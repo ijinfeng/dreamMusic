@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:dream_music/src/components/network/download_task_model.dart';
 import 'package:dream_music/src/components/network/network.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
@@ -32,8 +33,10 @@ class NeteaseRequest {
         searchKeyPath: searchKeyPath);
   }
 
-  Future<ResponseModel<DownloadTaskModel>> download(String url, String savePath) {
-    return network.download(url, savePath);
+  Future<ResponseModel<DownloadTaskModel>> download(String url, String savePath, {
+    ProgressCallback? onReceiveProgress,
+  }) {
+    return network.download(url, savePath, onReceiveProgress: onReceiveProgress);
   }
 
   Map<String, dynamic>? get commomParams {
