@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/network/download_task_model.dart';
 import 'package:dream_music/src/components/network/network.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
 
@@ -29,6 +30,10 @@ class NeteaseRequest {
         body: _combine(body, postRequestCommonParams),
         builder: builder,
         searchKeyPath: searchKeyPath);
+  }
+
+  Future<ResponseModel<DownloadTaskModel>> download(String url, String savePath) {
+    return network.download(url, savePath);
   }
 
   Map<String, dynamic>? get commomParams {

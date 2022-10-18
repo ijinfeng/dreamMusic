@@ -4,6 +4,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:dream_music/src/components/network/download_task_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -30,9 +31,7 @@ class Network {
 
   void _managerCookies(Dio dio) async {
     Directory docDir = await getApplicationDocumentsDirectory();
-    CookieJar cj = PersistCookieJar(
-      storage: FileStorage(docDir.path)
-    );
+    CookieJar cj = PersistCookieJar(storage: FileStorage(docDir.path));
     dio.interceptors.add(CookieManager(cj));
   }
 
@@ -157,6 +156,37 @@ class Network {
         serializer: serializer,
         searchKeyPath: searchKeyPath,
         onError: onError);
+  }
+
+  Future<ResponseModel<DownloadTaskModel>> download<T>(
+    String url,
+    String savePath, {
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  }) async {
+    final DownloadTaskModel task =
+        DownloadTaskModel(url: url, savePath: savePath);
+    final response =
+        await _dio.download(url, savePath, onReceiveProgress: task.processCallback, queryParameters: queryParameters, 
+    cancelToken: task.cancelToken,
+    options: Options(headers: headers));
+    if (response.statusCode == 200) {
+      final ResponseModel<DownloadTaskModel> responseModel =
+          ResponseModel<DownloadTaskModel>.empty();
+      responseModel.response = response;
+      responseModel.data = task;
+      responseModel.code = response.statusCode ?? 0;
+      responseModel.message = response.statusMessage;
+      if (response.data is Map) {
+        responseModel.businessCode = response.data['code'];
+        if (response.data['message'] != null) {
+          responseModel.message = response.data['message'];
+        }
+      }
+      return responseModel;
+    } else {
+      return ResponseModel.failResponse(response);
+    }
   }
 
   ///请求响应内容处理

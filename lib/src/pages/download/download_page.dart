@@ -1,7 +1,9 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
-import 'package:dream_music/src/pages/download/model/download_state_model.dart';
+import 'package:dream_music/src/config/global_constant.dart';
+import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/download/model/download_page_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -15,7 +17,7 @@ class DownloadPage extends ProviderStatefulWidget {
 }
 
 class _DownloadPageState
-    extends ProviderState<DownloadPage, DownloadStateModel> with SingleTickerProviderStateMixin {
+    extends ProviderState<DownloadPage, DownloadPageStateModel> with SingleTickerProviderStateMixin {
 
   late final TabController _tabController;
 
@@ -33,7 +35,7 @@ class _DownloadPageState
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: tabNames.length, vsync: this);
+    _tabController = TabController(length: tabNames.length, animationDuration: Duration.zero, vsync: this);
   }
 
   @override
@@ -41,7 +43,7 @@ class _DownloadPageState
 
     final List<Widget> tabs = [];
     for (String tabName in tabNames) {
-      final Tab tab = Tab(
+      Widget tab = Tab(
         text: tabName,
         height: 35,
       );
@@ -52,15 +54,39 @@ class _DownloadPageState
         hideNavigationBar: true,
         limitBodyWidth: false,
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TabBar(
-              controller: _tabController,
-              tabs: tabs), 
-            TabBarView(
-              controller: _tabController,
-              children: tabNames.map((e) {
-                return Text(e);
-              }).toList())],
+            SizedBox(
+              width: 200,
+              child: TabBar(
+                controller: _tabController,
+                indicatorColor: kHighlightThemeColor,
+                labelColor: kHighlightThemeColor,
+                unselectedLabelColor: kText9Color,
+                indicatorSize: TabBarIndicatorSize.label,
+                overlayColor: MaterialStateProperty.all(kThinGreyColor),
+                labelStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: kHighlightThemeColor
+                ),
+                indicatorWeight: 4,
+                splashBorderRadius: BorderRadius.circular(8),
+                tabs: tabs),
+            ), 
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: tabNames.map((e) {
+                  return Text(e);
+                }).toList()),
+            )],
         ));
+  }
+
+  @override
+  DownloadPageStateModel? createViewModel() {
+    return DownloadPageStateModel();
   }
 }
