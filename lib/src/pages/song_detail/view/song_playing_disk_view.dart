@@ -228,7 +228,7 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
             message: '下载',
             child: SelectableIconButton(
               selected: true,
-              src: 'icon_download',
+              src: 'icon_song_downloaded',//icon_song_download
               width: 30,
               height: 30,
               color: kText9Color,

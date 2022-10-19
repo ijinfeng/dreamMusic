@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dream_music/src/components/network/download_task_model.dart';
 import 'package:dream_music/src/components/network/netease_request.dart';
-import 'package:flutter/material.dart';
 
 enum DownloadStatus {
   /// 等待下载
@@ -27,12 +26,17 @@ abstract class DownloadTask {
     final type = FileSystemEntity.typeSync(savePath);
     if (type == FileSystemEntityType.file) {
       final file = File(savePath);
-      final name = file.uri.pathSegments.last;
-      //TODO: jinfeng
-      return SongDownloadTask(songId: 1, savePath: file.path);
-    } else {
-      return ErrorDownloadTask(savePath);
-    }
+      String name = file.uri.pathSegments.last;
+      name = name.split(".").first;
+      name = name.split('_').last;
+      final id = int.tryParse(name);
+      if (id != null && id > 0) {
+        final task = SongDownloadTask(songId: id, savePath: file.path);
+        task._status = DownloadStatus.downloaded;
+        return task;
+      }
+    } 
+    return ErrorDownloadTask(savePath);
   }
  
   void start() async {
@@ -83,12 +87,16 @@ class ErrorDownloadTask extends DownloadTask {
   @override
   String get taskId => "error_task";
 
+  @override
+  String toString() {
+    return "Error task with path: $savePath";
+  }
 }
 
 class SongDownloadTask extends DownloadTask {
   SongDownloadTask({
     required this.songId,
-    required String savePath,
+    required String savePath
   }) : super(_generateDownloadUrl(songId), savePath);
 
   final int songId;
@@ -106,5 +114,10 @@ class SongDownloadTask extends DownloadTask {
 
   static String createFileName(int songId) {
     return "/song_$songId.mp3";
+  }
+
+  @override
+  String toString() {
+    return "Song task with songId=$songId, savePath=$savePath";
   }
 }

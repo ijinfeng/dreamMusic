@@ -13,15 +13,15 @@ class DownloadManager extends BaseChangeNotifier {
   factory DownloadManager() => _manager;
 
   DownloadManager._instance() {
-    initializeFileCachePath().then((_) {
+    _initializeFileCachePath().then((_) {
         debugPrint("[download]初始化缓存目录地址：$fileCacheDirectorPath");
-        loadDownloadedFiles();
+        _loadDownloadedFiles();
     },);
   }
 
   String _fileCacheDirectoryPath = '';
 
-  Future initializeFileCachePath() async {
+  Future _initializeFileCachePath() async {
     String cachePath;
     final downloadDir = await getDownloadsDirectory();
     if (downloadDir == null) {
@@ -39,15 +39,22 @@ class DownloadManager extends BaseChangeNotifier {
   String get fileCacheDirectorPath => _fileCacheDirectoryPath;
 
   /// 加载已下载好的文件
-  Future<void> loadDownloadedFiles() async {
+  Future<void> _loadDownloadedFiles() async {
     final directory = Directory(fileCacheDirectorPath);
     final files = await directory.list().toList();
     for (final file in files) {
       final type = FileSystemEntity.typeSync(file.path);
       if (type == FileSystemEntityType.file) {
-        
+        final task = DownloadTask.loadFrom(file.path);
+        if (task is ErrorDownloadTask) {
+          debugPrint("[download]发现错误任务----->$task");
+          continue;
+        }
+        _addNewTask(task, needNotify: false);
       }
     }
+    debugPrint("[download]读取到本地存在$finishedTaskCount个已下载文件");
+    notifyListeners();
   }
 
   /// 正在下载任务=正在下载+等待下载
@@ -63,25 +70,27 @@ class DownloadManager extends BaseChangeNotifier {
   /// 下载歌曲
   /// - songId：歌曲id
   void downloadSong(int songId) {
-    // if (songNeedDownload(songId) == false) return;
+    if (songNeedDownload(songId) == false) return;
     final task = SongDownloadTask(songId: songId, savePath: fileCacheDirectorPath + SongDownloadTask.createFileName(songId));
-    addNewTask(task);
-    listenTaskProgress(task);
+    _addNewTask(task);
+    _listenTaskProgress(task);
     task.start();
   }
 
   /// 添加一个新任务
-  void addNewTask(DownloadTask task) {
+  void _addNewTask(DownloadTask task, {bool needNotify = true}) {
     if (task.status != DownloadStatus.downloaded) {
       _downloadTasks[task.taskId] = task;
     } else {
       _finishedTasks[task.taskId] = task;
     }
-    notifyListeners();
+    if (needNotify) {
+      notifyListeners();
+    }
   } 
 
   /// 完成一个下载中的任务
-  void finishTask(DownloadTask task) {
+  void _finishTask(DownloadTask task) {
     if (task.status == DownloadStatus.downloaded) {
       _finishedTasks[task.taskId] = task;
       _downloadTasks.remove(task.taskId);
@@ -92,10 +101,10 @@ class DownloadManager extends BaseChangeNotifier {
   }
 
   /// 监听任务下载进度
-  void listenTaskProgress(DownloadTask task) {
+  void _listenTaskProgress(DownloadTask task) {
     task.onReceiveProgress = (count, total) {
       if (task.status == DownloadStatus.downloaded) {
-        finishTask(task);
+        _finishTask(task);
         debugPrint("[download]success-taskId: ${task.taskId}");
         debugPrint("[download]进行中任务: $downloadTaskCount, 已完成任务: $finishedTaskCount");
       } else {
@@ -120,7 +129,7 @@ class DownloadManager extends BaseChangeNotifier {
     if (songId == 0) return false;
     final String key = SongDownloadTask.createTaskId(songId);
     if (_downloadTasks.containsKey(key)) return false;
-    if (_finishedTasks.containsKey(key)) return false;
+    if (existDownloadedSong(songId)) return false;
     return true;
   }
 

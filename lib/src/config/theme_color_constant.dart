@@ -18,6 +18,9 @@ const Color kText9Color = Color(0xff999999);
 /// 失效淡灰色，#EEEEEE
 const Color kDisableColor = Color(0xFFEEEEEE);
 
+/// 中度灰色
+const Color kMiddleGreyColor = Color.fromARGB(255, 245, 245, 245);
+
 /// 淡灰色
 const Color kThinGreyColor = Color.fromARGB(255, 249, 249, 249);
 

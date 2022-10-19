@@ -29,9 +29,7 @@ class CommonMaterialApp extends StatelessWidget {
           themeMode: ThemeMode.light,
           color: kPageBackgroundColor,
           navigatorObservers: [CustomNavigatorObserver()],
-          theme: theme ?? ThemeData(
-            primarySwatch: Colors.blue,
-          ),
+          theme: theme,
           home: home,
           builder: builder,
         );

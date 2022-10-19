@@ -1,5 +1,8 @@
+
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:flutter/material.dart';
+
+typedef MainSplashColorCallback = Color Function(Set<MaterialState> states);
 
 class MainButton extends StatelessWidget {
   const MainButton.title({
@@ -15,6 +18,7 @@ class MainButton extends StatelessWidget {
     this.padding,
     this.highlight = true,
     this.backgroundColor,
+    this.customSplashColors,
   }) : child = null, icon = null, ltr = true, super(key: key);
 
   const MainButton.icon({
@@ -32,6 +36,7 @@ class MainButton extends StatelessWidget {
     this.ltr = true,
     this.highlight = true,
     this.backgroundColor,
+    this.customSplashColors,
   }) : child = null, super(key: key);
 
 
@@ -47,7 +52,8 @@ class MainButton extends StatelessWidget {
     this.textStyle,
     this.padding,
     this.highlight = true,
-    this.backgroundColor
+    this.backgroundColor,
+    this.customSplashColors,
   }) : title = null, icon = null, ltr = true, super(key: key);
 
   final Widget? child;
@@ -65,6 +71,7 @@ class MainButton extends StatelessWidget {
   /// 这个属性只有在[enable=true]时才生效，表示按钮可用下的颜色状态
   final bool highlight;
   final Color? backgroundColor;
+  final MainSplashColorCallback? customSplashColors;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +107,6 @@ class MainButton extends StatelessWidget {
         current = titleWidget;
       }
     }
-
     return Container(
       width: width,
       height: height,
@@ -114,6 +120,9 @@ class MainButton extends StatelessWidget {
         backgroundColor: MaterialStateProperty.all(backgroundColor ?? ((enable && highlight) ? kMainThemeColor : kDisableColor)),
         padding: MaterialStateProperty.all(padding ?? EdgeInsets.zero),
         minimumSize: MaterialStateProperty.all(Size.zero),
+        overlayColor: customSplashColors != null ? MaterialStateProperty.resolveWith((states) {
+          return customSplashColors!(states);
+        }) : null,
       ),
        child: current),
     );
