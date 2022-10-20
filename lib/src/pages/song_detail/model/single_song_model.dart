@@ -9,6 +9,8 @@ class SingleSongModel {
 
   SingleSongModel({required this.track, this.privilege});
 
+  int get songId => track?.id ?? 0;
+
   /// 音乐是否能播放
   PlayAbleModel get canPlay {
     if (!hasCopyright) {

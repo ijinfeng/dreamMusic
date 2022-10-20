@@ -1,4 +1,6 @@
+
 import 'dart:math';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
@@ -52,6 +54,11 @@ class Utils {
       ret = "$ret $hourStr:$minuteStr";
     }
     return ret;
+  }
+
+  /// 格式化歌曲的时间
+  static String formatSongTime(int time) {
+    return time.formatDownTime;
   }
 
   /// 格式化长数字

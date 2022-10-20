@@ -3,9 +3,12 @@ import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/download/model/download_page_state_model.dart';
 import 'package:dream_music/src/pages/download/view/download_list_view.dart';
+import 'package:dream_music/src/pages/download/view/download_page_header_info.dart';
 import 'package:dream_music/src/pages/download/view/download_tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({Key? key}) : super(key: key);
@@ -36,22 +39,34 @@ class _DownloadPageState extends State<DownloadPage> {
     return CommonScaffold(
         hideNavigationBar: true,
         limitBodyWidth: false,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DownloadTabbar(onTap: (index) {
-              _pageController.jumpToPage(index);  
-            },),
-            Expanded(child: 
-            PageView.builder(
-              controller: _pageController,
-              itemCount: 2,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return DownloadListView();
-              },
-            ))
-          ],
+        body: ChangeNotifierProvider(
+          create: (context) {
+            return DownloadPageStateModel();
+          },
+          builder: (context, child) {
+            final state = context.read<DownloadPageStateModel>();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DownloadTabbar(
+                  onTap: (index) {
+                    state.type = index == 0 ? DownloadPageType.finished : DownloadPageType.download;
+                    _pageController.jumpToPage(index);
+                  },
+                ),
+                const DownloadPageHeaderInfo(),
+                Expanded(
+                    child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: 2,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return const DownloadedListView();
+                  },
+                ))
+              ],
+            );
+          },
         ));
   }
 }

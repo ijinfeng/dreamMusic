@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dream_music/src/components/network/download_task_model.dart';
 import 'package:dream_music/src/components/network/netease_request.dart';
+import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
+import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 
 enum DownloadStatus {
   /// 等待下载
@@ -22,22 +24,23 @@ abstract class DownloadTask {
   DownloadTaskModel? task;
   ProgressCallback? onReceiveProgress;
 
-  factory DownloadTask.loadFrom(String savePath) {
-    final type = FileSystemEntity.typeSync(savePath);
-    if (type == FileSystemEntityType.file) {
-      final file = File(savePath);
-      String name = file.uri.pathSegments.last;
-      name = name.split(".").first;
-      name = name.split('_').last;
-      final id = int.tryParse(name);
-      if (id != null && id > 0) {
-        final task = SongDownloadTask(songId: id, savePath: file.path);
-        task._status = DownloadStatus.downloaded;
-        return task;
-      }
-    } 
-    return ErrorDownloadTask(savePath);
-  }
+  // factory DownloadTask.loadFrom(String savePath) {
+  //   final type = FileSystemEntity.typeSync(savePath);
+  //   if (type == FileSystemEntityType.file) {
+  //     final file = File(savePath);
+  //     String name = file.uri.pathSegments.last;
+  //     name = name.split(".").first;
+  //     name = name.split('_').last;
+  //     final id = int.tryParse(name);
+  //     if (id != null && id > 0) {
+  //       // TODO:jifeng
+  //       final task = SongDownloadTask(song: SingleSongModel(track: SonglistDetailModelTracks()), savePath: file.path);
+  //       task._status = DownloadStatus.downloaded;
+  //       return task;
+  //     }
+  //   } 
+  //   return ErrorDownloadTask(savePath);
+  // }
  
   void start() async {
     final res = await neRequest.download(
@@ -95,29 +98,29 @@ class ErrorDownloadTask extends DownloadTask {
 
 class SongDownloadTask extends DownloadTask {
   SongDownloadTask({
-    required this.songId,
+    required this.song,
     required String savePath
-  }) : super(_generateDownloadUrl(songId), savePath);
+  }) : super(_generateDownloadUrl(song.songId), savePath);
 
-  final int songId;
+  final SingleSongModel song;
 
   static String _generateDownloadUrl(int songId) {
     return "https://music.163.com/song/media/outer/url?id=$songId.mp3";
   }
 
   @override
-  String get taskId => SongDownloadTask.createTaskId(songId);
+  String get taskId => SongDownloadTask.createTaskId(song.songId);
 
   static String createTaskId(int songId) {
     return "$songId";
   }
 
   static String createFileName(int songId) {
-    return "/song_$songId.mp3";
+    return "/$songId.mp3";
   }
 
   @override
   String toString() {
-    return "Song task with songId=$songId, savePath=$savePath";
+    return "Song task with songId=${song.songId}, savePath=$savePath";
   }
 }

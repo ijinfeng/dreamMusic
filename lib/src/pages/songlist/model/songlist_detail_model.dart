@@ -1,4 +1,3 @@
-import 'package:dream_music/src/components/json/json_loader.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/song_detail/model/song_detail_model.dart';
 
@@ -401,6 +400,7 @@ class SonglistDetailModelTracks {
 
   ///专辑
   SonglistDetailModelTracksAl? al;
+  /// 播放时长
   int? dt;
   SonglistDetailModelTracksH? h;
   SonglistDetailModelTracksM? m;

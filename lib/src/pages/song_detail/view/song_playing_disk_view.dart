@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
+import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
@@ -233,7 +234,7 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
               height: 30,
               color: kText9Color,
               onTap: (sel) {
-                showFutureToast();
+                DownloadManager().downloadSong(player.currentSong);
               },
             ),
           ),

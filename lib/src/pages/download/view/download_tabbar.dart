@@ -68,7 +68,15 @@ class _DownloadTabbarState extends State<DownloadTabbar> {
 
     return Container(
       height: height,
-      color: kPageBackgroundColor,
+      decoration: const BoxDecoration(
+        color: kPageBackgroundColor,
+        border: Border(
+          bottom: BorderSide(
+            color: kDividerColor,
+            width: 0.5
+          )
+        )
+      ),
       padding: EdgeInsets.only(left: kPageContentPadding.left - 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

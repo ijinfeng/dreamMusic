@@ -1,14 +1,22 @@
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
+import 'package:dream_music/src/components/downloder/download_manager.dart';
+import 'package:dream_music/src/components/finder/show_in_finder.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
+import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
 
-class DownloadListCell extends StatelessWidget with EasyInterface {
-  const DownloadListCell({Key? key, required this.index}) : super(key: key);
+class DownloadedListCell extends StatelessWidget with EasyInterface {
+  const DownloadedListCell({Key? key, required this.index, required this.model})
+      : super(key: key);
 
   final int index;
+
+  final SingleSongModel model;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,7 +49,7 @@ class DownloadListCell extends StatelessWidget with EasyInterface {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '哈哈哈哈哈哈哈哈哈哈哈哈哈',
+              model.track?.songName ?? '',
               style: _generateTextStyle(),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -50,7 +58,7 @@ class DownloadListCell extends StatelessWidget with EasyInterface {
               height: 2,
             ),
             Text(
-              '1231223',
+              model.track?.authorName ?? '',
               style: _generateTextStyle(fontSize: 12, textColor: kText6Color),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -63,7 +71,7 @@ class DownloadListCell extends StatelessWidget with EasyInterface {
   Widget _buildTextInfo() {
     return _buildFlexItem(
         Text(
-          "03:11",
+          Utils.formatSongTime(model.track?.dt ?? 0),
           style: _generateTextStyle(),
         ),
         1);
@@ -100,7 +108,9 @@ class DownloadListCell extends StatelessWidget with EasyInterface {
                 width: 20,
                 height: 20,
                 color: kText6Color,
-                onTap: (_) {},
+                onTap: (_) {
+                  DownloadManager().showSongInFinder(model.songId);
+                },
               ),
             ),
             widthSpace(8),
@@ -124,7 +134,9 @@ class DownloadListCell extends StatelessWidget with EasyInterface {
                 width: 20,
                 height: 20,
                 color: kText6Color,
-                onTap: (_) {},
+                onTap: (_) {
+                  DownloadManager().deleteDownloadSong(model.songId);
+                },
               ),
             ),
           ],

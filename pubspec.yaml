@@ -27,6 +27,7 @@ dependencies:
   audioplayers: ^1.0.1
   easy_refresh: ^3.0.4+2
   url_launcher: ^6.1.6
+  id3: ^1.0.2
 
 dev_dependencies:
   flutter_test:
