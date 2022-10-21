@@ -1,5 +1,6 @@
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -47,20 +48,41 @@ class DailySongsHeaderView extends StatelessWidget with EasyInterface {
                 ),
                 heightSpace(18),
                 UnconstrainedBox(
-                  child: MainButton.icon(
-                    icon: const ImageView.asset(
-                      src: 'assets/icon_add.png',
-                      width: 15,
-                      height: 15,
-                      color: kHighlightThemeColor,
-                    ),
-                    title: '播放全部',
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    height: 30,
-                    fontSize: 15,
-                    onTap: () {
-                      _updatePlaylistIfNeeded(context);
-                    },
+                  child: Row(
+                    children: [
+                      MainButton.icon(
+                        icon: const ImageView.asset(
+                          src: 'assets/icon_add.png',
+                          width: 15,
+                          height: 15,
+                          color: kHighlightThemeColor,
+                        ),
+                        title: '播放全部',
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 30,
+                        fontSize: 15,
+                        onTap: () {
+                          _updatePlaylistIfNeeded(context);
+                        },
+                      ),
+                      widthSpace(10),
+                      MainButton.icon(
+                        icon: const ImageView.asset(
+                          src: 'icon_download',
+                          width: 15,
+                          height: 15,
+                          color: kHighlightThemeColor,
+                        ),
+                        title: '下载全部',
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        height: 30,
+                        fontSize: 15,
+                        onTap: () {
+                          final songs = state.dailySongs?.getSongs();
+                          DownloadManager().downloadSongs(songs);
+                        },
+                      ),
+                    ],
                   ),
                 )
               ],

@@ -12,6 +12,7 @@ import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/collection/my_collection_page.dart';
 import 'package:dream_music/src/pages/download/download_page.dart';
 import 'package:dream_music/src/pages/find/find_page.dart';
+import 'package:dream_music/src/pages/home/left_menu/model/left_menu_item_model.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/home/right_content/model/right_content_state_model.dart';
 import 'package:dream_music/src/pages/home/window_navigation_bar/window_buttons.dart';
@@ -55,24 +56,23 @@ class _RightContentBodyState
     _pageController = PageController();
   }
 
-  Widget _buildChildPage(BuildContext context, int index) {
-    if (index == 0) {
+  Widget _buildChildPage(BuildContext context, LeftMenuItemName name) {
+    if (name == LeftMenuItemName.find) {
       return const FindPage();
-    } else if (index == 1) {
+    } else if (name == LeftMenuItemName.personal) {
       return const PersonalFMPage();
-    } else if (index == 2) {
+    } else if (name == LeftMenuItemName.mylike) {
       return const MylikePage();
-    } else if (index == 3) {
+    } else if (name == LeftMenuItemName.mycollection) {
       return const MyCollectionPage();
-    } else if (index == 4) {
+    } else if (name == LeftMenuItemName.mydownload) {
       return const DownloadPage();
     }
-    else if (index == 5) {
+    else if (name == LeftMenuItemName.setting) {
       return const SettingPage();
     }
 
-
-    else if (index == 1000) {
+    else if (name == LeftMenuItemName.test) {
       return const TestPage();
     }
     else {
@@ -84,9 +84,9 @@ class _RightContentBodyState
 
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
-    return Selector<HomeStateModel, int>(
+    return Selector<HomeStateModel, LeftMenuItemName>(
       selector: (p0, p1) {
-        return p1.selectedIndex;
+        return p1.selectedName;
       },
       shouldRebuild: (previous, next) {
         return previous != next;

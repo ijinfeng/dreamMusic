@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 
@@ -25,18 +26,20 @@ class DownloadSongModel {
   /// 播放时长
   int time;
 
+  /// 音乐文件大小
+  int? _size;
+  int get size {
+    _size ??= DownloadManager().getSongFileSize(songId);
+    return _size ?? 0;
+  }
+
   factory DownloadSongModel.from(SingleSongModel song) {
     List<DownloadSongModelAr> ar = [];
     final ars = song.track?.ar;
     if (ars != null) {
       for (var e in ars) {
         if (e != null) {
-          ar.add(
-          DownloadSongModelAr(
-            id: e.id ?? 0,
-            name: e.name ?? ''
-          )
-        );
+          ar.add(DownloadSongModelAr(id: e.id ?? 0, name: e.name ?? ''));
         }
       }
     }
@@ -44,7 +47,10 @@ class DownloadSongModel {
       songId: song.track?.id ?? 0,
       name: song.track?.songName ?? '',
       ar: ar,
-      al: DownloadSongModelAl(id: song.track?.al?.id ?? 0, name: song.track?.al?.name ?? '', picUrl: song.track?.al?.picUrl),
+      al: DownloadSongModelAl(
+          id: song.track?.al?.id ?? 0,
+          name: song.track?.al?.name ?? '',
+          picUrl: song.track?.al?.picUrl),
       time: song.track?.dt ?? 0,
     );
   }
@@ -63,6 +69,19 @@ class DownloadSongModel {
         time: time);
   }
 
+  String get authorNmae {
+    String ret = '';
+    for (int i = 0; i < ar.length; i++) {
+      final a = ar[i];
+      if (i != 0) {
+        ret += ",${a.name}";
+      } else {
+        ret += a.name;
+      }
+    }
+    return ret.isEmpty ? '佚名' : ret;
+  }
+
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = {};
     data["songId"] = songId;
@@ -75,21 +94,15 @@ class DownloadSongModel {
 
   SingleSongModel toSong() {
     return SingleSongModel(
-      track: SonglistDetailModelTracks(
-        name: name,
-        dt: time,
-        id: songId,
-        ar: ar.map((e) => SonglistDetailModelTracksAr(
-          id: e.id,
-          name: e.name
-        )).toList(),
-        al: SonglistDetailModelTracksAl(
-          id: al.id,
-          name: al.name,
-          picUrl: al.picUrl
-        )
-      )
-    );
+        track: SonglistDetailModelTracks(
+            name: name,
+            dt: time,
+            id: songId,
+            ar: ar
+                .map((e) => SonglistDetailModelTracksAr(id: e.id, name: e.name))
+                .toList(),
+            al: SonglistDetailModelTracksAl(
+                id: al.id, name: al.name, picUrl: al.picUrl)));
   }
 }
 
@@ -102,17 +115,11 @@ class DownloadSongModelAr {
   String name;
 
   Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "name": name
-    };
+    return {"id": id, "name": name};
   }
 
   factory DownloadSongModelAr.fromJson(Map<String, dynamic> json) {
-    return DownloadSongModelAr(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? ''
-    );
+    return DownloadSongModelAr(id: json['id'] ?? 0, name: json['name'] ?? '');
   }
 }
 
@@ -127,18 +134,11 @@ class DownloadSongModelAl {
   String? picUrl;
 
   Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "name": name,
-      "picUrl": picUrl
-    };
+    return {"id": id, "name": name, "picUrl": picUrl};
   }
 
   factory DownloadSongModelAl.fromJson(Map<String, dynamic> json) {
     return DownloadSongModelAl(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-      picUrl: json['picUrl']
-    );
+        id: json['id'] ?? 0, name: json['name'] ?? '', picUrl: json['picUrl']);
   }
 }

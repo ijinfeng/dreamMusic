@@ -4,6 +4,7 @@ import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/home/left_menu/model/left_menu_item_model.dart';
 import 'package:dream_music/src/pages/home/left_menu/view/menu_cell_widget.dart';
 import 'package:dream_music/src/pages/home/left_menu/view/user_info_card.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
@@ -38,9 +39,9 @@ class _LeftMenuBodyState extends ProviderState with EasyInterface {
       children: [
         UserInfoCard(),
         Expanded(
-          child: Selector<HomeStateModel, int>(
+          child: Selector<HomeStateModel, LeftMenuItemName>(
             selector: (p0, p1) {
-              return p1.selectedIndex;
+              return p1.selectedName;
             },
             shouldRebuild: (previous, next) {
               return previous != next;
@@ -52,16 +53,16 @@ class _LeftMenuBodyState extends ProviderState with EasyInterface {
                     color: kSideMenuBackgroundColor,
                     child: InkWell(
                       onTap: () {
-                        getHomeState(context).selectedIndex = getHomeState(context).itemModels[section][index].index;
+                        getHomeState(context).selectedName = getHomeState(context).itemModels[section][index].name;
                       },
                       hoverColor: kMainThemeColor,
                       highlightColor: kMainThemeColor,
                       child: MenuCellWidegt(
                         model: getHomeState(context).itemModels[section][index],
-                        selected: getHomeState(context).selectedIndex ==
+                        selected: getHomeState(context).selectedName ==
                             getHomeState(context)
                                 .itemModels[section][index]
-                                .index,
+                                .name,
                       ),
                     ),
                   );

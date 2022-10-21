@@ -276,18 +276,23 @@ class SongLyricModel {
       // [00:00.000] 作词 : 黄家驹
       final Map<String, List<String?>> lyricMap = {};
 
-      for (final sub in lyricSubs) {
+      for (int i = 0; i < lyricSubs.length; i++) {
+        final sub = lyricSubs[i];
         final two = sub.split("]");
         if (two.length > 1) {
           final time = two.first.substring(1);
           final content = two.length > 1 ? two.last : null;
           lyricMap[time] = [content];
+        } else {
+          // parse error
+          lyricMap['$i'] = [two.first];
         }
       }
 
       if (tlyric != null && tlyric?.lyric?.isNotEmpty == true) {
         final lyricSubs = tlyric!.lyric!.split("\n");
-        for (final sub in lyricSubs) {
+        for (int i = 0; i < lyricSubs.length; i++) {
+          final sub = lyricSubs[i];
           final two = sub.split("]");
           if (two.length > 1) {
             final time = two.first.substring(1);
@@ -298,13 +303,17 @@ class SongLyricModel {
             } else {
               lyricMap[time] = [content];
             }
+          } else {
+            // parse error
+            lyricMap['$i'] = [two.first];
           }
         }
       }
 
       if (romalrc != null && romalrc?.lyric?.isNotEmpty == true) {
         final lyricSubs = romalrc!.lyric!.split("\n");
-        for (final sub in lyricSubs) {
+        for (int i = 0; i < lyricSubs.length; i++) {
+          final sub = lyricSubs[i];
           final two = sub.split("]");
           if (two.length > 1) {
             final time = two.first.substring(1);
@@ -315,6 +324,9 @@ class SongLyricModel {
             } else {
               lyricMap[time] = [content];
             }
+          } else {
+            // parse error
+            lyricMap['$i'] = [two.first];
           }
         }
       }

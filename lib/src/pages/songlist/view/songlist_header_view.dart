@@ -163,7 +163,7 @@ class SonglistHeaderView extends StatelessWidget with EasyInterface {
                     : kHighlightThemeColor,
               ),
               title:
-                  "${(value ?? false) ? '已收藏' : '收藏'}(${(model?.subscribedCount ?? 0).longNumShow})",
+                  "${(value ?? false) ? '已收藏' : '收藏歌单'}(${(model?.subscribedCount ?? 0).longNumShow})",
               padding: const EdgeInsets.symmetric(horizontal: 10),
               height: buttonHeight,
               highlight: !(value ?? false),

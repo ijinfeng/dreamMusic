@@ -1,4 +1,5 @@
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/finder/show_in_finder.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
@@ -23,7 +24,9 @@ class DownloadPageHeaderInfo extends StatelessWidget {
             selector: (p0, p1) => p1.type,
             builder: (context, type, child) {
               return Selector<DownloadManager, int>(
-                selector: (p0, p1) => type == DownloadPageType.finished ? p1.downloadedSongCount : p1.downloadingSongCount,
+                selector: (p0, p1) => type == DownloadPageType.finished
+                    ? p1.downloadedSongCount
+                    : p1.downloadingSongCount,
                 builder: (context, count, child) {
                   String text = '';
                   if (type == DownloadPageType.finished) {
@@ -31,13 +34,36 @@ class DownloadPageHeaderInfo extends StatelessWidget {
                   } else {
                     text = "正在下载中的歌曲$count首，";
                   }
-                  return Text(
+                  Widget current = Text(
                     text,
                     style: const TextStyle(
                         fontSize: 12,
                         color: kText9Color,
                         fontWeight: FontWeight.normal),
                   );
+                  if (type == DownloadPageType.finished) {
+                    current = Row(
+                      children: [
+                        CustomTooltipWidget(
+                          message: '重新加载已下载歌曲',
+                          child: SelectableIconButton(
+                              selected: true,
+                              width: 15,
+                              height: 15,
+                              src: 'icon_reload',
+                              color: kText9Color,
+                              onTap: (_) {
+                                DownloadManager().reloadDownloadFiles();
+                              }),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        current
+                      ],
+                    );
+                  }
+                  return current;
                 },
               );
             },
@@ -52,8 +78,7 @@ class DownloadPageHeaderInfo extends StatelessWidget {
                 decoration: TextDecoration.underline),
             onTap: () {
               ShowInFinder.open(
-                initialDirectory: DownloadManager().fileCacheDirectorPath
-              );
+                  initialDirectory: DownloadManager().fileCacheDirectorPath);
             },
           )
         ],

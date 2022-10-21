@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/badge/badge_container.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
@@ -10,6 +11,7 @@ import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/home/player_bar/play_progress_indicator.dart';
 import 'package:dream_music/src/pages/song_detail/view/song_animation_disk.dart';
+import 'package:dream_music/src/pages/song_detail/view/song_download_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_music/src/components/extension/num_extension.dart';
@@ -225,19 +227,7 @@ class SongPlayingDiskView extends StatelessWidget with EasyInterface {
               );
             },
           ),
-          CustomTooltipWidget(
-            message: '下载',
-            child: SelectableIconButton(
-              selected: true,
-              src: 'icon_song_downloaded',//icon_song_download
-              width: 30,
-              height: 30,
-              color: kText9Color,
-              onTap: (sel) {
-                DownloadManager().downloadSong(player.currentSong);
-              },
-            ),
-          ),
+          SongDownloadButton(model: player.currentSong),
           CustomTooltipWidget(
             message: '评论',
             child: SelectableIconButton(

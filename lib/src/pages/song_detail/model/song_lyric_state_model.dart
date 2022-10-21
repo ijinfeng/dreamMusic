@@ -116,7 +116,7 @@ class SongLyricStateModel extends BaseChangeNotifier {
             offsety = _scrollMetrics!.maxScrollExtent;
           }
         }
-        debugPrint("scroll to index-${row.index}, offsety-$offsety");
+        // debugPrint("scroll to index-${row.index}, offsety-$offsety");
         scrollController.animateTo(offsety,
             duration: const Duration(milliseconds: 200), curve: Curves.ease);
       }

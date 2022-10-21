@@ -7,6 +7,7 @@ import 'package:dream_music/src/pages/download/model/download_page_state_model.d
 import 'package:dream_music/src/pages/download/view/download_list_view.dart';
 import 'package:dream_music/src/pages/download/view/download_page_header_info.dart';
 import 'package:dream_music/src/pages/download/view/download_tabbar.dart';
+import 'package:dream_music/src/pages/download/view/downloading_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,7 +62,11 @@ class _DownloadPageState extends State<DownloadPage> {
                   itemCount: 2,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return const DownloadedListView();
+                    if (index == 0) {
+                      return const DownloadedListView();
+                    } else {
+                      return const DownloadingListView();
+                    }
                   },
                 ))
               ],

@@ -86,4 +86,15 @@ class Utils {
       }
     });
   }
+
+  static String formatFileSize(int size) {
+    final d = size / 1024;
+    if (d < 1024) {
+      return "${d.toStringAsFixed(2)}K";
+    } else if (d < 1024 * 1024) {
+      return "${(d / 1024).toStringAsFixed(2)}M";
+    } else {
+      return "${(d / 1024 / 1024).toStringAsFixed(2)}G";
+    }
+  }
 }

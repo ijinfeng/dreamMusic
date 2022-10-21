@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
+import 'package:dream_music/src/pages/home/left_menu/model/left_menu_item_model.dart';
 import 'package:flutter/material.dart';
 
 enum RouteActionType {
@@ -48,7 +49,7 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
         }
       }
     }
-    return TabRouteAction(index: 0);
+    return TabRouteAction(name: LeftMenuItemName.find);
   }
 
   void _debugPrintActionStack(RouteAction? action) {
@@ -73,7 +74,7 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
         TabRouteAction? action = _findNearestTabAction(_currentIndex, true);
         _debugPrintActionStack(action);
         if (action != null && context != null) {
-          getHomeState(context!).selectedIndex = action.index;
+          getHomeState(context!).selectedName = action.name;
         }
       }
       notifyListeners();
@@ -101,7 +102,7 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
         TabRouteAction? action = _findNearestTabAction(_currentIndex, false);
         _debugPrintActionStack(action);
         if (action != null && context != null) {
-          getHomeState(context!).selectedIndex = action.index;
+          getHomeState(context!).selectedName = action.name;
         }
       }
       notifyListeners();
@@ -221,12 +222,12 @@ class PageRouteAction extends RouteAction {
 }
 
 class TabRouteAction extends RouteAction {
-  TabRouteAction({required this.index}) : super(type: RouteActionType.tab);
+  TabRouteAction({required this.name}) : super(type: RouteActionType.tab);
 
-  final int index;
+  final LeftMenuItemName name;
 
   @override
   String toString() {
-    return "[route]tab, index=$index";
+    return "[route]tab, name=$name";
   }
 }

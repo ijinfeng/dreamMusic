@@ -2,20 +2,22 @@ import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/dialog/dialog.dart';
 import 'package:dream_music/src/components/downloder/download_manager.dart';
-import 'package:dream_music/src/components/downloder/download_song_model.dart';
+import 'package:dream_music/src/components/downloder/download_task.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class DownloadedListCell extends StatelessWidget with EasyInterface {
-  const DownloadedListCell({Key? key, required this.index, required this.model})
+class DownloadingListCell extends StatelessWidget with EasyInterface {
+  const DownloadingListCell(
+      {Key? key, required this.index, required this.model})
       : super(key: key);
 
   final int index;
 
-  final DownloadSongModel model;
+  final SongDownloadTask model;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              model.name,
+              model.song.track?.songName ?? '',
               style: _generateTextStyle(),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -58,7 +60,7 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
               height: 2,
             ),
             Text(
-              model.authorNmae,
+              model.song.track?.authorName ?? '',
               style: _generateTextStyle(fontSize: 12, textColor: kText6Color),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -71,7 +73,7 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
   Widget _buildTextInfo() {
     return _buildFlexItem(
         Text(
-          Utils.formatSongTime(model.time),
+          Utils.formatSongTime(model.song.track?.dt ?? 0),
           style: _generateTextStyle(),
         ),
         1);
@@ -79,18 +81,31 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
 
   Widget _buildFileSize() {
     return _buildFlexItem(
-        Text(
-          Utils.formatFileSize(model.size),
-          style: _generateTextStyle(),
+        Selector<DownloadManager, int>(
+          selector: (p0, p1) {
+            return model.total;
+          },
+          builder: (context, value, child) {
+            return Text(
+              value == 0 ? '计算中' : Utils.formatFileSize(value),
+              style: _generateTextStyle(),
+            );
+          },
         ),
         1);
   }
 
   Widget _buildStatusInfo() {
     return _buildFlexItem(
-        Text(
-          '下载完成',
-          style: _generateTextStyle(),
+        Selector<DownloadManager, double>(
+          selector: (p0, p1) =>
+              model.total == 0 ? 0 : model.received / model.total,
+          builder: (context, value, child) {
+            return Text(
+              '${(value * 100).toInt()}%',
+              style: _generateTextStyle(),
+            );
+          },
         ),
         1);
   }
@@ -109,7 +124,7 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
                 height: 20,
                 color: kText6Color,
                 onTap: (_) {
-                  DownloadManager().showSongInFinder(model.songId);
+                  DownloadManager().showSongInFinder(model.song.songId);
                 },
               ),
             ),
@@ -143,7 +158,7 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
                             title: "删除",
                             onTap: () {
                               DownloadManager()
-                                  .deleteDownloadSong(model.songId);
+                                  .deleteDownloadSong(model.song.songId);
                             })
                       ]);
                 },

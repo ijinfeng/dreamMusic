@@ -34,6 +34,7 @@ class DownloadManager extends BaseChangeNotifier {
 
   String _fileCacheDirectoryPath = '';
 
+  /// 初始化下载目录，默认在[下载]
   Future _initializeFileCachePath() async {
     String cachePath;
     final downloadDir = await getDownloadsDirectory();
@@ -61,23 +62,41 @@ class DownloadManager extends BaseChangeNotifier {
     for (final file in files) {
       final type = FileSystemEntity.typeSync(file.path);
       if (type == FileSystemEntityType.directory) {
-        String name = file.uri.pathSegments[file.uri.pathSegments.length - 2];
-        final jsonFile = File("${file.path}/$name.json");
+        final song = await _loadSongModelFromPath(file.path);
+        if (song != null) {
+          final String key = SongDownloadTask.createTaskId(song.songId);
+          _downloadedSongModels[key] = song;
+        }
+      }
+    }
+    debugPrint("[download]读取到本地存在$downloadedSongCount首已下载歌曲");
+    notifyListeners();
+  }
+
+  /// 从存储路径中读取音乐模型
+  /// - path：为最外层的音乐目录或mp3文件本身目录
+  Future<DownloadSongModel?> _loadSongModelFromPath(String path) async {
+    if (_cacheMode == DownloadCacheMode.json) {
+      final Directory directory = Directory(path);
+      bool dirExist = await directory.exists();
+      if (dirExist) {
+        String name = directory.uri.pathSegments[directory.uri.pathSegments.length - 2];
+        final jsonFile = File("${directory.path}/$name.json");
         final exist = await jsonFile.exists();
         if (exist) {
           final content = await jsonFile.readAsString();
           final data = json.decode(content);
           if (data is Map<String, dynamic>) {
             final song = DownloadSongModel.fromJson(data);
-            final String key = SongDownloadTask.createTaskId(song.songId);
-            _downloadedSongModels[key] = song;
+            return song;
           }
-          debugPrint("[download]name-$name, data-$data");
+        } else {
+          debugPrint("[download]音乐[$name]json文件没有找到，删掉对应文件夹内容");
+          await directory.delete(recursive: true);
         }
       }
     }
-    debugPrint("[download]读取到本地存在$downloadedSongCount首已下载歌曲");
-    notifyListeners();
+    return null;
   }
 
   /// mp3文件存储方式
@@ -98,6 +117,21 @@ class DownloadManager extends BaseChangeNotifier {
   /// 获取歌曲显示模型[SingleSongModel]
   List<SingleSongModel> getSongs() {
     return _downloadedSongModels.values.map((e) => e.toSong()).toList();
+  }
+
+  /// 获取歌曲显示模型[DownloadSongModel]
+  List<DownloadSongModel> getDownloadSongs() {
+    return _downloadedSongModels.values.toList();
+  }
+
+  /// 获取正在下载的任务列表
+  List<SongDownloadTask> getDownloadTasks() {
+    return _downloadTasks.values.toList();
+  }
+
+  Future reloadDownloadFiles() async {
+    _downloadedSongModels.clear();
+    return await _loadDownloadedFiles();
   }
 
   /// 获取歌曲下载地址
@@ -131,20 +165,45 @@ class DownloadManager extends BaseChangeNotifier {
     }
   }
 
+  /// 获取某一首歌的下载任务，当这首歌处于下载中或等待下载时将返回[SongDownloadTask]
+  /// - songId: 歌曲id
+  SongDownloadTask? getTaskWithSong(int songId) {
+    final String key = SongDownloadTask.createTaskId(songId);
+    return _downloadTasks[key];
+  }
+
   /// 下载歌曲
   /// - songId：歌曲id
-  void downloadSong(SingleSongModel? song) {
+  bool downloadSong(SingleSongModel? song) {
     if (song == null || song.track?.id == null) {
       debugPrint("[download]无法下载歌曲，因为歌曲模型[SingleSongModel]为null或[songId]为null");
-      return;
+      return false;
+    }
+    if (song.canPlay.canPlay == false) {
+      return false;
     }
     int songId = song.songId;
-    if (songNeedDownload(songId) == false) return;
+    if (songNeedDownload(songId) == false) return false;
     final task =
         SongDownloadTask(song: song, savePath: _generateSongSavePath(songId));
     _addNewTask(task);
     _listenTaskProgress(task);
     task.start();
+    return true;
+  }
+
+  /// 下载歌曲列表
+  void downloadSongs(List<SingleSongModel?>? songs) {
+    if (songs?.isNotEmpty == true) {
+      int i = 0;
+      for (var song in songs!) {
+         final canDownload = downloadSong(song);
+         if (canDownload == false) {
+          i += 1;
+         }
+      }
+      debugPrint("[download]将有${songs.length - i - 1}首歌进入下载队列，${i+1}首歌无法下载或已经下载");
+    }
   }
 
   /// 添加一个新任务
@@ -224,5 +283,13 @@ class DownloadManager extends BaseChangeNotifier {
   bool existFile(String savePath) {
     File file = File(savePath);
     return file.existsSync();
+  }
+
+  /// 获取下载歌曲的大小
+  int getSongFileSize(int songId) {
+    final exist = existDownloadedSong(songId);
+    if (!exist) return 0;
+    final file = File(_generateSongSavePath(songId));
+    return file.lengthSync();
   }
 }

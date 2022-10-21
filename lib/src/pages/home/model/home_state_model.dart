@@ -15,35 +15,44 @@ class HomeStateModel extends BaseChangeNotifier {
   List<List<LeftMenuItemModel>> get itemModels => [
         [
           LeftMenuItemModel(
-              icon: 'assets/leftmenu/my_icn_radio.png', title: '发现音乐', index: 0),
+              icon: 'assets/leftmenu/my_icn_radio.png', title: '发现音乐', name: LeftMenuItemName.find),
           LeftMenuItemModel(
-              icon: 'assets/leftmenu/my_icn_fm.png', title: '私人FM', index: 1),
+              icon: 'assets/leftmenu/my_icn_fm.png', title: '私人FM', name: LeftMenuItemName.personal),
         ],
         [
             LeftMenuItemModel(
-              icon: 'assets/leftmenu/my_icn_like.png', title: '我喜欢的音乐', index: 2),
+              icon: 'assets/leftmenu/my_icn_like.png', title: '我喜欢的音乐', name: LeftMenuItemName.mylike),
           LeftMenuItemModel(
-              icon: 'assets/leftmenu/my_icn_fav.png', title: '我收藏的歌单', index: 3),
+              icon: 'assets/leftmenu/my_icn_fav.png', title: '我收藏的歌单', name: LeftMenuItemName.mycollection),
               LeftMenuItemModel(
-              icon: 'icon_download.png', title: '我的下载', index: 4)
+              icon: 'icon_download.png', title: '我的下载', name: LeftMenuItemName.mydownload)
         ],
         [
           LeftMenuItemModel(
-              icon: 'assets/leftmenu/my_icn_setting.png', title: '设置', index: 5)
+              icon: 'assets/leftmenu/my_icn_setting.png', title: '设置', name: LeftMenuItemName.setting)
         ],
         [
-          LeftMenuItemModel(icon: 'icon_test.png', title: '测试', index: 1000)
+          LeftMenuItemModel(icon: 'icon_test.png', title: '测试', name: LeftMenuItemName.test)
         ]
       ];
 
   /// 选中了left content侧边栏第几个栏目
-  int _selectedIndex = 0;
-  set selectedIndex(int value) {
-    if (value == _selectedIndex) return;
-    _selectedIndex = value;
-    RouteControlManager().pushAction(TabRouteAction(index: value));
+  // int _selectedIndex = 0;
+  // set selectedIndex(int value) {
+  //   if (value == _selectedIndex) return;
+  //   _selectedIndex = value;
+  //   RouteControlManager().pushAction(TabRouteAction(name: value));
+  //   notifyListeners();
+  // }
+  // int get selectedIndex => _selectedIndex;
+
+  LeftMenuItemName _selectedName = LeftMenuItemName.find;
+  set selectedName(LeftMenuItemName value) {
+    if (value == _selectedName) return;
+    _selectedName = value;
+    RouteControlManager().pushAction(TabRouteAction(name: value));
     notifyListeners();
   }
 
-  int get selectedIndex => _selectedIndex;
+  LeftMenuItemName get selectedName => _selectedName;
 }
