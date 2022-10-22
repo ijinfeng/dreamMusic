@@ -8,17 +8,20 @@ import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/download/model/download_page_state_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 /// 歌曲详情卡片
 class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
-  const DownloadSongDetailCard({Key? key, required this.model})
+  const DownloadSongDetailCard({Key? key, required this.model, this.y = 80})
       : super(key: key);
 
   final DownloadSongModel model;
 
   final double kImageWidth = 180;
+
+  final double y;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +29,13 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
       shadowColor: Colors.black12,
       color: kPageBackgroundColor,
       elevation: 3.0,
-      shape: const SongCardShapeBorder(
-        side: BorderSide(
+      shape:  SongCardShapeBorder(
+        side: const BorderSide(
           color: kDividerColor,
           width: 0.5,
         ),
         radius: 8,
-        yposition: 80,
+        yposition: y,
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -118,8 +121,30 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
   }
 }
 
+Offset _calculateCardPositon(BuildContext context, double cellOffsetY) {
+    final container = context.findRenderObject();
+    double right = 0;
+    double y = 0;
+    if (container is RenderConstrainedBox) {
+      right = container.size.width / 6;
+      final pixels = Scrollable.of(context)?.position.pixels ?? 0;
+      final currentOffset = cellOffsetY;
+      y = currentOffset - pixels;
+    }
+    return Offset(right + 5, y);
+}
+
+double _calculateContainerHeight(BuildContext context) {
+  final container = context.findRenderObject();
+    if (container is RenderConstrainedBox) {
+      return container.size.height;
+    }
+    return 0;
+}
+
 void showSongCard(BuildContext context, bool hover, DownloadSongModel model,
-    {double? top, double? left, double? bottom, double? right}) {
+    double cellOffsetY) {
+  final offset = _calculateCardPositon(context, cellOffsetY);
   final state = context.read<DownloadPageStateModel>();
   if (!hover) {
     state.songCardOverlay?.remove();
@@ -129,22 +154,18 @@ void showSongCard(BuildContext context, bool hover, DownloadSongModel model,
   if (state.songCardOverlay != null) return;
   state.songCardOverlay = OverlayEntry(
     builder: (_) {
+      double suggestY = offset.dy;
+      double containerHeight = _calculateContainerHeight(context);
+  // TODO: jinfeng
       Widget entry = DownloadSongDetailCard(
         model: model,
+        y: 123,
       );
-      if (top != null || left != null || bottom != null || right != null) {
         entry = Positioned(
-          top: top,
-          left: left,
-          bottom: bottom,
-          right: right,
+          top: suggestY,
+          right: offset.dx,
           child: entry,
         );
-      } else {
-        entry = Center(
-          child: entry,
-        );
-      }
       return entry;
     },
   );

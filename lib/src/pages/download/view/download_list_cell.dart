@@ -20,12 +20,14 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
 
   final DownloadSongModel model;
 
+  double get _rowHeight => 50;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: index % 2 != 0 ? kThinGreyColor : kPageBackgroundColor,
       padding: EdgeInsets.only(left: kPageContentPadding.left),
-      height: 50,
+      height: _rowHeight,
       child: Row(
         children: [
           _buildSongInfo(),
@@ -103,29 +105,20 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Builder(
-              builder: (cx) {
-                return InkWell(
-                  onHover: (hover) {
-                    final yposition = _calculateCardPositon(context);
-                    final container = context.findRenderObject();
-                        if (container is RenderConstrainedBox) {
-                          final rightWidth = container.size.width / 6;
-                          final pixels = Scrollable.of(context)?.position.pixels;
-                          debugPrint("=====>${container.size}, ${container.parentData}, $pixels");
-                          showSongCard(context, hover, model, top: yposition, right: rightWidth);
-                        }
-                  },
-                  onTap: () {},
-                  child: const ImageView.asset(
-                    src: 'icon_detail',
-                    width: 20,
-                    height: 20,
-                    color: kText6Color,
-                  ),
-                );
-              }
-            ),
+            Builder(builder: (cx) {
+              return InkWell(
+                onHover: (hover) {
+                  showSongCard(context, hover, model, _rowHeight * index);
+                },
+                onTap: () {},
+                child: const ImageView.asset(
+                  src: 'icon_detail',
+                  width: 20,
+                  height: 20,
+                  color: kText6Color,
+                ),
+              );
+            }),
             widthSpace(8),
             CustomTooltipWidget(
               message: '打开文件',
@@ -174,9 +167,5 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
       flex: flex,
       child: Align(alignment: Alignment.centerLeft, child: child),
     );
-  }
-
-  double _calculateCardPositon(BuildContext context) {
-    return 0;
   }
 }
