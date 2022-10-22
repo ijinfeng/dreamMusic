@@ -5,7 +5,6 @@ import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/downloder/download_song_model.dart';
 import 'package:dream_music/src/components/downloder/download_task.dart';
 import 'package:dream_music/src/components/finder/show_in_finder.dart';
-import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -28,6 +27,7 @@ class DownloadManager extends BaseChangeNotifier {
       (_) {
         debugPrint("[download]初始化缓存目录地址：$fileCacheDirectorPath");
         _loadDownloadedFiles();
+        _addFileDeleteObserverIfNeeded();
       },
     );
   }
@@ -73,6 +73,55 @@ class DownloadManager extends BaseChangeNotifier {
     notifyListeners();
   }
 
+  bool hasDirectoryObserver = false;
+
+  /// 监听下载目录的变化，主要看文件有没有减少
+  void _addFileDeleteObserverIfNeeded() async {
+    if (!FileSystemEntity.isWatchSupported) {
+      return;
+    }
+    if (hasDirectoryObserver) {
+      return;
+    }
+    hasDirectoryObserver = true;
+    if (_cacheMode == DownloadCacheMode.json) {
+      final directory = Directory(fileCacheDirectorPath);
+      if (!directory.existsSync()) {
+        await directory.create();
+      }
+      final stream =
+          directory.watch(events: FileSystemEvent.delete, recursive: true);
+      stream.listen((event) async {
+        // debugPrint("[download]$event");
+        String path = event.path;
+        if (path == fileCacheDirectorPath) {
+          // 删除了整个下载目录
+          _downloadedSongModels.clear();
+          hasDirectoryObserver = false;
+          debugPrint("[download]删除整个下载目录");
+        } else {
+          // 删除其中某个文件，这会导致信息不完整，因此直接全部删除即可
+          final lastSegment = Uri(path: path).pathSegments.last;
+          final fileName = lastSegment.split('.').first;
+          final songId = int.tryParse(fileName);
+          if (songId != null) {
+            final path = "$fileCacheDirectorPath/$songId";
+            final dir = Directory(path);
+            final exist = await dir.exists();
+            if (exist) {
+              await dir.delete(recursive: true);
+            }
+            final key = SongDownloadTask.createTaskId(songId);
+              _downloadedSongModels.remove(key);
+          }
+          debugPrint("[download]删除文件$lastSegment,songId-$songId");
+        }
+        notifyListeners();
+      });
+      debugPrint("[download]开始监听$fileCacheDirectorPath目录的变化");
+    }
+  }
+
   /// 从存储路径中读取音乐模型
   /// - path：为最外层的音乐目录或mp3文件本身目录
   Future<DownloadSongModel?> _loadSongModelFromPath(String path) async {
@@ -80,7 +129,8 @@ class DownloadManager extends BaseChangeNotifier {
       final Directory directory = Directory(path);
       bool dirExist = await directory.exists();
       if (dirExist) {
-        String name = directory.uri.pathSegments[directory.uri.pathSegments.length - 2];
+        String name =
+            directory.uri.pathSegments[directory.uri.pathSegments.length - 2];
         final jsonFile = File("${directory.path}/$name.json");
         final exist = await jsonFile.exists();
         if (exist) {
@@ -101,6 +151,8 @@ class DownloadManager extends BaseChangeNotifier {
 
   /// mp3文件存储方式
   final DownloadCacheMode _cacheMode = DownloadCacheMode.json;
+
+  String get cacheModeName => _cacheMode == DownloadCacheMode.json ? "JSON+MP3" : "MP3/ID3";
 
   /// 正在下载任务=正在下载+等待下载
   final Map<String, SongDownloadTask> _downloadTasks = {};
@@ -158,12 +210,17 @@ class DownloadManager extends BaseChangeNotifier {
     if (_cacheMode == DownloadCacheMode.json) {
       final path = "$fileCacheDirectorPath/$songId";
       final dir = Directory(path);
-      await dir.delete(recursive: true);
+      final exist = await dir.exists();
+      if (exist) {
+        await dir.delete(recursive: true);
+      }
       final String key = SongDownloadTask.createTaskId(songId);
       _downloadedSongModels.remove(key);
       notifyListeners();
     }
   }
+
+  String getSaveSongPath(int songId) => _generateSongSavePath(songId);
 
   /// 获取某一首歌的下载任务，当这首歌处于下载中或等待下载时将返回[SongDownloadTask]
   /// - songId: 歌曲id
@@ -184,6 +241,7 @@ class DownloadManager extends BaseChangeNotifier {
     }
     int songId = song.songId;
     if (songNeedDownload(songId) == false) return false;
+    _addFileDeleteObserverIfNeeded();
     final task =
         SongDownloadTask(song: song, savePath: _generateSongSavePath(songId));
     _addNewTask(task);
@@ -197,12 +255,13 @@ class DownloadManager extends BaseChangeNotifier {
     if (songs?.isNotEmpty == true) {
       int i = 0;
       for (var song in songs!) {
-         final canDownload = downloadSong(song);
-         if (canDownload == false) {
+        final canDownload = downloadSong(song);
+        if (canDownload == false) {
           i += 1;
-         }
+        }
       }
-      debugPrint("[download]将有${songs.length - i - 1}首歌进入下载队列，${i+1}首歌无法下载或已经下载");
+      debugPrint(
+          "[download]将有${songs.length - i - 1}首歌进入下载队列，${i + 1}首歌无法下载或已经下载");
     }
   }
 
@@ -236,6 +295,10 @@ class DownloadManager extends BaseChangeNotifier {
     if (_cacheMode == DownloadCacheMode.json) {
       final path = _generateSongInfoJsonSavePath(song.songId);
       final file = File(path);
+      final exist = await file.exists();
+      if (!exist) {
+        await file.create();
+      }
       await file.writeAsString(json.encode(song.toJson()));
     }
   }
@@ -269,8 +332,16 @@ class DownloadManager extends BaseChangeNotifier {
     if (songId == 0) return false;
     final String key = SongDownloadTask.createTaskId(songId);
     if (_downloadTasks.containsKey(key)) return false;
-    if (existDownloadedSong(songId)) return false;
+    if (_downloadedSongModels.containsKey(key)) return false;
     return true;
+  }
+
+  /// 歌曲是否已经下载
+  bool hasDownloaded(int songId) {
+    if (songId == 0) return false;
+    final String key = SongDownloadTask.createTaskId(songId);
+    if (_downloadedSongModels.containsKey(key)) return true;
+    return false;
   }
 
   /// 是否存在已经下载好的歌曲

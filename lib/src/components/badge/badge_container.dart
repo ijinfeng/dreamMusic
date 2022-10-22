@@ -5,7 +5,7 @@ enum BadgeType {
   number,
 }
 
-const double kBadgeHeight = 18;
+const double kBadgeHeight = 17;
 
 class BadgeContainer extends StatelessWidget {
   const BadgeContainer({

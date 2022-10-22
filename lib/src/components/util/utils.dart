@@ -97,4 +97,18 @@ class Utils {
       return "${(d / 1024 / 1024).toStringAsFixed(2)}G";
     }
   }
+
+  static String getFileCreateTime(String path) {
+    final type = FileSystemEntity.typeSync(path);
+    if (type == FileSystemEntityType.directory || type == FileSystemEntityType.link) {
+      return '-';
+    } else if (type == FileSystemEntityType.notFound) {
+      return '未找到';
+    } else {
+      final file = File(path);
+      final stat = file.statSync();
+      final lastChanged = stat.changed;
+      return getDateDesc(lastChanged.millisecondsSinceEpoch, showDetail: true);
+    }
+  }
 }

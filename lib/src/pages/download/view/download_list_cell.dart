@@ -4,10 +4,13 @@ import 'package:dream_music/src/components/dialog/dialog.dart';
 import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/downloder/download_song_model.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
+import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/download/view/download_song_detail_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class DownloadedListCell extends StatelessWidget with EasyInterface {
   const DownloadedListCell({Key? key, required this.index, required this.model})
@@ -100,6 +103,30 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Builder(
+              builder: (cx) {
+                return InkWell(
+                  onHover: (hover) {
+                    final yposition = _calculateCardPositon(context);
+                    final container = context.findRenderObject();
+                        if (container is RenderConstrainedBox) {
+                          final rightWidth = container.size.width / 6;
+                          final pixels = Scrollable.of(context)?.position.pixels;
+                          debugPrint("=====>${container.size}, ${container.parentData}, $pixels");
+                          showSongCard(context, hover, model, top: yposition, right: rightWidth);
+                        }
+                  },
+                  onTap: () {},
+                  child: const ImageView.asset(
+                    src: 'icon_detail',
+                    width: 20,
+                    height: 20,
+                    color: kText6Color,
+                  ),
+                );
+              }
+            ),
+            widthSpace(8),
             CustomTooltipWidget(
               message: '打开文件',
               child: SelectableIconButton(
@@ -111,18 +138,6 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
                 onTap: (_) {
                   DownloadManager().showSongInFinder(model.songId);
                 },
-              ),
-            ),
-            widthSpace(8),
-            CustomTooltipWidget(
-              message: '查看详情',
-              child: SelectableIconButton(
-                selected: true,
-                src: 'icon_detail',
-                width: 20,
-                height: 20,
-                color: kText6Color,
-                onTap: (_) {},
               ),
             ),
             widthSpace(8),
@@ -159,5 +174,9 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
       flex: flex,
       child: Align(alignment: Alignment.centerLeft, child: child),
     );
+  }
+
+  double _calculateCardPositon(BuildContext context) {
+    return 0;
   }
 }

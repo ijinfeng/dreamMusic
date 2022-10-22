@@ -1,3 +1,4 @@
+import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/downloder/download_manager.dart';
@@ -9,7 +10,7 @@ import 'package:dream_music/src/pages/download/model/download_page_state_model.d
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DownloadPageHeaderInfo extends StatelessWidget {
+class DownloadPageHeaderInfo extends StatelessWidget with EasyInterface {
   const DownloadPageHeaderInfo({Key? key}) : super(key: key);
 
   @override
@@ -53,7 +54,9 @@ class DownloadPageHeaderInfo extends StatelessWidget {
                               src: 'icon_reload',
                               color: kText9Color,
                               onTap: (_) {
-                                DownloadManager().reloadDownloadFiles();
+                                DownloadManager().reloadDownloadFiles().then((value) {
+                                  showToast('已重新加载');
+                                });
                               }),
                         ),
                         const SizedBox(

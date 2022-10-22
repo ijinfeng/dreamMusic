@@ -56,6 +56,16 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
                   print(instance.getMetaTags());
                 }
             }),
+            buildActionButton("测试await", () async {
+              final path1 = "/Users/zl/Library/Containers/com.jinfeng.dreammusic.dreamMusic/Data/Downloads/DreamMusic/1405128273";
+              debugPrint(path1);
+              bool isDir = await FileSystemEntity.isDirectory(path1);
+              debugPrint("isdir-$isDir");
+              final path = DownloadManager().fileCacheDirectorPath + "/566731290";
+              debugPrint(path);
+              isDir = await FileSystemEntity.isDirectory(path);
+              debugPrint("isdir-$isDir");
+            }),
           ],
         ));
   }

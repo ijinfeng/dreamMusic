@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/dialog/dialog.dart';
+import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/playlist/playlist_drawer.dart';
@@ -201,7 +202,7 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
     _unlockFlagSet = false;
   }
 
-  UrlSource? _getCurrentSongSource() {
+  Source? _getCurrentSongSource() {
     if (_currentSong == null && playlistIsEmpty) return null;
     if (_currentSong == null) {
       _fixPlaySongIndexIfNeeded();
@@ -209,6 +210,12 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
     }
     int? songId = _currentSong!.track?.id;
     if (songId == null) return null;
+    // 检查歌曲是否已经下载
+    if (DownloadManager().hasDownloaded(songId) && DownloadManager().existDownloadedSong(songId)) {
+      return DeviceFileSource(
+        DownloadManager().getSaveSongPath(songId)
+      );
+    }
     return UrlSource(
         "https://music.163.com/song/media/outer/url?id=$songId.mp3");
   }
@@ -219,13 +226,12 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
     if (player.state == PlayerState.paused) {
       player.resume();
     } else {
-      UrlSource? source = _getCurrentSongSource();
+      Source? source = _getCurrentSongSource();
       if (source != null) {
         player.play(source);
       }
       debugPrint("""[play]ready to play id=${_currentSong?.track?.id}, 
   name=${_currentSong?.track?.name}
-  url=${source?.url}
   index=$_playSongIndex, all=$allSongsLength
   playmode=$playMode
   songlistid=$songlistId

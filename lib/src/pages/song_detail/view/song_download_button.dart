@@ -15,78 +15,78 @@ class SongDownloadButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTooltipWidget(
-      message: '下载',
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Selector<DownloadManager, bool>(
-            selector: (p0, p1) {
-              bool needDownloaded = p1.songNeedDownload(model?.songId ?? 0);
-              if (needDownloaded) {
-                return true;
-              }
-              final task =
-                  DownloadManager().getTaskWithSong(model?.songId ?? 0);
-              if (task != null) {
-                return true;
-              }
-              return false;
-            },
-            builder: (context, download, child) {
-              return SelectableIconButton(
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Selector<DownloadManager, bool>(
+          selector: (p0, p1) {
+            bool needDownloaded = p1.songNeedDownload(model?.songId ?? 0);
+            if (needDownloaded) {
+              return true;
+            }
+            final task =
+                DownloadManager().getTaskWithSong(model?.songId ?? 0);
+            if (task != null) {
+              return true;
+            }
+            return false;
+          },
+          builder: (context, download, child) {
+            return CustomTooltipWidget(
+              message: download ? '下载' : '已下载',
+              child: SelectableIconButton(
                 selected: download,
                 src: 'icon_song_download',
-                unsrc: 'icon_song_downloaded',
+                unsrc: 'icon_song_download',
                 width: 30,
                 height: 30,
                 color: kText9Color,
-                unColor: kText9Color,
+                unColor: kDisableColor,
                 onTap: (sel) {
                   DownloadManager().downloadSong(model);
                 },
-              );
-            },
-          ),
-          Selector<DownloadManager, double>(
-            selector: (p0, p1) {
-              final task = p1.getTaskWithSong(model?.songId ?? 0);
-              if (task == null || task.total == 0) {
-                return 0;
-              } else {
-                return task.received / task.total;
-              }
-            },
-            shouldRebuild: (previous, next) {
-              return previous != next;
-            },
-            builder: (context, progress, child) {
-              final task =
-                  DownloadManager().getTaskWithSong(model?.songId ?? 0);
-              if (task == null) {
-                return const SizedBox.shrink();
-              }
-              return Positioned(
-                  top: -4,
-                  right: -10,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                    decoration: BoxDecoration(
-                        color: kText6Color,
-                        borderRadius: BorderRadius.circular(4)),
-                    child: Text(
-                      '${(progress * 100).toInt()}%',
-                      style: const TextStyle(
-                          fontSize: 9,
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal),
-                    ),
-                  ));
-            },
-          ),
-        ],
-      ),
+              ),
+            );
+          },
+        ),
+        Selector<DownloadManager, double>(
+          selector: (p0, p1) {
+            final task = p1.getTaskWithSong(model?.songId ?? 0);
+            if (task == null || task.total == 0) {
+              return 0;
+            } else {
+              return task.received / task.total;
+            }
+          },
+          shouldRebuild: (previous, next) {
+            return previous != next;
+          },
+          builder: (context, progress, child) {
+            final task =
+                DownloadManager().getTaskWithSong(model?.songId ?? 0);
+            if (task == null) {
+              return const SizedBox.shrink();
+            }
+            return Positioned(
+                top: -4,
+                right: -10,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                  decoration: BoxDecoration(
+                      color: kText6Color,
+                      borderRadius: BorderRadius.circular(4)),
+                  child: Text(
+                    '${(progress * 100).toInt()}%',
+                    style: const TextStyle(
+                        fontSize: 9,
+                        color: Colors.white,
+                        fontWeight: FontWeight.normal),
+                  ),
+                ));
+          },
+        ),
+      ],
     );
   }
 }
