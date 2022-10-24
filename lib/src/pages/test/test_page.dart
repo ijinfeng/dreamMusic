@@ -66,6 +66,20 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
               isDir = await FileSystemEntity.isDirectory(path);
               debugPrint("isdir-$isDir");
             }),
+            MouseRegion(
+              onEnter: (event) {
+                  debugPrint("[enter]$event");
+              },
+              onHover: (event) {
+                  debugPrint("[hover]$event");
+              },
+              onExit: (event) {
+                debugPrint("[exit]$event");
+              },
+              child: buildActionButton("鼠标事件", () {
+                
+              }),
+            ),
           ],
         ));
   }

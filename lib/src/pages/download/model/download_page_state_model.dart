@@ -19,4 +19,5 @@ class DownloadPageStateModel extends BaseChangeNotifier {
   }
 
   OverlayEntry? songCardOverlay;
+  Size? songCardSize;
 }

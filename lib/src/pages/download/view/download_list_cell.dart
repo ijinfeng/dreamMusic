@@ -106,11 +106,17 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Builder(builder: (cx) {
-              return InkWell(
-                onHover: (hover) {
-                  showSongCard(context, hover, model, _rowHeight * index);
+              return MouseRegion(
+                onHover: (event) {
+                  
                 },
-                onTap: () {},
+                onEnter: (event) {
+                  showSongCard(context, true, model, _rowHeight * index, Offset.zero);
+                },
+                onExit: (event) {
+                  final position = event.position;
+                  showSongCard(context, false, model, _rowHeight * index, position);
+                },
                 child: const ImageView.asset(
                   src: 'icon_detail',
                   width: 20,

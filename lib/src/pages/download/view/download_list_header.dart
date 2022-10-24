@@ -38,7 +38,7 @@ class DownloadListHeader extends StatelessWidget {
       style: textStyle,
     );
     current = Container(
-      // color: Utils.randomColor,
+      color: Utils.randomColor,
       alignment: Alignment.centerLeft,
       child: current,
     );
