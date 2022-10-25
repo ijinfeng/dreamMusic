@@ -190,24 +190,31 @@ class _SonglistItemCellState extends State<SonglistItemCell>
           widget.onDoubleTap(widget.model!);
         }
       },
-      child: SizedBox(
-        height: 48,
-        child: Container(
-          height: 48,
-          padding: EdgeInsets.only(
-              left: kPageContentPadding.left, right: kPageContentPadding.right),
-          color: backgroundColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _boxAlignItem(
-                  Row(
-                    children: left,
-                  ),
-                  Alignment.centerLeft),
-              _boxAlignItem(album, Alignment.center),
-              _boxAlignItem(time, Alignment.centerRight)
-            ],
+      onSecondaryTap: () {
+        // 鼠标右键点击
+        showFutureToast();
+      },
+      child: Material(
+        color: backgroundColor,
+        child: InkWell(
+          hoverColor: kMainThemeColor,
+          onTap: () {},
+          child: Container(
+            height: 48,
+            padding: EdgeInsets.only(
+                left: kPageContentPadding.left, right: kPageContentPadding.right),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _boxAlignItem(
+                    Row(
+                      children: left,
+                    ),
+                    Alignment.centerLeft),
+                _boxAlignItem(album, Alignment.center),
+                _boxAlignItem(time, Alignment.centerRight)
+              ],
+            ),
           ),
         ),
       ),

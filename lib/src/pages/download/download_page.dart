@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
+import 'package:dream_music/src/components/layoutbox/after_layout.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/download/model/download_page_state_model.dart';
@@ -46,31 +47,62 @@ class _DownloadPageState extends State<DownloadPage> {
           },
           builder: (context, child) {
             final state = context.read<DownloadPageStateModel>();
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DownloadTabbar(
-                  onTap: (index) {
-                    state.type = index == 0 ? DownloadPageType.finished : DownloadPageType.download;
-                    _pageController.jumpToPage(index);
-                  },
-                ),
-                const DownloadPageHeaderInfo(),
-                Expanded(
-                    child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: 2,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return const DownloadedListView();
-                    } else {
-                      return const DownloadingListView();
-                    }
-                  },
-                ))
-              ],
-            );
+            return AfterLayout(
+                callback: (value) {
+                  state.pageSize = value.size;
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DownloadTabbar(
+                      onTap: (index) {
+                        state.type = index == 0
+                            ? DownloadPageType.finished
+                            : DownloadPageType.download;
+                        _pageController.jumpToPage(index);
+                      },
+                    ),
+                    const DownloadPageHeaderInfo(),
+                    Expanded(
+                        child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: 2,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return const DownloadedListView();
+                        } else {
+                          return const DownloadingListView();
+                        }
+                      },
+                    ))
+                  ],
+                ));
+            // return Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     DownloadTabbar(
+            //       onTap: (index) {
+            //         state.type = index == 0 ? DownloadPageType.finished : DownloadPageType.download;
+            //         _pageController.jumpToPage(index);
+            //       },
+            //     ),
+            //     const DownloadPageHeaderInfo(),
+            //     Expanded(
+            //         child: PageView.builder(
+            //       controller: _pageController,
+            //       itemCount: 2,
+            //       physics: const NeverScrollableScrollPhysics(),
+            //       itemBuilder: (context, index) {
+            //         if (index == 0) {
+            //           return const DownloadedListView();
+            //         } else {
+            //           return const DownloadingListView();
+            //         }
+            //       },
+            //     ))
+            //   ],
+            // );
           },
         ));
   }

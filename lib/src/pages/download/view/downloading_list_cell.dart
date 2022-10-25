@@ -116,20 +116,6 @@ class DownloadingListCell extends StatelessWidget with EasyInterface {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CustomTooltipWidget(
-              message: '打开文件',
-              child: SelectableIconButton(
-                selected: true,
-                src: 'icon_open_file',
-                width: 20,
-                height: 20,
-                color: kText6Color,
-                onTap: (_) {
-                  DownloadManager().showSongInFinder(model.song.songId);
-                },
-              ),
-            ),
-            widthSpace(8),
-            CustomTooltipWidget(
               message: '查看详情',
               child: SelectableIconButton(
                 selected: true,
@@ -141,29 +127,6 @@ class DownloadingListCell extends StatelessWidget with EasyInterface {
               ),
             ),
             widthSpace(8),
-            CustomTooltipWidget(
-              message: '删除',
-              child: SelectableIconButton(
-                selected: true,
-                src: 'icon_delete',
-                width: 20,
-                height: 20,
-                color: kText6Color,
-                onTap: (_) {
-                  showCommonDialog(context,
-                      content: "将删除已下载歌曲，是否删除？",
-                      actions: [
-                        DialogAction.cancel(),
-                        DialogAction.destructive(
-                            title: "删除",
-                            onTap: () {
-                              DownloadManager()
-                                  .deleteDownloadSong(model.song.songId);
-                            })
-                      ]);
-                },
-              ),
-            ),
           ],
         ),
         1);

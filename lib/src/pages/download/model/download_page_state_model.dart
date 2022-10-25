@@ -20,4 +20,11 @@ class DownloadPageStateModel extends BaseChangeNotifier {
 
   OverlayEntry? songCardOverlay;
   Size? songCardSize;
+
+  double get cardHeight => songCardSize?.height ?? 399.0;
+  
+  /// 我的下载页size
+  Size? pageSize;
+
+  double get pageHeight => pageSize?.height ?? 0;
 }

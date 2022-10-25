@@ -13,7 +13,9 @@ import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/pages/download/request/download_request.dart';
 import 'package:dream_music/src/pages/test/test_state_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:id3/id3.dart';
@@ -80,6 +82,23 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
                 
               }),
             ),
+            GestureDetector(
+              onTapDown: (detail) {
+                debugPrint("$detail");
+              },
+              onSecondaryTap: () {
+                debugPrint("onSecondaryTap");
+              },
+              child: MainButton.title(title: '鼠标点击'),
+            ),
+            Listener(
+              onPointerDown: (event) {
+                if (event.kind == PointerDeviceKind.mouse) {
+                  debugPrint("event--$event");
+                }
+              },
+              child: MainButton.title(title: '鼠标点击2'),
+            )
           ],
         ));
   }

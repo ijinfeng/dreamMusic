@@ -1,11 +1,13 @@
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/downloder/download_song_model.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/layoutbox/after_layout.dart';
 import 'package:dream_music/src/components/util/utils.dart';
+import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/download/model/download_page_state_model.dart';
 import 'package:flutter/material.dart';
@@ -15,14 +17,12 @@ import 'package:provider/provider.dart';
 
 /// 歌曲详情卡片
 class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
-  const DownloadSongDetailCard({Key? key, required this.model, this.y = 80})
+  const DownloadSongDetailCard({Key? key, required this.model})
       : super(key: key);
 
   final DownloadSongModel model;
 
   final double kImageWidth = 180;
-
-  final double y;
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +31,12 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
       color: kPageBackgroundColor,
       elevation: 3.0,
       margin: EdgeInsets.zero,
-      shape:  SongCardShapeBorder(
-        side: const BorderSide(
+      shape: const SongCardShapeBorder(
+        side: BorderSide(
           color: kDividerColor,
           width: 0.5,
         ),
         radius: 8,
-        yposition: y,
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -52,11 +51,11 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
               radius: 8,
             ),
             heightSpace(10),
-            _buildDesc(context, '歌曲ID：', "${model.songId}"),
+            _buildDesc(context, '歌曲ID：', "${model.songId}", canCopy: true),
             heightSpace(5),
-            _buildDesc(context, '歌名：', model.name),
+            _buildDesc(context, '歌名：', model.name, canCopy: true),
             heightSpace(5),
-            _buildDesc(context, '专辑：', model.al.name),
+            _buildDesc(context, '专辑：', model.al.name, canCopy: true),
             heightSpace(5),
             _buildDesc(context, '艺术家：', model.authorNmae),
             heightSpace(5),
@@ -109,8 +108,9 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
     );
   }
 
-  Widget _buildDesc(BuildContext context, String title, String content) {
-    return RichText(
+  Widget _buildDesc(BuildContext context, String title, String content,
+      {bool canCopy = false}) {
+    Widget current = RichText(
       text: TextSpan(
         children: [
           TextSpan(text: title),
@@ -120,83 +120,100 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
             fontSize: 12, color: kText6Color, fontWeight: FontWeight.w400),
       ),
     );
+    if (canCopy) {
+      current = Row(
+        children: [
+          current,
+          CustomTooltipWidget(
+            message: '复制',
+            child: SelectableIconButton(
+              selected: true,
+              src: 'icon_copy',
+              width: 12,
+              height: 12,
+              color: kHighlightThemeColor,
+              onTap: (_) {
+                Clipboard.setData(ClipboardData(
+                  text: content));
+              showToast('已复制到转帖版');
+              },
+            ),
+          )
+        ],
+      );
+    }
+    return current;
   }
 }
 
-Offset _calculateCardPositon(BuildContext context, double cellOffsetY) {
-    final container = context.findRenderObject();
-    double right = 0;
-    double y = 0;
-    if (container is RenderConstrainedBox) {
-      right = container.size.width / 6;
-      final pixels = Scrollable.of(context)?.position.pixels ?? 0;
-      final currentOffset = cellOffsetY;
-      y = currentOffset - pixels;
-    }
-    return Offset(right + 6, y + 3);
-}
-
-double _calculateContainerHeight(BuildContext context) {
-  final container = context.findRenderObject();
-    if (container is RenderConstrainedBox) {
-      return container.size.height;
-    }
-    return 0;
-}
-
-void dismissSongCard(BuildContext context) {
-  final state = context.read<DownloadPageStateModel>();
-  state.songCardOverlay?.remove();
-  state.songCardOverlay = null;
-}
-
 void showSongCard(BuildContext context, bool show, DownloadSongModel model,
-    double cellOffsetY, Offset exitOffset) {
-  // final offset = _calculateCardPositon(context, cellOffsetY);
+    double cellOffsetY, Offset mouseOffset) {
   final container = context.findRenderObject();
-    double right = 0;
-    double top = 0;
-    Size size = Size.zero;
-    if (container is RenderConstrainedBox) {
-      size = container.size;
-      right = container.size.width / 6;
-      final pixels = Scrollable.of(context)?.position.pixels ?? 0;
-      final currentOffset = cellOffsetY;
-      top = currentOffset - pixels;
-    }
-    // 修正
-    top = top + 3;
-    right = right + 6;
-
-
-
+  double right = 0;
+  double top = 0;
+  // context是cell
+  if (container is RenderConstrainedBox) {
+    right = container.size.width / 6;
+    final pixels = Scrollable.of(context)?.position.pixels ?? 0;
+    final currentOffset = cellOffsetY;
+    top = currentOffset - pixels;
+  }
+  // 卡片的top和right
+  top = top + 3;
+  right = right + 6;
   final state = context.read<DownloadPageStateModel>();
+
+  // 计算有没有超过下边界
+  if (top + state.cardHeight + 5 > state.pageHeight) {
+    top = state.pageHeight - state.cardHeight - 5;
+  }
+
+  // 计算有没有超过上边界
+  if (top < 5) {
+    top = 5;
+  }
+
   if (!show) {
     // 表示鼠标移开了详情按钮，如果不在卡片上，那么久需要隐藏卡片
-    debugPrint("[exit]offset=$exitOffset, size=$size");
-
-    state.songCardOverlay?.remove();
-    state.songCardOverlay = null;
-    return;
+    final mouseExitY = mouseOffset.dy - 151 - 15 - cellOffsetY;
+    final mouseExitX = mouseOffset.dx - kLeftMenuMaxWidth;
+    // debugPrint(
+    // "[exit]offset=$mouseOffset, mouseExitY=$mouseExitY, mouseExitX=$mouseExitX, card-size=${state.songCardSize}, page-size=${state.pageSize}");
+    // 151是上方高度，这个写死还是有问题的
+    // 按钮上方有15的间隙
+    // 鼠标移出时的位置在按钮的上方或下方，那么就不显示卡片
+    if (mouseExitY <= 0 ||
+        mouseExitY >= 20 ||
+        (state.pageSize!.width - mouseExitX + 10 < right)) {
+      state.songCardOverlay?.remove();
+      state.songCardOverlay = null;
+      return;
+    }
   }
   if (state.songCardOverlay != null) return;
   state.songCardOverlay = OverlayEntry(
     builder: (_) {
-      double suggestY = top;
-      double containerHeight = _calculateContainerHeight(context);
-  // TODO: jinfeng
       Widget entry = DownloadSongDetailCard(
         model: model,
-        y: 123,
       );
-      entry = AfterLayout(callback:(value) {
-            state.songCardSize = value.size;
-        }, child: entry,);
-        entry = Positioned(
-          top: suggestY,
-          right: right,
-          child: entry,
-        );
+      entry = MouseRegion(
+        child: entry,
+        onExit: (event) {
+          state.songCardOverlay?.remove();
+          state.songCardOverlay = null;
+        },
+      );
+      entry = AfterLayout(
+        callback: (value) {
+          state.songCardSize = value.size;
+        },
+        child: entry,
+      );
+      entry = Positioned(
+        top: top,
+        right: right,
+        child: entry,
+      );
       return entry;
     },
   );
@@ -207,16 +224,11 @@ class SongCardShapeBorder extends ShapeBorder {
   const SongCardShapeBorder({
     this.side = BorderSide.none,
     this.radius = 0,
-    this.yposition = 0,
   });
 
   final BorderSide side;
 
   final double radius;
-
-  final double yposition;
-
-  double get _triangleHeight => 10;
 
   @override
   EdgeInsetsGeometry get dimensions {
@@ -248,34 +260,11 @@ class SongCardShapeBorder extends ShapeBorder {
           ..style = PaintingStyle.stroke
           ..strokeJoin = StrokeJoin.round;
         canvas.drawPath(path, paint);
-
-        var triangleFillPath = Path();
-        triangleFillPath.moveTo(rect.width, yposition - _triangleHeight * 0.8);
-        triangleFillPath.lineTo(rect.width + _triangleHeight, yposition);
-        triangleFillPath.lineTo(rect.width, yposition + _triangleHeight * 0.8);
-        triangleFillPath.lineTo(rect.width, yposition - _triangleHeight * 0.8);
-        canvas.drawPath(
-            triangleFillPath,
-            paint
-              ..style = PaintingStyle.fill
-              ..color = kPageBackgroundColor);
-
-        var trianglePath = Path();
-        trianglePath.moveTo(rect.width, yposition - _triangleHeight * 0.8);
-        trianglePath.lineTo(rect.width + _triangleHeight, yposition);
-        trianglePath.lineTo(rect.width, yposition + _triangleHeight * 0.8);
-        trianglePath.lineTo(rect.width, yposition - _triangleHeight * 0.8);
-        canvas.drawPath(
-            trianglePath,
-            paint
-              ..style = PaintingStyle.stroke
-              ..color = side.color);
     }
   }
 
   @override
   ShapeBorder scale(double t) {
-    return SongCardShapeBorder(
-        side: side.scale(t), radius: radius * t, yposition: yposition * t);
+    return SongCardShapeBorder(side: side.scale(t), radius: radius * t);
   }
 }

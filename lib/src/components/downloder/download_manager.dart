@@ -220,6 +220,10 @@ class DownloadManager extends BaseChangeNotifier {
     }
   }
 
+  void cancelDownloadSongTask(int songId) async {
+    
+  }
+
   String getSaveSongPath(int songId) => _generateSongSavePath(songId);
 
   /// 获取某一首歌的下载任务，当这首歌处于下载中或等待下载时将返回[SongDownloadTask]

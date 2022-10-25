@@ -89,11 +89,12 @@ class CommentToolBar extends StatelessWidget with EasyInterface {
                   tooltip: '',
                   color: kPageBackgroundColor,
                   padding: const EdgeInsets.symmetric(vertical: 4),
+                  elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                     side: const BorderSide(
                       width: 0.5,
-                      color: kThinGreyColor,
+                      color: kDividerColor,
                       style: BorderStyle.solid
                     )
                   ),

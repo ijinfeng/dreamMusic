@@ -24,7 +24,8 @@ const int? kPersonalFMSonglistId = null;
 /// 评论页导航
 final GlobalKey<NavigatorState> kCommentNavigatorKey = GlobalKey(debugLabel: 'home-body-gkey');
 
-
+/// 我的掘金个人主页
 const String kAuthorPageUrl = "https://juejin.cn/user/1108736596794279/posts";
 
+/// 我的Github个人主页
 const String kRepositoryUrl = "https://github.com/ijinfeng/dreamMusic";
