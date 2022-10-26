@@ -7,7 +7,9 @@ import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +20,7 @@ class SonglistItemCell extends StatefulWidget {
     required this.onDoubleTap,
     this.index,
     this.onLikeTap,
+    this.onSecondaryTap,
   }) : super(key: key);
 
   final int? index;
@@ -25,6 +28,8 @@ class SonglistItemCell extends StatefulWidget {
   final OneParamCallback<SingleSongModel> onDoubleTap;
   /// 点击喜欢的回调，这个可以在这个回调中做删除等操作，不需要自己处理喜欢｜不喜欢的接口调用
   final OneParamCallback<SingleSongModel>? onLikeTap;
+  /// 点击右键回调
+  final OneParamCallback<RelativeRect>? onSecondaryTap;
 
   @override
   State<StatefulWidget> createState() {
@@ -34,6 +39,9 @@ class SonglistItemCell extends StatefulWidget {
 
 class _SonglistItemCellState extends State<SonglistItemCell>
     with EasyInterface {
+
+  Offset? _globalPosition;
+  
   @override
   Widget build(BuildContext context) {
     // 背景是否高亮
@@ -192,7 +200,25 @@ class _SonglistItemCellState extends State<SonglistItemCell>
       },
       onSecondaryTap: () {
         // 鼠标右键点击
-        showFutureToast();
+        if (_globalPosition != null && widget.onSecondaryTap != null) {
+          final mainContext = kTopPageScaffoldKey.currentContext!;
+          final container = mainContext.findRenderObject() as RenderBox;
+          RelativeRect rect = RelativeRect.fromSize(Rect.fromLTWH(_globalPosition!.dx - kLeftMenuMaxWidth, _globalPosition!.dy - kWindowNavigationBarHeight, 0, 0), container.size);
+          widget.onSecondaryTap!(rect);
+        }
+      },
+      onSecondaryTapCancel: () {
+        _globalPosition = null;
+      },
+      onSecondaryTapDown: (details) {
+        if (details.kind == PointerDeviceKind.mouse) {
+          _globalPosition = details.globalPosition;
+        }
+      },
+      onSecondaryTapUp: (details) {
+        if (details.kind == PointerDeviceKind.mouse) {
+          _globalPosition = details.globalPosition;
+        }
       },
       child: Material(
         color: backgroundColor,

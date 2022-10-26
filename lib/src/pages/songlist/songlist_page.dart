@@ -4,7 +4,10 @@ import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
+import 'package:dream_music/src/components/menu/common_menu.dart';
+import 'package:dream_music/src/components/menu/menu_item.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
+import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_state_model.dart';
@@ -73,6 +76,22 @@ class _SonglistState extends ProviderState<SonglistPage, SonglistStateModel> {
                           model: viewModel?.songs?[index],
                           onDoubleTap: (model) {
                             _selectedOneSongFromSonglist(model);
+                          },
+                          onSecondaryTap: (rect) {
+                            showCommonMenu(context, rect, [
+                              CommonPopupMenuItem(text: '播放', onTap: () {
+
+                              },),
+                              CommonPopupMenuItem(text: '评论', onTap: () {
+
+                              },),
+                              CommonPopupMenuItem(text: '详情', onTap: () {
+
+                              }, hasSubMenu: true, subMenuItems: [
+                                CommonPopupMenuItem(text: '1'),
+                                CommonPopupMenuItem(text: '2'),
+                              ],)
+                            ]);
                           },
                         );
                       },

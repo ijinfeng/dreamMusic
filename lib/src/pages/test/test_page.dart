@@ -69,35 +69,50 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
               debugPrint("isdir-$isDir");
             }),
             MouseRegion(
-              onEnter: (event) {
-                  debugPrint("[enter]$event");
-              },
-              onHover: (event) {
-                  debugPrint("[hover]$event");
-              },
-              onExit: (event) {
-                debugPrint("[exit]$event");
-              },
+              // onEnter: (event) {
+              //     debugPrint("[enter]$event");
+              // },
+              // onHover: (event) {
+              //     debugPrint("[hover]$event");
+              // },
+              // onExit: (event) {
+              //   debugPrint("[exit]$event");
+              // },
               child: buildActionButton("鼠标事件", () {
                 
               }),
             ),
+            PopupMenuButton(itemBuilder:(context) {
+              return [];
+            },),
             GestureDetector(
-              onTapDown: (detail) {
-                debugPrint("$detail");
-              },
               onSecondaryTap: () {
-                debugPrint("onSecondaryTap");
+                debugPrint("[tap]tap---${viewModel?.globalPosition}, ${viewModel?.localPositon}");
+                final overlay = context.findRenderObject() as RenderBox;
+              RelativeRect rect = RelativeRect.fromSize(Rect.fromLTWH((viewModel?.globalPosition?.dx ?? 0) - kLeftMenuMaxWidth, (viewModel?.globalPosition?.dy ?? 0) - kWindowNavigationBarHeight, 0, 0), overlay.size);
+            showMenu(context: context, position: rect, items: [
+              PopupMenuItem(child: Text('快乐'), onTap: () {},),
+              PopupMenuItem(child: Text('加倍'), onTap: () {},),
+              PopupMenuItem(child: Text('！！'), onTap: () {},),
+            ]);
               },
-              child: MainButton.title(title: '鼠标点击'),
-            ),
-            Listener(
-              onPointerDown: (event) {
-                if (event.kind == PointerDeviceKind.mouse) {
-                  debugPrint("event--$event");
-                }
+              /// 右键抬起
+              onSecondaryTapUp: (TapUpDetails details) {
+                debugPrint("[tap]up-${details.globalPosition}, ${details.localPosition}");
+                viewModel?.globalPosition = details.globalPosition;
+                viewModel?.localPositon = details.localPosition;
               },
-              child: MainButton.title(title: '鼠标点击2'),
+              /// 右键按下
+              onSecondaryTapDown: (TapDownDetails details) { 
+                debugPrint("[tap]down-${details.globalPosition}, ${details.localPosition}");
+                viewModel?.globalPosition = details.globalPosition;
+                viewModel?.localPositon = details.localPosition;
+              },
+              onSecondaryTapCancel: () {
+                debugPrint("[tap]cancel");
+                viewModel?.cancelPosition();
+              },
+              child: const MainButton.title(title: '鼠标点击2', padding: EdgeInsets.all(8),),
             )
           ],
         ));
@@ -113,5 +128,10 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
             onTap: onTap));
   }
 
-//
+
+  @override
+  TestStateModel? createViewModel() {
+    return TestStateModel();
+  }
+
 }
