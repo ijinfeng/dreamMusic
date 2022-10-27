@@ -2,12 +2,18 @@ import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
 import 'package:dream_music/src/components/menu/common_menu.dart';
+import 'package:dream_music/src/components/menu/common_menu_items.dart';
+import 'package:dream_music/src/components/menu/menu_divider.dart';
 import 'package:dream_music/src/components/menu/menu_item.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
+import 'package:dream_music/src/components/router/page_routers.dart';
+import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_detail_model.dart';
 import 'package:dream_music/src/pages/songlist/model/songlist_state_model.dart';
@@ -78,19 +84,26 @@ class _SonglistState extends ProviderState<SonglistPage, SonglistStateModel> {
                             _selectedOneSongFromSonglist(model);
                           },
                           onSecondaryTap: (rect) {
+                            final model = viewModel?.songs?[index];
+                            final player = getPlayer(context);
+                            final isCurrentSong = player.currentSong?.songId == model?.songId;
+                            final playing = isCurrentSong && player.playing;
                             showCommonMenu(context, rect, [
-                              CommonPopupMenuItem(text: '播放', onTap: () {
-
+                              CommonPopupMenuItem(text: playing ? '暂停' : '播放', onTap: () {
+                                if (playing) {
+                                  player.pause();
+                                } else {
+                                  if (isCurrentSong) {
+                                    player.play();
+                                  } else {
+                                    _selectedOneSongFromSonglist(model!);
+                                  }
+                                }
                               },),
-                              CommonPopupMenuItem(text: '评论', onTap: () {
-
-                              },),
-                              CommonPopupMenuItem(text: '详情', onTap: () {
-
-                              }, hasSubMenu: true, subMenuItems: [
-                                CommonPopupMenuItem(text: '1'),
-                                CommonPopupMenuItem(text: '2'),
-                              ],)
+                              CommonPopupMenuItemComment(model: model),
+                              const CommonMenuDivider(),
+                              CommonPopupMenuItemSongLike(songId: model!.songId),
+                              if (!DownloadManager().hasDownloaded(model.songId)) CommonPopupMenuItemDownload(model: model)
                             ]);
                           },
                         );

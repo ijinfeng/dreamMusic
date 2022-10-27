@@ -2,9 +2,14 @@ import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
+import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/emptyview/empty_view.dart';
 import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
+import 'package:dream_music/src/components/menu/common_menu.dart';
+import 'package:dream_music/src/components/menu/common_menu_items.dart';
+import 'package:dream_music/src/components/menu/menu_divider.dart';
+import 'package:dream_music/src/components/menu/menu_item.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/refresh/refresh_footer.dart';
 import 'package:dream_music/src/pages/mylike/model/mylike_state_model.dart';
@@ -23,8 +28,8 @@ class MylikePage extends ProviderStatefulWidget {
   }
 }
 
-class MyLikePageState extends ProviderState<MylikePage, MyLikeStateModel> with EasyInterface {
-
+class MyLikePageState extends ProviderState<MylikePage, MyLikeStateModel>
+    with EasyInterface {
   @override
   void dispose() {
     viewModel?.refreshController?.dispose();
@@ -34,9 +39,8 @@ class MyLikePageState extends ProviderState<MylikePage, MyLikeStateModel> with E
   @override
   void initState() {
     super.initState();
-    viewModel?.refreshController = EasyRefreshController(
-      controlFinishLoad: true
-    );
+    viewModel?.refreshController =
+        EasyRefreshController(controlFinishLoad: true);
   }
 
   @override
@@ -79,11 +83,53 @@ class MyLikePageState extends ProviderState<MylikePage, MyLikeStateModel> with E
                                 index: index,
                                 model: viewModel?.songs[index],
                                 onDoubleTap: (model) {
-                                  getPlayer(context).replaceSonglistAndPlay(context, viewModel?.songlist?.id, viewModel?.songs, model, force: true);
+                                  getPlayer(context).replaceSonglistAndPlay(
+                                      context,
+                                      viewModel?.songlist?.id,
+                                      viewModel?.songs,
+                                      model,
+                                      force: true);
                                 },
                                 onLikeTap: (model) {
                                   // debugPrint("取消喜欢成功--${model.track?.id}");
                                   viewModel?.deleteSong(model);
+                                },
+                                onSecondaryTap: (rect) {
+                                  final model = viewModel?.songs[index];
+                                  final player = getPlayer(context);
+                                  final isCurrentSong =
+                                      player.currentSong?.songId ==
+                                          model?.songId;
+                                  final playing =
+                                      isCurrentSong && player.playing;
+                                  showCommonMenu(context, rect, [
+                                    CommonPopupMenuItem(
+                                      text: playing ? '暂停' : '播放',
+                                      onTap: () {
+                                        if (playing) {
+                                          player.pause();
+                                        } else {
+                                          if (isCurrentSong) {
+                                            player.play();
+                                          } else {
+                                            player.replaceSonglistAndPlay(
+                                                context,
+                                                viewModel?.songlist?.id,
+                                                viewModel?.songs,
+                                                model,
+                                                force: true);
+                                          }
+                                        }
+                                      },
+                                    ),
+                                    CommonPopupMenuItemComment(model: model),
+                                    const CommonMenuDivider(),
+                                    CommonPopupMenuItemSongLike(
+                                        songId: model!.songId),
+                                    if (!DownloadManager()
+                                        .hasDownloaded(model.songId))
+                                      CommonPopupMenuItemDownload(model: model)
+                                  ]);
                                 },
                               );
                             },
@@ -94,7 +140,9 @@ class MyLikePageState extends ProviderState<MylikePage, MyLikeStateModel> with E
                         if (section == 0) {
                           return 1;
                         } else {
-                          return viewModel?.songs.isEmpty == true ? 0 : viewModel!.songs.length;
+                          return viewModel?.songs.isEmpty == true
+                              ? 0
+                              : viewModel!.songs.length;
                         }
                       },
                     );

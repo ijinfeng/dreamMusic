@@ -112,6 +112,7 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
 
   void pushAction(RouteAction action) {
     if (_isDefaultRoute(action)) return;
+    if (_isNoneNamePageRoute(action)) return;
     if (_forwarding || _backing) {
       _forwarding = false;
       _backing = false;
@@ -140,6 +141,7 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
 
   void popAction(PageRouteAction route) {
     if (_isDefaultRoute(route)) return;
+    if (_isNoneNamePageRoute(route)) return;
     if (_backing) {
       _backing = false;
       return;
@@ -167,6 +169,14 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
       if (pageRoute.settings.name == Navigator.defaultRouteName) {
         return true;
       }
+    }
+    return false;
+  }
+
+  /// 没有路由名字的都理解为控制之外的路由，比如系统弹窗，菜单
+  bool _isNoneNamePageRoute(RouteAction action) {
+    if (action is PageRouteAction && action.settings.name == null) {
+      return true;
     }
     return false;
   }

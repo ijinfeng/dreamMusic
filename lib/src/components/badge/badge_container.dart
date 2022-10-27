@@ -49,17 +49,22 @@ class NumberBadge extends StatelessWidget {
     return Container(
       height: kBadgeHeight,
       alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      constraints: const BoxConstraints(
+        minWidth: kBadgeHeight
+      ),
       decoration: BoxDecoration(
         color: kHighlightThemeColor,
         borderRadius: BorderRadius.circular(kBadgeHeight / 2)
       ),
       child: Text(
         "$count",
+        textAlign: TextAlign.center,
         style: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.normal,
-          color: Colors.white
+          color: Colors.white,
+          height: 1
         ),
       ),
     );

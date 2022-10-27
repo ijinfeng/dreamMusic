@@ -148,19 +148,15 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
 
 void showSongCard(BuildContext context, bool show, DownloadSongModel model,
     double cellOffsetY, Offset mouseOffset) {
-  final container = context.findRenderObject();
-  double right = 0;
-  double top = 0;
-  // context是cell
-  if (container is RenderConstrainedBox) {
-    right = container.size.width / 6;
-    final pixels = Scrollable.of(context)?.position.pixels ?? 0;
-    final currentOffset = cellOffsetY;
-    top = currentOffset - pixels;
-  }
-  // 卡片的top和right
-  top = top + 3;
+  final cell = context.findRenderObject() as RenderBox;
+  final pixels = Scrollable.of(context)?.position.pixels ?? 0;
+  final currentOffset = cellOffsetY;
+  double right = cell.size.width / 6;
+  double top = currentOffset - pixels;
+
+  // 卡片离详情按钮远一点
   right = right + 6;
+
   final state = context.read<DownloadPageStateModel>();
 
   // 计算有没有超过下边界
@@ -175,14 +171,14 @@ void showSongCard(BuildContext context, bool show, DownloadSongModel model,
 
   if (!show) {
     // 表示鼠标移开了详情按钮，如果不在卡片上，那么久需要隐藏卡片
-    final mouseExitY = mouseOffset.dy - 151 - 15 - cellOffsetY;
+    final mouseExitY = mouseOffset.dy - 151 - 15 + pixels - cellOffsetY;
     final mouseExitX = mouseOffset.dx - kLeftMenuMaxWidth;
     // debugPrint(
     // "[exit]offset=$mouseOffset, mouseExitY=$mouseExitY, mouseExitX=$mouseExitX, card-size=${state.songCardSize}, page-size=${state.pageSize}");
     // 151是上方高度，这个写死还是有问题的
     // 按钮上方有15的间隙
     // 鼠标移出时的位置在按钮的上方或下方，那么就不显示卡片
-    if (mouseExitY <= 0 ||
+    if (mouseExitY <= 1 ||
         mouseExitY >= 20 ||
         (state.pageSize!.width - mouseExitX + 10 < right)) {
       state.songCardOverlay?.remove();

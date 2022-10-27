@@ -75,7 +75,11 @@ class CommentStateModel extends BaseChangeNotifier with EasyInterface {
     hasRequestData = true;
     if (res.success) {
       commentDetailModel = res.data;
-      hotComments = commentDetailModel?.hotComments?.sublist(0, _hotCommentMaxLength);
+      if (commentDetailModel?.hotComments?.isNotEmpty == true && commentDetailModel!.hotComments!.length > _hotCommentMaxLength) {
+        hotComments = commentDetailModel?.hotComments?.sublist(0, _hotCommentMaxLength);
+      } else {
+        hotComments = commentDetailModel?.hotComments;
+      }
       comments = commentDetailModel?.comments;
       debugPrint("[comment]评论获取成功");
     }

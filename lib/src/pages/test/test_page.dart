@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:dream_music/src/components/badge/badge_container.dart';
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
@@ -113,7 +114,8 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
                 viewModel?.cancelPosition();
               },
               child: const MainButton.title(title: '鼠标点击2', padding: EdgeInsets.all(8),),
-            )
+            ),
+            Center(child: NumberBadge(count: 10)),
           ],
         ));
   }

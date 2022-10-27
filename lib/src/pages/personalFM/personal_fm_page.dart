@@ -1,9 +1,14 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
+import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
+import 'package:dream_music/src/components/menu/common_menu.dart';
+import 'package:dream_music/src/components/menu/common_menu_items.dart';
+import 'package:dream_music/src/components/menu/menu_divider.dart';
+import 'package:dream_music/src/components/menu/menu_item.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -25,12 +30,11 @@ class PersonalFMPage extends ProviderStatefulWidget {
 
 class PersonalFMPageState
     extends ProviderState<PersonalFMPage, PersonalFMStateModel> {
-
-    @override
+  @override
   void initState() {
     super.initState();
   }
-  
+
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
     return CommonScaffold(
@@ -92,6 +96,40 @@ class PersonalFMPageState
                                     model: viewModel?.fmModels[index],
                                     onDoubleTap: (model) {
                                       didSelectOneSong(model, index);
+                                    },
+                                    onSecondaryTap: (rect) {
+                                      final model = viewModel?.fmModels[index];
+                                      final player = getPlayer(context);
+                                      final isCurrentSong =
+                                          player.currentSong?.songId ==
+                                              model?.songId;
+                                      final playing =
+                                          isCurrentSong && player.playing;
+                                      showCommonMenu(context, rect, [
+                                        CommonPopupMenuItem(
+                                          text: playing ? '暂停' : '播放',
+                                          onTap: () {
+                                            if (playing) {
+                                              player.pause();
+                                            } else {
+                                              if (isCurrentSong) {
+                                                player.play();
+                                              } else {
+                                                didSelectOneSong(model!, index);
+                                              }
+                                            }
+                                          },
+                                        ),
+                                        CommonPopupMenuItemComment(
+                                            model: model),
+                                        const CommonMenuDivider(),
+                                        CommonPopupMenuItemSongLike(
+                                            songId: model!.songId),
+                                        if (!DownloadManager()
+                                            .hasDownloaded(model.songId))
+                                          CommonPopupMenuItemDownload(
+                                              model: model)
+                                      ]);
                                     },
                                   );
                                 },

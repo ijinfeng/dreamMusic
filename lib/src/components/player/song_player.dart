@@ -187,7 +187,9 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
       }
     }
     notifyListeners();
-    stop();
+    // if (playing == false) {
+      // stop();
+    // }
   }
 
   /// 初始化部分变量
@@ -223,7 +225,8 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
   // https://music.163.com/song/media/outer/url?id=id.mp3
   // https://music.163.com/song/media/outer/url?id=1930863429.mp3
   void play() {
-    if (player.state == PlayerState.paused) {
+    // 再次播放的时候，有可能播放源已经换过了，需要确认下
+    if (player.state == PlayerState.paused && !stack.changed) {
       player.resume();
     } else {
       Source? source = _getCurrentSongSource();
@@ -382,11 +385,9 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
   SingleSongModel? _readyToPlayNewSong() {
     _fixPlaySongIndexIfNeeded();
     if (playlistIsEmpty) {
-      // updatePlaySong(null);
       return null;
     } else {
       final song = songs![_playSongIndex];
-      // updatePlaySong(song);
       return song;
     }
   }
@@ -395,6 +396,7 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
   void _switchSong(SingleSongModel song) {
     stack.previousSong = stack.currentSong;
     stack.currentSong = song;
+    stack.changed = true;
   }
 
   /// 打开的播放列表浮层
@@ -520,6 +522,7 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
 class PlaySongStack {
   SingleSongModel? previousSong;
   SingleSongModel? currentSong;
+  bool changed = false;
 
   int? get currentSongId => currentSong?.track?.id;
   int? get previousSongId => previousSong?.track?.id;
