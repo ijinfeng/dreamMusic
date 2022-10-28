@@ -51,8 +51,8 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
               );
             }),
             buildActionButton("id3", () {
-                final path = DownloadManager().fileCacheDirectorPath + "/song_1975589384.mp3";
-                // final path1 = "assets/music/bgm.mp3";
+                final path = DownloadManager().fileCacheDirectorPath + "/lenfen.mp3";
+                // final path = "assets/music/bgm.mp3";
                 Uint8List bytes = File(path).readAsBytesSync();
                 final instance = MP3Instance(bytes);
                 if (instance.parseTagsSync()) {
@@ -115,7 +115,6 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
               },
               child: const MainButton.title(title: '鼠标点击2', padding: EdgeInsets.all(8),),
             ),
-            Center(child: NumberBadge(count: 10)),
           ],
         ));
   }

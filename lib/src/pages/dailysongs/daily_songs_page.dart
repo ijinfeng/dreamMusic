@@ -1,8 +1,13 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
+import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
+import 'package:dream_music/src/components/menu/common_menu.dart';
+import 'package:dream_music/src/components/menu/common_menu_items.dart';
+import 'package:dream_music/src/components/menu/menu_divider.dart';
+import 'package:dream_music/src/components/menu/menu_item.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/pages/dailysongs/model/daily_songs_state_model.dart';
 import 'package:dream_music/src/pages/dailysongs/view/daily_songs_header_view.dart';
@@ -59,6 +64,28 @@ class _DailySongsPageState
                         model: song,
                         onDoubleTap: (model) {
                           _selectedOneSongFromSonglist(model);
+                        },
+                        onSecondaryTap: (rect) {
+                            final player = getPlayer(context);
+                            final isCurrentSong = player.currentSong?.songId == song.songId;
+                            final playing = isCurrentSong && player.playing;
+                            showCommonMenu(context, rect, [
+                              CommonPopupMenuItem(text: playing ? '暂停' : '播放', onTap: () {
+                                if (playing) {
+                                  player.pause();
+                                } else {
+                                  if (isCurrentSong) {
+                                    player.play();
+                                  } else {
+                                    _selectedOneSongFromSonglist(song);
+                                  }
+                                }
+                              },),
+                              CommonPopupMenuItemComment(model: song),
+                              const CommonMenuDivider(),
+                              CommonPopupMenuItemSongLike(songId: song.songId),
+                              if (!DownloadManager().hasDownloaded(song.songId)) CommonPopupMenuItemDownload(model: song)
+                            ]);
                         },
                       );
                     },

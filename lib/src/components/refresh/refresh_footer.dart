@@ -26,8 +26,8 @@ class _RefreshFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "[re]state:${state.result.name}, mode:${state.mode.name}, offset:${state.offset}");
+    // debugPrint(
+        // "[re]state:${state.result.name}, mode:${state.mode.name}, offset:${state.offset}");
     return Container(
       height: state.offset,
       alignment: Alignment.center,

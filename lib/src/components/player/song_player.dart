@@ -229,6 +229,7 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
     if (player.state == PlayerState.paused && !stack.changed) {
       player.resume();
     } else {
+      stack.changed = false;
       Source? source = _getCurrentSongSource();
       if (source != null) {
         player.play(source);

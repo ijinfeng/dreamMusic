@@ -11,7 +11,6 @@ import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:dream_music/src/pages/download/model/download_page_state_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -51,25 +50,25 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
               radius: 8,
             ),
             heightSpace(10),
-            _buildDesc(context, '歌曲ID：', "${model.songId}", canCopy: true),
+            _buildDesc(context, '歌曲ID', "${model.songId}", canCopy: true),
             heightSpace(5),
-            _buildDesc(context, '歌名：', model.name, canCopy: true),
+            _buildDesc(context, '歌名', model.name, canCopy: true),
             heightSpace(5),
-            _buildDesc(context, '专辑：', model.al.name, canCopy: true),
+            _buildDesc(context, '专辑', model.al.name, canCopy: true),
             heightSpace(5),
-            _buildDesc(context, '艺术家：', model.authorNmae),
+            _buildDesc(context, '艺术家', model.authorNmae),
             heightSpace(5),
-            _buildDesc(context, '时长：', Utils.formatSongTime(model.time)),
+            _buildDesc(context, '时长', Utils.formatSongTime(model.time)),
             heightSpace(5),
             _buildDesc(
                 context,
-                '创建时间：',
+                '创建时间',
                 Utils.getFileCreateTime(
                     DownloadManager().getSaveSongPath(model.songId))),
             heightSpace(5),
-            _buildDesc(context, '存储方式：', DownloadManager().cacheModeName),
+            _buildDesc(context, '存储方式', DownloadManager().cacheModeName),
             heightSpace(5),
-            _buildDesc(context, '文件大小：', Utils.formatFileSize(model.size)),
+            _buildDesc(context, '文件大小', Utils.formatFileSize(model.size)),
             heightSpace(5),
             _buildSavePath(context),
           ],
@@ -113,7 +112,7 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
     Widget current = RichText(
       text: TextSpan(
         children: [
-          TextSpan(text: title),
+          TextSpan(text: "$title："),
           TextSpan(text: content, style: const TextStyle(color: kText3Color))
         ],
         style: const TextStyle(
@@ -125,7 +124,7 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
         children: [
           current,
           CustomTooltipWidget(
-            message: '复制',
+            message: '复制$title',
             child: SelectableIconButton(
               selected: true,
               src: 'icon_copy',

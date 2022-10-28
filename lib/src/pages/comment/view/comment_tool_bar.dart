@@ -4,6 +4,7 @@ import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
+import 'package:dream_music/src/components/menu/menu_item.dart';
 import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
@@ -105,31 +106,39 @@ class CommentToolBar extends StatelessWidget with EasyInterface {
                         fontWeight: FontWeight.w400);
                     if (model?.user?.userId ==
                         AppSharedManager().userModel?.account?.id) {
-                      return [
-                        PopupMenuItem(
-                          height: 30,
-                          child: const Text(
-                            "删除",
-                            style: textStyle,
-                          ),
-                          onTap: () {
-                            state.deleteComment(model);
-                          },
-                        )
-                      ];
+                          return [CommonPopupMenuItem(text: '删除', onTap: () {
+state.deleteComment(model);
+                          },)];
+                      // return [
+                      //   PopupMenuItem(
+                      //     height: 30,
+                      //     child: const Text(
+                      //       "删除",
+                      //       style: textStyle,
+                      //     ),
+                      //     onTap: () {
+                      //       state.deleteComment(model);
+                      //     },
+                      //   )
+                      // ];
                     } else {
                       return [
-                        PopupMenuItem(
-                          height: 30,
-                          child: const Text(
-                            "举报",
-                            style: textStyle,
-                          ),
-                          onTap: () {
-                            showFutureToast();
-                          },
-                        )
+                        CommonPopupMenuItem(text: '举报', onTap: () {
+                          showFutureToast();
+                        },)
                       ];
+                      // return [
+                      //   PopupMenuItem(
+                      //     height: 30,
+                      //     child: const Text(
+                      //       "举报",
+                      //       style: textStyle,
+                      //     ),
+                      //     onTap: () {
+                      //       showFutureToast();
+                      //     },
+                      //   )
+                      // ];
                     }
                   },
                   child: const ImageView.asset(
