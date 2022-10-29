@@ -18,7 +18,7 @@ class UserInfoCard extends StatelessWidget with EasyInterface {
     final avatarUrl = AppSharedManager().userModel?.profile?.avatarUrl;
     String? nickname;
     if (AppSharedManager().isAnonimousLogin()) {
-      nickname = '游客${AppSharedManager().userModel?.account?.id ?? ''}';
+      nickname = '游客登录';
     } else if (AppSharedManager().isUserLogin()) {
       nickname = AppSharedManager().userModel?.profile?.nickname ??
           AppSharedManager().userModel?.account?.userName ??
@@ -28,64 +28,69 @@ class UserInfoCard extends StatelessWidget with EasyInterface {
       nickname = '未登录';
     }
 
-   return GestureDetector(
-    onTap: () {
-      if (AppSharedManager().isUserLogin()) {
-          // 跳转个人主页
-          Navigator.pushNamed(context, PageRouters.setting);
+    return GestureDetector(
+      onTap: () {
+        if (AppSharedManager().isUserLogin()) {
+          showFutureToast();
         } else {
           if (kTopPageScaffoldKey.currentContext != null) {
-            Navigator.pushNamed(kTopPageScaffoldKey.currentContext!, PageRouters.login);
+            Navigator.pushNamed(
+                kTopPageScaffoldKey.currentContext!, PageRouters.login);
           }
         }
-    },
-     child: SizedBox(
-      height: 60,
-       child: Stack(
-        alignment: Alignment.center,
-        fit: StackFit.expand,
+      },
+      child: SizedBox(
+        height: 60,
+        child: Stack(
+          alignment: Alignment.center,
+          fit: StackFit.expand,
           children: [
             ClipRRect(
-              child: ImageFiltered(imageFilter: ImageFilter.blur(
-                sigmaX: 5,
-                sigmaY: 5,
-              ),
-                child: ImageView.network(src: backgroundUrl, fit: BoxFit.cover,),
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(
+                  sigmaX: 5,
+                  sigmaY: 5,
+                ),
+                child: ImageView.network(
+                  src: backgroundUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                AvatarView(
-                  src: avatarUrl,
-                  width: 40,
-                ),
-                widthSpace(10),
-                Expanded(
-                  child: Text(
-                    nickname,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: kText3Color),
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AvatarView(
+                    src: avatarUrl,
+                    width: 40,
                   ),
-                ),
-                widthSpace(5),
-                const ImageView.asset(
-                  src: 'assets/ic_full_right_arrow.png',
-                  width: 15,
-                  height: 15,
-                )
-              ],
-                        ),
+                  widthSpace(10),
+                  Expanded(
+                    child: Text(
+                      nickname,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: kText3Color),
+                    ),
+                  ),
+                  widthSpace(5),
+                  const ImageView.asset(
+                    src: 'assets/ic_full_right_arrow.png',
+                    width: 15,
+                    height: 15,
+                  )
+                ],
+              ),
             )
           ],
         ),
-     ),
-   );
+      ),
+    );
   }
 }

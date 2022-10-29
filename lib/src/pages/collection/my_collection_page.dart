@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
+import 'package:dream_music/src/components/emptyview/empty_view.dart';
 import 'package:dream_music/src/components/emptyview/loading_view.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
@@ -25,12 +26,11 @@ class MyCollectionPage extends ProviderStatefulWidget {
   }
 }
 
-class _MyCollectionPageState extends ProviderState<MyCollectionPage, MyCollectionStateModel> {
-
+class _MyCollectionPageState
+    extends ProviderState<MyCollectionPage, MyCollectionStateModel> {
   @override
   void initState() {
     super.initState();
-     
   }
 
   @override
@@ -40,43 +40,56 @@ class _MyCollectionPageState extends ProviderState<MyCollectionPage, MyCollectio
 
   @override
   Widget buildProviderChild(BuildContext context, Widget? reuseChild) {
-
     return CommonScaffold(
-      backgroundColor: kPageBackgroundColor,
-      hideNavigationBar: true,
-      padding: kPageContentPadding,
-      body: Selector<MyCollectionStateModel, bool>(
-        selector: (p0, p1) => p1.hasRequestData,
-        builder: (context, value, child) {
-          return value ? FFListView(
-        sectionCount: 2,
-        itemBuilder:(context, section, index) {
-          if (section == 0) {
-            return Container(
-              alignment: Alignment.centerLeft,
-              height: 50,
-              child: Text('我收藏的歌单(${viewModel?.songlists.length})',
-              style:const TextStyle(
-                fontSize: 20,
-                color: kText3Color,
-                fontWeight: FontWeight.w600
-              ),),
-            );
-          } else {
-            return MyCollectionSonglistCell(model: viewModel?.songlists[index], onTap: (model) {
-              Navigator.pushNamed(context, PageRouters.songlist, arguments: model.id);
-            },);
-          }
-      }, indexCountBuilder:(context, section) {
-        if (section == 0) {
-          return 1;
-        } else {
-          return viewModel?.songlists.length ?? 0;
-        }
-      },) : const LoadingView();
-        },
-      )
-    );
+        backgroundColor: kPageBackgroundColor,
+        hideNavigationBar: true,
+        padding: kPageContentPadding,
+        body: Selector<MyCollectionStateModel, bool>(
+          selector: (p0, p1) => p1.hasRequestData,
+          builder: (context, value, child) {
+            if (value) {
+              if (viewModel?.songlists.isEmpty == true) {
+                return const EmptyView();
+              } else {
+                return FFListView(
+                  sectionCount: 2,
+                  itemBuilder: (context, section, index) {
+                    if (section == 0) {
+                      return Container(
+                        alignment: Alignment.centerLeft,
+                        height: 50,
+                        child: Text(
+                          '我收藏的歌单(${viewModel?.songlists.length})',
+                          style: const TextStyle(
+                              fontSize: 20,
+                              color: kText3Color,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      );
+                    } else {
+                      return MyCollectionSonglistCell(
+                        model: viewModel?.songlists[index],
+                        onTap: (model) {
+                          Navigator.pushNamed(context, PageRouters.songlist,
+                              arguments: model.id);
+                        },
+                      );
+                    }
+                  },
+                  indexCountBuilder: (context, section) {
+                    if (section == 0) {
+                      return 1;
+                    } else {
+                      return viewModel?.songlists.length ?? 0;
+                    }
+                  },
+                );
+              }
+            } else {
+              return const LoadingView();
+            }
+          },
+        ));
   }
 
   @override

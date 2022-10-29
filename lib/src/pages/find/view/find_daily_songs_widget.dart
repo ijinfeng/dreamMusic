@@ -210,6 +210,7 @@ class DailySongAnimationCoverState extends State<DailySongAnimationCover> {
       });
     });
     context.read<FindStateModel>().addListener(() {
+      if (!mounted) return;
       setState(() {
         updateCurrentSong();
       });

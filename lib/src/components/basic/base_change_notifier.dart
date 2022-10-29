@@ -27,4 +27,7 @@ class BaseChangeNotifier extends ChangeNotifier {
   bool needAutoDispose() {
     return true;
   }
+
+  /// 这里做一些网络请求等操作，用于刷新数据
+  void reloadData() {}
 }

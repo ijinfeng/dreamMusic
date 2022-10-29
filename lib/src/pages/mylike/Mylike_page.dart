@@ -12,6 +12,7 @@ import 'package:dream_music/src/components/menu/menu_divider.dart';
 import 'package:dream_music/src/components/menu/menu_item.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/components/refresh/refresh_footer.dart';
+import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/pages/mylike/model/mylike_state_model.dart';
 import 'package:dream_music/src/pages/mylike/view/mylike_header_view.dart';
 import 'package:dream_music/src/pages/songlist/view/songlist_item_cell.dart';
@@ -52,6 +53,9 @@ class MyLikePageState extends ProviderState<MylikePage, MyLikeStateModel>
           selector: (p0, p1) => p1.hasRequestData,
           builder: (context, value, child) {
             if (value) {
+              if (!AppSharedManager().isUserLogin()) {
+                return const EmptyView();
+              }
               return EasyRefresh(
                 controller: viewModel?.refreshController,
                 onLoad: () {

@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
-import 'package:dream_music/src/components/extension/num_extension.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
 import 'package:dream_music/src/pages/personalFM/request/personal_request.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
@@ -118,13 +116,10 @@ class PersonalFMStateModel extends BaseChangeNotifier with EasyInterface {
   List<SingleSongModel> getShowCoverSongs(int length, {int? startIndex}) {
     List<SingleSongModel> models = [];
     final leftCount = fmModels.length - currentPlayIndex;
-    String indexStr = '';
     int index = startIndex ?? currentPlayIndex;
     for (int i = index; i < index + min(length, leftCount); i++) {
       models.insert(0, fmModels[i]);
-      indexStr += "$i; ";
     }
-    debugPrint("[FM]show cover indexs: $indexStr");
     return models;
   }
 

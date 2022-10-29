@@ -196,18 +196,18 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
   }
 
   void printRoutesDetail() {
-    debugPrint(
-        "====================[route]length=${_actions.length},current=$_currentIndex");
-    for (int i = _actions.length - 1; i >= 0; i--) {
-      final action = _actions[i];
-      String t = action.toString();
-      if (i == _currentIndex) {
-        t = "-->$t";
-      } else {
-        t = "---$t";
-      }
-      debugPrint(t);
-    }
+    // debugPrint(
+    //     "====================[route]length=${_actions.length},current=$_currentIndex");
+    // for (int i = _actions.length - 1; i >= 0; i--) {
+    //   final action = _actions[i];
+    //   String t = action.toString();
+    //   if (i == _currentIndex) {
+    //     t = "-->$t";
+    //   } else {
+    //     t = "---$t";
+    //   }
+    //   debugPrint(t);
+    // }
   }
 }
 

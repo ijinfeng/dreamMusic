@@ -103,9 +103,6 @@ class PersonFMAnimationPicState extends State<PersonFMAnimationPic>
                 value != null &&
                 state.currentPlayIndex > 0 &&
                 !state.clickPlay;
-            debugPrint(
-                "[FM]歌曲切换了-----curIndex: ${state.currentPlayIndex}, songId: ${getPlayer(context).currentSong?.track?.id}, widgetBuild: $widgetBuild ,an: $needStartAnimation, clickPlay: ${state.clickPlay}");
-
             if (widgetBuild) {
               widgetBuild = false;
             }
