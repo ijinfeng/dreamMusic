@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/movable_navigation_bar.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/button/selectable_icon_button.dart';
 import 'package:dream_music/src/components/hover/custom_tool_tip_widget.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/network/response_model.dart';
@@ -26,21 +27,21 @@ void showCommentDialog(BuildContext context, SingleSongModel? song,
     barrierDismissible: true,
     builder: (context) {
       return CommentWriteWidget(
-      model: song,
-      reply: reply,
-      onCommentCallback: onCommentCallback,
+        model: song,
+        reply: reply,
+        onCommentCallback: onCommentCallback,
       );
     },
   );
 }
 
 class CommentWriteWidget extends StatelessWidget with EasyInterface {
-  const CommentWriteWidget({
-    Key? key,
-    required this.model,
-    this.reply,
-    required this.onCommentCallback
-  }) : super(key: key);
+  const CommentWriteWidget(
+      {Key? key,
+      required this.model,
+      this.reply,
+      required this.onCommentCallback})
+      : super(key: key);
 
   final SingleSongModel? model;
   final CommentModel? reply;
@@ -49,8 +50,7 @@ class CommentWriteWidget extends StatelessWidget with EasyInterface {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) =>
-          CommentWriteStateModel(model: model, reply: reply),
+      create: (context) => CommentWriteStateModel(model: model, reply: reply),
       builder: (context, child) {
         return _buildBody(context);
       },
@@ -121,22 +121,30 @@ class CommentWriteWidget extends StatelessWidget with EasyInterface {
                   children: [
                     Row(
                       children: [
-                        const CustomTooltipWidget(
+                        CustomTooltipWidget(
                             message: "表情",
-                            child: ImageView.asset(
+                            child: SelectableIconButton(
+                              selected: true,
                               src: 'icon_emoj',
                               width: 25,
                               height: 25,
                               color: kText9Color,
+                              onTap: (_) {
+                                showFutureToast();
+                              },
                             )),
-                        widthSpace(20),
-                        const CustomTooltipWidget(
+                        widthSpace(10),
+                        CustomTooltipWidget(
                             message: '话题',
-                            child: ImageView.asset(
+                            child: SelectableIconButton(
+                              selected: true,
                               src: 'icon_topic',
                               width: 25,
                               height: 25,
                               color: kText9Color,
+                              onTap: (_) {
+                                showFutureToast();
+                              },
                             ))
                       ],
                     ),
@@ -168,10 +176,13 @@ class CommentWriteWidget extends StatelessWidget with EasyInterface {
                       title: '评论',
                       onTap: () {
                         state.sendComment().then((response) {
-                          if (response.success && response.businessCode == 200) {
+                          if (response.success &&
+                              response.businessCode == 200) {
                             showToast("发送成功");
-                            if (response.data != null && onCommentCallback != null) {
-                              onCommentCallback!(response.data!.toCommentModel(reply: reply));
+                            if (response.data != null &&
+                                onCommentCallback != null) {
+                              onCommentCallback!(
+                                  response.data!.toCommentModel(reply: reply));
                             }
                             Navigator.pop(context);
                           } else {
@@ -216,11 +227,11 @@ class CommentWriteStateModel extends BaseChangeNotifier {
 
   Future<ResponseModel<CommentReplyModel>> sendComment() async {
     if (model?.track?.id == null) return Future.value(ResponseModel.empty());
-    final res = await CommentRequest.comment(
-        model?.track?.id ?? 0, reply?.commentId, reply != null, currentText ?? '');
+    final res = await CommentRequest.comment(model?.track?.id ?? 0,
+        reply?.commentId, reply != null, currentText ?? '');
     if (res.success) {
       debugPrint("[comment]评论发表成功：$currentText");
     }
     return Future.value(res);
-  } 
+  }
 }
