@@ -14,7 +14,7 @@ class CustomNavigatorObserver extends NavigatorObserver {
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
-    debugPrint('[route]pop --> $route');
+    // debugPrint('[route]pop --> $route');
     RouteControlManager().popAction(PageRouteAction(navigator: route.navigator, settings: route.settings));
   }
 

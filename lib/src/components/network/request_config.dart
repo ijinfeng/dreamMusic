@@ -1,22 +1,27 @@
 
+import 'package:dream_music/src/components/network/network_env_route.dart';
+
 class RequestConfig {
-  static bool openLocalTest = true;
   static String get baseUrl {
-    if (openLocalTest) {
-      return "http://localhost:3000";
+    final env = NetworkEnv().current;
+    switch (env) {
+      case NetworkEnvMode.local:
+        return "http://localhost:3000";
+      case NetworkEnvMode.vercel:
+        return "https://netease-cloud-music-api-eight-kappa-18.vercel.app";
+      case NetworkEnvMode.custom:
+        return NetworkEnv().customHost;
+      default:
     }
-    return "$scheme://$host";
+    return "https://netease-cloud-music-api-eight-kappa-18.vercel.app";
   }
 
   static String get scheme {
-    return openLocalTest ? "http" : "https";
+    return baseUrl.split(':').first;
   }
 
   static String get host {
-    if (openLocalTest) {
-      return "localhost:3000";
-    }
-    return "netease-cloud-music-api-eight-kappa-18.vercel.app";
+    return baseUrl.split('//').last;
   } 
 
   static const connectTimeout = 15000;

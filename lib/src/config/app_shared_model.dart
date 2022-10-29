@@ -37,6 +37,7 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
   void reloadCookies(void Function()? callback) {
     getApplicationDocumentsDirectory().then((docDir) {
       CookieJar cj = PersistCookieJar(storage: FileStorage(docDir.path));
+      debugPrint("[cookie]load cookies with host=${RequestConfig.host}");
       cj.loadForRequest(Uri.https(RequestConfig.host, "/")).then((cookies) {
         _cookies = cookies;
         assert(() {
@@ -87,13 +88,12 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
   int? get uid => hasAccount ? AppSharedManager().userModel?.account?.id : null;
 
   /// 清除账号数据
-  void clearAccount() {
+  Future clearAccount() async {
     userModel = null;
     _cookies = null;
-    getApplicationDocumentsDirectory().then((docDir) {
-      CookieJar cj = PersistCookieJar(storage: FileStorage(docDir.path));
-      cj.deleteAll();
-    });
+    final docDir = await getApplicationDocumentsDirectory();
+    CookieJar cj = PersistCookieJar(storage: FileStorage(docDir.path));
+    await cj.deleteAll();
     likelistIds = null;
   }
 

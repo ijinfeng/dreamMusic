@@ -2,6 +2,7 @@ import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/listview/list_view.dart';
+import 'package:dream_music/src/components/restart/restart_widget.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/global_constant.dart';
@@ -39,8 +40,8 @@ class SettingPage extends StatelessWidget with EasyInterface {
                     height: 40,
                     onTap: () {
                       if (AppSharedManager().isUserLogin()) {
-                        logout().then((_) => 
-                          getHomeState(context).needRefresh()
+                        logout().then((_) => restartApp(context)
+
                       );
                       } else {
                         if (kTopPageScaffoldKey.currentContext != null) {
@@ -95,7 +96,7 @@ class SettingPage extends StatelessWidget with EasyInterface {
   Future logout() async {
     final res = await LoginRequest.logout();
     if (res.success) {
-      AppSharedManager().clearAccount();
+      await AppSharedManager().clearAccount();
     } else {
       showToast(res.message);
     }

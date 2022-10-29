@@ -12,9 +12,21 @@ import 'dart:io';
 
 String _networkEnvKey = 'network_env_key';
 String _networkProxyKey = 'network_proxy_key';
+String _networkCustomHostKey = 'network_custom_host_key';
+
+/// 在这里设置网络环境
+enum NetworkEnvMode {
+  /// http://localhost:3000
+  local,
+  /// netease-cloud-music-api-eight-kappa-18.vercel.app
+  vercel,
+  /// 用户自己输入的域名
+  custom,
+}
 
 class NetworkEnv with ChangeNotifier {
-  String _env = 'dev';
+  /// 默认环境
+  NetworkEnvMode _env = NetworkEnvMode.local;
 
   /// 是否开启了本地代理
   bool _openProxy = false;
@@ -61,13 +73,16 @@ class NetworkEnv with ChangeNotifier {
     }
     debugPrint('正在同步本地网络配置...');
     SharedPreferences.getInstance().then((pre) {
-      final saved = pre.getString(_networkEnvKey) ?? _defaultEnv;
+      final saved = pre.getString(_networkEnvKey) ?? _env;
       _changed = saved != _env;
-      // env = saved;
-      _env = saved;
+      _env = NetworkEnvMode.values.firstWhere((element) => element.name == saved);
       debugPrint('初始化环境为：$_env');
+      _customHost = pre.getString(_networkCustomHostKey) ?? '';
+      if (_env == NetworkEnvMode.custom) {
+        debugPrint('用户自定义域名：$customHost');
+      }
       network.resetBaseUrl();
-      _openProxy = pre.getBool(_networkProxyKey) ?? _defaultProxy;
+      _openProxy = pre.getBool(_networkProxyKey) ?? _openProxy;
       debugPrint('代理已${_openProxy ? "开启" : "关闭"} ');
       if (_openProxy) {
         _tryConnectLocalProxy((success) {
@@ -141,22 +156,35 @@ class NetworkEnv with ChangeNotifier {
   static final NetworkEnv _manager = NetworkEnv._instance();
   factory NetworkEnv() => _manager;
 
-  set env(String value) {
+  set env(NetworkEnvMode value) {
     if (value == _env) return;
     _env = value;
     _changed = true;
     network.resetBaseUrl();
+    notifyListeners();
     SharedPreferences.getInstance().then((pre) {
-      pre.setString(_networkEnvKey, _env);
-      notifyListeners();
+      pre.setString(_networkEnvKey, _env.name);
     });
   }
 
   /// 当前的环境
-  String get current => _env;
+  NetworkEnvMode get current => _env;
 
-  String get _defaultEnv => 'default';
-  bool get _defaultProxy => true;
+  /// 用户自定义域名
+  String _customHost = '';
+  String get customHost => _customHost;
+  set customHost(String value) {
+    if ((_env == NetworkEnvMode.custom && value == _customHost) || value.isEmpty) return;
+    _customHost = value;
+    _changed;
+    _env = NetworkEnvMode.custom;
+    network.resetBaseUrl();
+    notifyListeners();
+    SharedPreferences.getInstance().then((pre) {
+      pre.setString(_networkEnvKey, _env.name);
+      pre.setString(_networkCustomHostKey, customHost);
+    });
+  }
 }
 
 class NetworkEnvPage extends StatelessWidget with EasyInterface {

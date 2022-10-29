@@ -3,6 +3,7 @@ import 'package:dream_music/src/components/basic/common_material_app.dart';
 import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/network/network_env_route.dart';
 import 'package:dream_music/src/components/player/song_player.dart';
+import 'package:dream_music/src/components/restart/restart_widget.dart';
 import 'package:dream_music/src/components/router/custom_navigator_observer.dart';
 import 'package:dream_music/src/components/router/route_control_manager.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
@@ -13,10 +14,9 @@ import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-import 'src/components/router/page_routers.dart';
 
 void main() async {
-  runApp(const MyApp());
+  runApp(const RestartWidget(child: MyApp()));
   doWhenWindowReady(() {
     const initialSize = Size(900, 700);
     appWindow.minSize = initialSize;

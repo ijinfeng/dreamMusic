@@ -1,7 +1,6 @@
 import 'package:dream_music/src/config/theme_color_constant.dart';
 import 'package:flutter/material.dart';
 
-
 const kDialogWidth = 320.0;
 const kDialogRowHeight = 43.0;
 
@@ -91,10 +90,9 @@ class Dialog extends StatelessWidget {
       Widget titleWidget = Text(
         title!,
         textAlign: TextAlign.center,
-        style: titleStyle ?? const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: kText3Color),
+        style: titleStyle ??
+            const TextStyle(
+                fontSize: 17, fontWeight: FontWeight.w600, color: kText3Color),
         maxLines: 1,
       );
       contents.add(titleWidget);
@@ -110,10 +108,9 @@ class Dialog extends StatelessWidget {
       Widget contentWidget = Text(
         content!,
         textAlign: TextAlign.center,
-        style: contentStyle ?? const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: kText3Color),
+        style: contentStyle ??
+            const TextStyle(
+                fontSize: 16, fontWeight: FontWeight.w400, color: kText3Color),
         maxLines: contentMaxlines,
       );
       contents.add(contentWidget);
@@ -138,9 +135,8 @@ class Dialog extends StatelessWidget {
             }
             Navigator.of(context).pop();
           },
-          style: ButtonStyle(
-            padding: MaterialStateProperty.all(EdgeInsets.zero)
-          ),
+          style:
+              ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
           child: Text(
             action.title,
             style: TextStyle(
@@ -160,7 +156,9 @@ class Dialog extends StatelessWidget {
       }
       actionWidgets.add(button);
       if (i != actions.length - 1) {
-        Widget divider = over2actions ? _generateDivider() : _generateDivider(horizontal: false);
+        Widget divider = over2actions
+            ? _generateDivider()
+            : _generateDivider(horizontal: false);
         actionWidgets.add(divider);
       }
     }
@@ -185,12 +183,14 @@ class Dialog extends StatelessWidget {
                 ),
               ),
               _generateDivider(),
-              over2actions ? Column(
-                children: actionWidgets,
-              ) : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: actionWidgets,
-              )
+              over2actions
+                  ? Column(
+                      children: actionWidgets,
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: actionWidgets,
+                    )
             ],
           ),
         ),
@@ -220,4 +220,27 @@ class Dialog extends StatelessWidget {
       );
     }
   }
+}
+
+void showSingleChildDialog(BuildContext context,
+    {required WidgetBuilder builder, EdgeInsetsGeometry? padding = const EdgeInsets.all(12)}) {
+  showDialog(
+      context: context,
+      barrierColor: Colors.black12,
+      builder: (context) {
+        return Center(
+          child: Container(
+            width: kDialogWidth,
+            padding: padding,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: builder(context),
+            ),
+          ),
+        );
+      });
 }

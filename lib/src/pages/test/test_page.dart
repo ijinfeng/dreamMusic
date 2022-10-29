@@ -10,6 +10,7 @@ import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/finder/show_in_finder.dart';
 import 'package:dream_music/src/components/network/netease_request.dart';
+import 'package:dream_music/src/components/restart/restart_widget.dart';
 import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/config/global_constant.dart';
 import 'package:dream_music/src/pages/download/request/download_request.dart';
@@ -83,38 +84,10 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
                 
               }),
             ),
-            PopupMenuButton(itemBuilder:(context) {
-              return [];
-            },),
-            GestureDetector(
-              onSecondaryTap: () {
-                debugPrint("[tap]tap---${viewModel?.globalPosition}, ${viewModel?.localPositon}");
-                final overlay = context.findRenderObject() as RenderBox;
-              RelativeRect rect = RelativeRect.fromSize(Rect.fromLTWH((viewModel?.globalPosition?.dx ?? 0) - kLeftMenuMaxWidth, (viewModel?.globalPosition?.dy ?? 0) - kWindowNavigationBarHeight, 0, 0), overlay.size);
-            showMenu(context: context, position: rect, items: [
-              PopupMenuItem(child: Text('快乐'), onTap: () {},),
-              PopupMenuItem(child: Text('加倍'), onTap: () {},),
-              PopupMenuItem(child: Text('！！'), onTap: () {},),
-            ]);
-              },
-              /// 右键抬起
-              onSecondaryTapUp: (TapUpDetails details) {
-                debugPrint("[tap]up-${details.globalPosition}, ${details.localPosition}");
-                viewModel?.globalPosition = details.globalPosition;
-                viewModel?.localPositon = details.localPosition;
-              },
-              /// 右键按下
-              onSecondaryTapDown: (TapDownDetails details) { 
-                debugPrint("[tap]down-${details.globalPosition}, ${details.localPosition}");
-                viewModel?.globalPosition = details.globalPosition;
-                viewModel?.localPositon = details.localPosition;
-              },
-              onSecondaryTapCancel: () {
-                debugPrint("[tap]cancel");
-                viewModel?.cancelPosition();
-              },
-              child: const MainButton.title(title: '鼠标点击2', padding: EdgeInsets.all(8),),
-            ),
+            MainButton.title(title: '重启APP', onTap: () {
+              restartApp(context);
+            },)
+            
           ],
         ));
   }
