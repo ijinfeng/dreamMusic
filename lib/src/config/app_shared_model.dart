@@ -30,10 +30,10 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
     if (userModel == null) {
       await initializeAppAccount();
        _initialized = true;
-      await requestLikelistIds();
     } else {
       _initialized = true;
     }
+    requestLikelistIds();
   }
 
   bool _initialized = false;

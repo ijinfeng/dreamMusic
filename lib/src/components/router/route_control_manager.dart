@@ -1,6 +1,7 @@
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/router/page_routers.dart';
+import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/left_menu/model/left_menu_item_model.dart';
 import 'package:flutter/material.dart';
 
@@ -73,8 +74,8 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
         // tab切换需要往前找到最近的一个[TabRouteAction]，这个才是需要返回到的状态
         TabRouteAction? action = _findNearestTabAction(_currentIndex, true);
         _debugPrintActionStack(action);
-        if (action != null && context != null) {
-          getHomeState(context!).selectedName = action.name;
+        if (action != null) {
+          getHomeState(kTopPageScaffoldKey.currentContext!).selectedName = action.name;
         }
       }
       notifyListeners();
@@ -101,8 +102,8 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
       } else {
         TabRouteAction? action = _findNearestTabAction(_currentIndex, false);
         _debugPrintActionStack(action);
-        if (action != null && context != null) {
-          getHomeState(context!).selectedName = action.name;
+        if (action != null) {
+          getHomeState(kTopPageScaffoldKey.currentContext!).selectedName = action.name;
         }
       }
       notifyListeners();
@@ -196,18 +197,18 @@ class RouteControlManager extends BaseChangeNotifier with EasyInterface {
   }
 
   void printRoutesDetail() {
-    // debugPrint(
-    //     "====================[route]length=${_actions.length},current=$_currentIndex");
-    // for (int i = _actions.length - 1; i >= 0; i--) {
-    //   final action = _actions[i];
-    //   String t = action.toString();
-    //   if (i == _currentIndex) {
-    //     t = "-->$t";
-    //   } else {
-    //     t = "---$t";
-    //   }
-    //   debugPrint(t);
-    // }
+    debugPrint(
+        "====================[route]length=${_actions.length},current=$_currentIndex");
+    for (int i = _actions.length - 1; i >= 0; i--) {
+      final action = _actions[i];
+      String t = action.toString();
+      if (i == _currentIndex) {
+        t = "-->$t";
+      } else {
+        t = "---$t";
+      }
+      debugPrint(t);
+    }
   }
 }
 
