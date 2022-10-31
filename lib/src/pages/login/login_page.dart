@@ -140,8 +140,7 @@ class _LoginPageBodyState
 
   void _loginSuccess() {
     debugPrint('登录成功，开始刷新cookies');
-    AppSharedManager().reloadCookies(() {
-      AppSharedManager().requestLikelistIds();
+    AppSharedManager().reloadAppData().then((value) {
       Provider.of<HomeStateModel>(context, listen: false).needRefresh();
       Navigator.pop(context);
     });

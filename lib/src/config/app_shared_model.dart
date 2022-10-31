@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
+import 'package:dream_music/src/components/cookie/cookie_parse.dart';
 import 'package:dream_music/src/components/network/request_config.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
 import 'package:dream_music/src/pages/song_detail/request/song_detail_request.dart';
@@ -17,16 +18,22 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
   factory AppSharedManager() => _manager;
 
   AppSharedManager._instance() {
-    /// 读取本地cookie
-    reloadCookies(() {
-      /// 登录策略
-      initializeAppAccount().then((value) {
-        _initialized = true;
-        /// 登录后获取用户喜欢音乐id列表
-        requestLikelistIds();
-        notifyListeners();
-      });
+    reloadAppData().then((value) {
+      notifyListeners();
     });
+  }
+
+  /// 初始化数据，先读取本地cookie-》根据当前cookie获取用户身份-》请求用户喜欢音乐id列表
+  Future reloadAppData() async {
+    debugPrint("[app]reload app data");
+    await reloadCookies();
+    if (userModel == null) {
+      await initializeAppAccount();
+       _initialized = true;
+      await requestLikelistIds();
+    } else {
+      _initialized = true;
+    }
   }
 
   bool _initialized = false;
@@ -36,24 +43,20 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
 
   CookieJar? _cj;
 
-  void reloadCookies(void Function()? callback) {
-    _initializeCookieJarIfNeeded().then((cj) {
-      debugPrint("[cookie]load cookies with url=${RequestConfig.baseUrl}");
-      cj.loadForRequest(_cookieSaveUri).then((cookies) {
-        _cookies = cookies;
-        assert(() {
-          debugPrint("[cookie]获取到本地cookie数据${cookies.length}条");
-          for (int i = 0; i < cookies.length; i++) {
-            final cookie = cookies[i];
-            debugPrint("[cookie]name=${cookie.name}, value=${cookie.value}");
-          }
-          return true;
-        }());
-        if (callback != null) {
-          callback();
-        }
-      });
-    });
+  Future reloadCookies() async {
+    debugPrint("[app]reload cookies");
+    final cj = await _initializeCookieJarIfNeeded();
+    debugPrint("[cookie]load cookies with url=${RequestConfig.baseUrl}");
+    final cookies = await cj.loadForRequest(_cookieSaveUri);
+    _cookies = cookies;
+    assert(() {
+      debugPrint("[cookie]获取到本地cookie数据${cookies.length}条");
+      for (int i = 0; i < cookies.length; i++) {
+        final cookie = cookies[i];
+        debugPrint("[cookie]name=${cookie.name}, value=${cookie.value}");
+      }
+      return true;
+    }());
   }
 
   Uri get _cookieSaveUri => RequestConfig.scheme == "https" ? Uri.https(RequestConfig.host, "/") : Uri.http(RequestConfig.host, "/");
@@ -68,17 +71,17 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
 
   Future saveCookieWithCookieStr(String? cookieStr) async {
     if (cookieStr == null) return;
-    final strs = cookieStr.split(";;");
+    final strs = CookieParse(cookieStr).cookieSlices;
     final cookies = strs.map((element) {
       return Cookie.fromSetCookieValue(element);
     }).toList();
     final cj = await _initializeCookieJarIfNeeded();
     await cj.saveFromResponse(_cookieSaveUri, cookies);
-    debugPrint("[cookie]已主动存入${cookies.length}条cookie");
-    // for (var element in cookies) {
-    //     debugPrint("[cookie]$element");
-    // }
-    // debugPrint("[cookie]-------------->end");
+    debugPrint("[cookie]解析出${strs.length}条cookie, 已主动存入${cookies.length}条cookie");
+    for (var element in cookies) {
+        debugPrint("[cookie]${element.name}=${element.value},path=${element.path}");
+    }
+    debugPrint("[cookie]-------------->end");
   }
 
   /// 用户登录后，或者拉取用户信息后会保存
@@ -120,10 +123,11 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
     _cookies = null;
     final cj = await _initializeCookieJarIfNeeded();
     await cj.deleteAll();
-    debugPrint("已清除账号数据");
+    debugPrint("[app]已清除账号数据");
   }
 
   Future<bool> initializeAppAccount() {
+    debugPrint("[app]init app account");
     // 未登录过，则使用游客身份登录
     if (hasCookies == false) {
       return requestAnonimousLogin();
@@ -135,20 +139,20 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
 
   /// 请求游客登录
   Future<bool> requestAnonimousLogin() async {
-    debugPrint('游客身份登录中...');
+    debugPrint('[app]游客身份登录中...');
     final res = await LoginRequest.anonimousLogin();
     if (res.success) {
-      debugPrint('游客登录成功');
+      debugPrint('[app]游客登录成功');
     }
     return Future.value(res.success);
   }
 
   /// 获取用户账号信息
   Future<bool> requestUserAccount() async {
-    debugPrint('用户已登录，开始获取账号信息');
+    debugPrint('[app]用户已登录，开始获取账号信息');
     final res = await UserRequest.accountInfo();
     if (res.success) {
-      debugPrint('已成功获取到用户账号信息: ${res.data}');
+      debugPrint('[app]已成功获取到用户账号信息: ${res.data}');
       AppSharedManager().userModel = res.data;
     }
     return Future.value(res.success);
@@ -174,14 +178,14 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
   }
 
   /// 获取用户喜欢的音乐id列表
-  void requestLikelistIds() async {
+  Future requestLikelistIds() async {
     if (isUserLogin() && hasAccount) {
-      debugPrint("开始拉取用户喜欢的音乐id列表");
+      debugPrint("[app]开始拉取用户喜欢的音乐id列表");
       final res = await SongDetailRequest.likelist();
       if (res.success) {
          likelistIds = res.datas;
           needRefreshLikelist();
-          debugPrint("拉取到用户喜欢音乐共${likelistIds?.length}条");
+          debugPrint("[app]拉取到用户喜欢音乐共${likelistIds?.length}条");
       }
     } else {
       debugPrint("[error]未登录-拉取用户喜欢音乐列表");
@@ -197,10 +201,10 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
           if (!isLikeSong(id)) {
             likelistIds?.add(id);
           }
-          showToast("已添加到我喜欢的音乐");
+          showToast("[app]已添加到我喜欢的音乐");
         } else {
           likelistIds?.remove(id);
-          showToast("取消喜欢成功");
+          showToast("[app]取消喜欢成功");
         }
         needRefreshLikelist();
         return Future.value(true);

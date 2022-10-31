@@ -7,6 +7,7 @@ import 'package:dream_music/src/components/basic/common_scaffold.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/basic/provider_statefulwidget.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
+import 'package:dream_music/src/components/cookie/cookie_parse.dart';
 import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/finder/show_in_finder.dart';
 import 'package:dream_music/src/components/network/netease_request.dart';
@@ -86,8 +87,12 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
             ),
             MainButton.title(title: '重启APP', onTap: () {
               restartApp(context);
+            },),
+            MainButton.title(title: 'cookie解析', onTap: () {
+              String cookie = "NMTID=00OjNG5Xrq9rpwqX0D2oP9tgS_PSOgAAAGELOfseQ; MUSIC_U=463df53548dd3ae475bf6a28f078e93b99f4be0472f9090498019fcd787216f7993166e004087dd36ee36492556f5cbf5414899c2c1613ff3e99309f53fd168194ca49eb20106a91a89fe7c55eac81f3; __remember_me=true; __csrf=4d93953393be3a09c4fea2266c142d0f";
+              final parse = CookieParse(cookie);
+              debugPrint("[cookie]解析出${parse.cookieSlices.length}条数据");
             },)
-            
           ],
         ));
   }
