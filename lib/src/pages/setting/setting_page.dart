@@ -40,9 +40,9 @@ class SettingPage extends StatelessWidget with EasyInterface {
                     height: 40,
                     onTap: () {
                       if (AppSharedManager().isUserLogin()) {
-                        logout().then((_) => restartApp(context)
-
-                      );
+                        logout().then((value) {
+                            restartApp(context);
+                        });
                       } else {
                         if (kTopPageScaffoldKey.currentContext != null) {
                           Navigator.pushNamed(kTopPageScaffoldKey.currentContext!, PageRouters.login);

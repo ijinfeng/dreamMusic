@@ -116,14 +116,16 @@ class DownloadingListCell extends StatelessWidget with EasyInterface {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CustomTooltipWidget(
-              message: '查看详情',
+              message: '取消任务',
               child: SelectableIconButton(
                 selected: true,
-                src: 'icon_detail',
+                src: 'icon_cancel_task',
                 width: 20,
                 height: 20,
                 color: kText6Color,
-                onTap: (_) {},
+                onTap: (_) {
+                  showFutureToast();
+                },
               ),
             ),
             widthSpace(8),

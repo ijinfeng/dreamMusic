@@ -9,12 +9,10 @@ import 'package:dream_music/src/components/image/image_view.dart';
 import 'package:dream_music/src/components/textfield/text_field.dart';
 import 'package:dream_music/src/config/app_shared_model.dart';
 import 'package:dream_music/src/config/theme_color_constant.dart';
-import 'package:dream_music/src/pages/home/home_page.dart';
 import 'package:dream_music/src/pages/home/model/home_state_model.dart';
 import 'package:dream_music/src/pages/login/model/login_qrstatus_model.dart';
 import 'package:dream_music/src/pages/login/model/login_state_model.dart';
 import 'package:dream_music/src/pages/login/request/login_request.dart';
-import 'package:dream_music/src/pages/user/request/user_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -143,6 +141,7 @@ class _LoginPageBodyState
   void _loginSuccess() {
     debugPrint('登录成功，开始刷新cookies');
     AppSharedManager().reloadCookies(() {
+      AppSharedManager().requestLikelistIds();
       Provider.of<HomeStateModel>(context, listen: false).needRefresh();
       Navigator.pop(context);
     });
@@ -180,6 +179,7 @@ class _LoginPageBodyState
       if (model.code == 803 || model.code == 800) {
         _cancelTimer();
         if (model.code == 803) {
+          await AppSharedManager().saveCookieWithCookieStr(model.cookie);
           _loginSuccess();
         }
       }
@@ -331,6 +331,7 @@ class _LoginPageBodyState
                   if (res.success) {
                     showToast('登录成功');
                     AppSharedManager().userModel = res.data?.userModel;
+                    await AppSharedManager().saveCookieWithCookieStr(res.data?.cookie);
                     _loginSuccess();
                   }
                 }
@@ -399,6 +400,7 @@ class _LoginPageBodyState
                   if (res.success) {
                     showToast('登录成功');
                     AppSharedManager().userModel = res.data?.userModel;
+                    await AppSharedManager().saveCookieWithCookieStr(res.data?.cookie);
                     _loginSuccess();
                   }
                 }

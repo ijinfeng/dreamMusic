@@ -34,14 +34,15 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
 
   List<Cookie>? _cookies;
 
+  CookieJar? _cj;
+
   void reloadCookies(void Function()? callback) {
-    getApplicationDocumentsDirectory().then((docDir) {
-      CookieJar cj = PersistCookieJar(storage: FileStorage(docDir.path));
-      debugPrint("[cookie]load cookies with host=${RequestConfig.host}");
-      cj.loadForRequest(Uri.https(RequestConfig.host, "/")).then((cookies) {
+    _initializeCookieJarIfNeeded().then((cj) {
+      debugPrint("[cookie]load cookies with url=${RequestConfig.baseUrl}");
+      cj.loadForRequest(_cookieSaveUri).then((cookies) {
         _cookies = cookies;
         assert(() {
-          debugPrint("获取到本地cookie数据${cookies.length}条");
+          debugPrint("[cookie]获取到本地cookie数据${cookies.length}条");
           for (int i = 0; i < cookies.length; i++) {
             final cookie = cookies[i];
             debugPrint("[cookie]name=${cookie.name}, value=${cookie.value}");
@@ -53,6 +54,31 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
         }
       });
     });
+  }
+
+  Uri get _cookieSaveUri => RequestConfig.scheme == "https" ? Uri.https(RequestConfig.host, "/") : Uri.http(RequestConfig.host, "/");
+
+  Future<CookieJar> _initializeCookieJarIfNeeded() async {
+    if (_cj != null) return Future.value(_cj);
+    final document = await getApplicationDocumentsDirectory();
+    _cj = PersistCookieJar(storage: FileStorage(document.path));
+    debugPrint("[cookie]初始化【CookieJar】in path=${document.path}");
+    return Future.value(_cj);
+  }
+
+  Future saveCookieWithCookieStr(String? cookieStr) async {
+    if (cookieStr == null) return;
+    final strs = cookieStr.split(";;");
+    final cookies = strs.map((element) {
+      return Cookie.fromSetCookieValue(element);
+    }).toList();
+    final cj = await _initializeCookieJarIfNeeded();
+    await cj.saveFromResponse(_cookieSaveUri, cookies);
+    debugPrint("[cookie]已主动存入${cookies.length}条cookie");
+    // for (var element in cookies) {
+    //     debugPrint("[cookie]$element");
+    // }
+    // debugPrint("[cookie]-------------->end");
   }
 
   /// 用户登录后，或者拉取用户信息后会保存
@@ -90,11 +116,11 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
   /// 清除账号数据
   Future clearAccount() async {
     userModel = null;
-    _cookies = null;
-    final docDir = await getApplicationDocumentsDirectory();
-    CookieJar cj = PersistCookieJar(storage: FileStorage(docDir.path));
-    await cj.deleteAll();
     likelistIds = null;
+    _cookies = null;
+    final cj = await _initializeCookieJarIfNeeded();
+    await cj.deleteAll();
+    debugPrint("已清除账号数据");
   }
 
   Future<bool> initializeAppAccount() {

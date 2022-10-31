@@ -221,7 +221,8 @@ class DownloadManager extends BaseChangeNotifier {
   }
 
   void cancelDownloadSongTask(int songId) async {
-    
+    final task = getTaskWithSong(songId);
+    task?.cancel();
   }
 
   String getSaveSongPath(int songId) => _generateSongSavePath(songId);
