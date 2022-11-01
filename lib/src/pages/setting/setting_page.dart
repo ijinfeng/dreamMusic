@@ -36,16 +36,19 @@ class SettingPage extends StatelessWidget with EasyInterface {
                   alignment: Alignment.centerLeft,
                   child: MainButton.title(
                     title: AppSharedManager().isUserLogin() ? '退出登录' : '登录',
-                    width: 220,
-                    height: 40,
+                    width: 120,
+                    height: 30,
+                    fontSize: 14,
                     onTap: () {
                       if (AppSharedManager().isUserLogin()) {
                         logout().then((value) {
-                            restartApp(context);
+                          restartApp(context);
                         });
                       } else {
                         if (kTopPageScaffoldKey.currentContext != null) {
-                          Navigator.pushNamed(kTopPageScaffoldKey.currentContext!, PageRouters.login);
+                          Navigator.pushNamed(
+                              kTopPageScaffoldKey.currentContext!,
+                              PageRouters.login);
                         }
                       }
                     },
@@ -53,8 +56,7 @@ class SettingPage extends StatelessWidget with EasyInterface {
                 );
               } else if (section == 1) {
                 return const NetworkSettingWidget();
-              }
-               else {
+              } else {
                 if (index == 0) {
                   return const VersionWidget();
                 } else {
@@ -67,8 +69,7 @@ class SettingPage extends StatelessWidget with EasyInterface {
                 return const SectionTitleWidget(title: "账号");
               } else if (index == 1) {
                 return const SectionTitleWidget(title: '网络设置');
-              }
-               else {
+              } else {
                 return const SectionTitleWidget(title: "关于DreamMusic");
               }
             },
@@ -77,8 +78,7 @@ class SettingPage extends StatelessWidget with EasyInterface {
                 return 1;
               } else if (section == 1) {
                 return 1;
-              }
-               else {
+              } else {
                 return 2;
               }
             },

@@ -153,8 +153,9 @@ class NetworkSettingWidget extends StatelessWidget with EasyInterface {
         heightSpace(15),
         MainButton.title(
           title: '重启生效',
-          width: 220,
-          height: 40,
+          width: 120,
+          height: 30,
+          fontSize: 14,
           onTap: () {
             restartApp(context);
           },

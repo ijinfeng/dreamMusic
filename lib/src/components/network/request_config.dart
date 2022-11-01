@@ -13,7 +13,7 @@ class RequestConfig {
         return NetworkEnv().customHost;
       default:
     }
-    return "https://netease-cloud-music-api-eight-kappa-18.vercel.app";
+    return "http://localhost:3000";
   }
 
   static String get scheme {
