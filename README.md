@@ -15,6 +15,27 @@
 发现页
 ![发现页](/images/%E5%B0%81%E9%9D%A2%E5%9B%BE.png)
 
+歌单列表
+![歌单列表](/images/%E6%AD%8C%E5%8D%95%E5%88%97%E8%A1%A8.png)
+
+我喜欢的音乐
+![我喜欢的音乐](/images/%E6%88%91%E5%96%9C%E6%AC%A2%E7%9A%84%E9%9F%B3%E4%B9%90.png)
+
+我的下载
+![](/images/%E6%88%91%E7%9A%84%E4%B8%8B%E8%BD%BD.png)
+
+歌单详情
+![](/images/%E6%AD%8C%E6%9B%B2%E8%AF%A6%E6%83%85.png)
+
+私人FM
+![](/images/%E7%A7%81%E4%BA%BAFM.png)
+
+评论详情
+![](/images/%E8%AF%84%E8%AE%BA%E8%AF%A6%E6%83%85.png)
+
+最后来一波动图
+![](/images/%E6%95%88%E6%9E%9C%E5%9B%BE1.gif)
+
 
 ## 已完成的功能介绍
 
