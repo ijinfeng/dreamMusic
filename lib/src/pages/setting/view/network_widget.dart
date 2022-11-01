@@ -131,7 +131,7 @@ class NetworkSettingWidget extends StatelessWidget with EasyInterface {
         Row(
           children: [
             const Text(
-              '网络代理：',
+              'Charles网络代理：',
               style: titleTextStyle,
             ),
             Selector<NetworkEnv, bool>(
