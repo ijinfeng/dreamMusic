@@ -34,14 +34,6 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       key: kTopPageScaffoldKey,
       backgroundColor: kPageBackgroundColor,
-      // floatingActionButton: Builder(builder: (context) {
-      //   return FloatingActionButton(
-      //     onPressed: () {
-      //       Navigator.pushNamed(context, PageRouters.networkEnv);
-      //     },
-      //     child: const Icon(Icons.help),
-      //   );
-      // }),
       body: const HomeBody(),
     );
   }

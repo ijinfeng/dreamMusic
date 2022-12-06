@@ -29,7 +29,7 @@ class DownloadSongModel {
   /// 音乐文件大小
   int? _size;
   int get size {
-    _size ??= DownloadManager().getSongFileSize(songId);
+    _size ??= DownloadManager().getSongFileSize(songId, name);
     return _size ?? 0;
   }
 

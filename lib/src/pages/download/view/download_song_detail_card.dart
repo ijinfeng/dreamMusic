@@ -64,7 +64,7 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
                 context,
                 '创建时间',
                 Utils.getFileCreateTime(
-                    DownloadManager().getSaveSongPath(model.songId))),
+                    DownloadManager().getSaveSongPath(model.songId, model.name))),
             heightSpace(5),
             _buildDesc(context, '存储方式', DownloadManager().cacheModeName),
             heightSpace(5),
@@ -87,7 +87,7 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
               fontSize: 12, color: kText6Color, fontWeight: FontWeight.w400),
         ),
         CustomTooltipWidget(
-          message: DownloadManager().getSaveSongPath(model.songId),
+          message: DownloadManager().getSaveSongPath(model.songId, model.name),
           child: MainButton.title(
             title: '复制路径',
             backgroundColor: Colors.transparent,
@@ -98,7 +98,7 @@ class DownloadSongDetailCard extends StatelessWidget with EasyInterface {
                 decoration: TextDecoration.underline),
             onTap: () {
               Clipboard.setData(ClipboardData(
-                  text: DownloadManager().getSaveSongPath(model.songId)));
+                  text: DownloadManager().getSaveSongPath(model.songId, model.name)));
               showToast('已复制到转帖版');
             },
           ),

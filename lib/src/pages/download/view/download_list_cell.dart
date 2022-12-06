@@ -157,7 +157,7 @@ class DownloadedListCell extends StatelessWidget with EasyInterface {
                             title: "删除",
                             onTap: () {
                               DownloadManager()
-                                  .deleteDownloadSong(model.songId);
+                                  .deleteDownloadSong(model.songId, model.name);
                             })
                       ]);
                 },

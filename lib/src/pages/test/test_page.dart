@@ -21,7 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:id3/id3.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'dart:io';
@@ -56,10 +55,7 @@ class TestPageState extends ProviderState<TestPage, TestStateModel>
                 final path = DownloadManager().fileCacheDirectorPath + "/lenfen.mp3";
                 // final path = "assets/music/bgm.mp3";
                 Uint8List bytes = File(path).readAsBytesSync();
-                final instance = MP3Instance(bytes);
-                if (instance.parseTagsSync()) {
-                  print(instance.getMetaTags());
-                }
+                
             }),
             buildActionButton("测试await", () async {
               final path1 = "/Users/zl/Library/Containers/com.jinfeng.dreammusic.dreamMusic/Data/Downloads/DreamMusic/1405128273";

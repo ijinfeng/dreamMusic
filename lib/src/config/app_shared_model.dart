@@ -131,9 +131,11 @@ class AppSharedManager extends BaseChangeNotifier with EasyInterface {
     // 未登录过，则使用游客身份登录
     if (hasCookies == false) {
       return requestAnonimousLogin();
-    } else {
+    } else if (isUserLogin()) {
       // 表示已经登录过了，直接拉取用户信息
       return requestUserAccount();
+    } else {
+      return Future.value(true);
     }
   }
 

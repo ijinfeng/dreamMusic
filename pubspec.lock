@@ -240,13 +240,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.1"
-  id3:
+  id3_codec:
     dependency: "direct main"
     description:
-      name: id3
+      name: id3_codec
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.2"
+    version: "0.0.10"
   js:
     dependency: transitive
     description:

@@ -115,10 +115,6 @@ class SongDownloadTask extends DownloadTask {
     return "$songId";
   }
 
-  static String createFileName(int songId) {
-    return "/$songId.mp3";
-  }
-
   @override
   String toString() {
     return "Song task with songId=${song.songId}, savePath=$savePath";

@@ -213,9 +213,9 @@ class SongPlayer extends BaseChangeNotifier with EasyInterface {
     int? songId = _currentSong!.track?.id;
     if (songId == null) return null;
     // 检查歌曲是否已经下载
-    if (DownloadManager().hasDownloaded(songId) && DownloadManager().existDownloadedSong(songId)) {
+    if (DownloadManager().hasDownloaded(songId) && DownloadManager().existDownloadedSong(songId, _currentSong?.track?.name)) {
       return DeviceFileSource(
-        DownloadManager().getSaveSongPath(songId)
+        DownloadManager().getSaveSongPath(songId, _currentSong?.track?.name)
       );
     }
     return UrlSource(

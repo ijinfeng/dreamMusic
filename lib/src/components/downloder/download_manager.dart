@@ -5,8 +5,12 @@ import 'package:dream_music/src/components/basic/base_change_notifier.dart';
 import 'package:dream_music/src/components/downloder/download_song_model.dart';
 import 'package:dream_music/src/components/downloder/download_task.dart';
 import 'package:dream_music/src/components/finder/show_in_finder.dart';
+import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
 import 'package:flutter/material.dart';
+import 'package:id3_codec/encode_metadata.dart';
+import 'package:id3_codec/id3_codec.dart';
+import 'package:id3_codec/id3_encoder.dart';
 import 'package:path_provider/path_provider.dart';
 
 enum DownloadCacheMode {
@@ -59,14 +63,14 @@ class DownloadManager extends BaseChangeNotifier {
       return;
     }
     final files = await directory.list().toList();
+    // DreamMusic目录下
+    // json格式会在外面包一层目录
+    // id3格式直接是歌名
     for (final file in files) {
-      final type = FileSystemEntity.typeSync(file.path);
-      if (type == FileSystemEntityType.directory) {
-        final song = await _loadSongModelFromPath(file.path);
-        if (song != null) {
-          final String key = SongDownloadTask.createTaskId(song.songId);
-          _downloadedSongModels[key] = song;
-        }
+      final song = await _loadSongModelFromPath(file.path);
+      if (song != null) {
+        final String key = SongDownloadTask.createTaskId(song.songId);
+        _downloadedSongModels[key] = song;
       }
     }
     debugPrint("[download]读取到本地存在$downloadedSongCount首已下载歌曲");
@@ -84,8 +88,7 @@ class DownloadManager extends BaseChangeNotifier {
       return;
     }
     hasDirectoryObserver = true;
-    if (_cacheMode == DownloadCacheMode.json) {
-      final directory = Directory(fileCacheDirectorPath);
+    final directory = Directory(fileCacheDirectorPath);
       if (!directory.existsSync()) {
         await directory.create();
       }
@@ -100,7 +103,8 @@ class DownloadManager extends BaseChangeNotifier {
           hasDirectoryObserver = false;
           debugPrint("[download]删除整个下载目录");
         } else {
-          // 删除其中某个文件，这会导致信息不完整，因此直接全部删除即可
+          if (_cacheMode == DownloadCacheMode.json) {
+            // 删除其中某个文件，这会导致信息不完整，因此直接全部删除即可
           final lastSegment = Uri(path: path).pathSegments.last;
           final fileName = lastSegment.split('.').first;
           final songId = int.tryParse(fileName);
@@ -112,14 +116,28 @@ class DownloadManager extends BaseChangeNotifier {
               await dir.delete(recursive: true);
             }
             final key = SongDownloadTask.createTaskId(songId);
-              _downloadedSongModels.remove(key);
+            _downloadedSongModels.remove(key);
           }
           debugPrint("[download]删除文件$lastSegment,songId-$songId");
+          } else {
+            final lastSegment = Uri(path: path).pathSegments.last;
+            final fileName = lastSegment.split('.').first; 
+            int songId = 0;
+            for (var song in _downloadedSongModels.entries) {
+                if (song.value.name == fileName) {
+                  songId = song.value.songId;
+                  break;
+                }
+            }
+            if (songId != 0) {
+              final key = SongDownloadTask.createTaskId(songId);
+            _downloadedSongModels.remove(key);
+            }
+          }
         }
         notifyListeners();
       });
       debugPrint("[download]开始监听$fileCacheDirectorPath目录的变化");
-    }
   }
 
   /// 从存储路径中读取音乐模型
@@ -145,14 +163,58 @@ class DownloadManager extends BaseChangeNotifier {
           await directory.delete(recursive: true);
         }
       }
+    } else {
+      //id3
+      if (path.endsWith('mp3') == false) return null;
+      final songFile = File(path);
+      final bytes = await songFile.readAsBytes();
+      final decoder = ID3Decoder(bytes);
+      final metadatas = await decoder.decodeAsync();
+      final metadata = metadatas.first.toTagMap();
+      for (var element in metadata.entries) {
+        if (element.key == 'Frames') {
+          String title = '';
+          String ar = '';
+          String al = '';
+          int duration = 0;
+          int songId = 0;
+          for (var frames in element.value) {
+            if (frames is Map) {
+              String frameId = frames["Frame ID"].toString();
+              Map<String, dynamic> content = frames["Content"];
+              if (frameId == 'TIT2') {
+                title = content['Information'];
+              } else if (frameId == 'TXXX') {
+                if (content['Description'] == 'duration') {
+                  duration = int.tryParse(content['Value'].toString()) ?? 0;
+                } else if (content['Description'] == 'songId') {
+                  songId = int.tryParse(content['Value'].toString()) ?? 0;
+                } else if (content['Description'] == 'ar') {
+                  ar = content['Value'];
+                } else if (content['Description'] == 'al') {
+                  al = content['Value'];
+                }
+              }
+            }
+          }
+          return DownloadSongModel.fromJson({
+            "songId": songId,
+            "name": title,
+            "ar": json.decode(ar),
+            "al": json.decode(al),
+            "time": duration
+          });
+        }
+      }
     }
     return null;
   }
 
   /// mp3文件存储方式
-  final DownloadCacheMode _cacheMode = DownloadCacheMode.json;
+  final DownloadCacheMode _cacheMode = DownloadCacheMode.id3;
 
-  String get cacheModeName => _cacheMode == DownloadCacheMode.json ? "JSON+MP3" : "MP3/ID3";
+  String get cacheModeName =>
+      _cacheMode == DownloadCacheMode.json ? "JSON+MP3" : "MP3/ID3";
 
   /// 正在下载任务=正在下载+等待下载
   final Map<String, SongDownloadTask> _downloadTasks = {};
@@ -187,13 +249,21 @@ class DownloadManager extends BaseChangeNotifier {
   }
 
   /// 获取歌曲下载地址
-  String _generateSongSavePath(int songId) {
-    return "$fileCacheDirectorPath/$songId${SongDownloadTask.createFileName(songId)}";
+  String _generateSongSavePath(int songId, String? songName) {
+    if (_cacheMode == DownloadCacheMode.json) {
+      return "$fileCacheDirectorPath/$songId/${songName ?? songId}.mp3";
+    } else {
+      return "$fileCacheDirectorPath/${songName ?? songId}.mp3";
+    }
   }
 
   /// 获取歌曲信息json保存地址
   String _generateSongInfoJsonSavePath(int songId) {
     return "$fileCacheDirectorPath/$songId/$songId.json";
+  }
+
+  String _generateSongId3SavePath(String songName) {
+    return "$fileCacheDirectorPath/$songName.mp3";
   }
 
   void showInFinder() {
@@ -203,10 +273,12 @@ class DownloadManager extends BaseChangeNotifier {
   void showSongInFinder(int songId) {
     if (_cacheMode == DownloadCacheMode.json) {
       ShowInFinder.open(initialDirectory: "$fileCacheDirectorPath/$songId");
+    } else {
+      ShowInFinder.open(initialDirectory: fileCacheDirectorPath);
     }
   }
 
-  void deleteDownloadSong(int songId) async {
+  void deleteDownloadSong(int songId, String? songName) async {
     if (_cacheMode == DownloadCacheMode.json) {
       final path = "$fileCacheDirectorPath/$songId";
       final dir = Directory(path);
@@ -214,10 +286,17 @@ class DownloadManager extends BaseChangeNotifier {
       if (exist) {
         await dir.delete(recursive: true);
       }
-      final String key = SongDownloadTask.createTaskId(songId);
-      _downloadedSongModels.remove(key);
-      notifyListeners();
+    } else {
+      final path = "$fileCacheDirectorPath/$songName.mp3";
+      final songFile = File(path);
+      final exist = await songFile.exists();
+      if (exist) {
+        await songFile.delete(recursive: false);
+      }
     }
+    final String key = SongDownloadTask.createTaskId(songId);
+    _downloadedSongModels.remove(key);
+    notifyListeners();
   }
 
   void cancelDownloadSongTask(int songId) async {
@@ -225,7 +304,8 @@ class DownloadManager extends BaseChangeNotifier {
     task?.cancel();
   }
 
-  String getSaveSongPath(int songId) => _generateSongSavePath(songId);
+  String getSaveSongPath(int songId, String? songName) =>
+      _generateSongSavePath(songId, songName);
 
   /// 获取某一首歌的下载任务，当这首歌处于下载中或等待下载时将返回[SongDownloadTask]
   /// - songId: 歌曲id
@@ -244,11 +324,11 @@ class DownloadManager extends BaseChangeNotifier {
     if (song.canPlay.canPlay == false) {
       return false;
     }
-    int songId = song.songId;
-    if (songNeedDownload(songId) == false) return false;
+    if (songNeedDownload(song.songId) == false) return false;
     _addFileDeleteObserverIfNeeded();
-    final task =
-        SongDownloadTask(song: song, savePath: _generateSongSavePath(songId));
+    final task = SongDownloadTask(
+        song: song,
+        savePath: _generateSongSavePath(song.songId, song.track?.name));
     _addNewTask(task);
     _listenTaskProgress(task);
     task.start();
@@ -305,6 +385,27 @@ class DownloadManager extends BaseChangeNotifier {
         await file.create();
       }
       await file.writeAsString(json.encode(song.toJson()));
+    } else if (_cacheMode == DownloadCacheMode.id3) {
+      final path = _generateSongId3SavePath(song.name);
+      final file = File(path);
+      bool exist = await file.exists();
+      if (exist) {
+        final bytes = await file.readAsBytes();
+        final encoder = ID3Encoder(bytes);
+        final al = json.encode(song.al.toJson());
+        final resultBytes = encoder.encodeSync(MetadataV2_3Body(
+            title: song.name,
+            artist: song.authorNmae,
+            album: song.al.name,
+            userDefines: {
+              "duration": song.time.toString(),
+              "songId": song.songId.toString(),
+              "ar": json.encode(song.ar.map((e) => e.toJson()).toList()),
+              "al": al,
+            }));
+        file.writeAsBytes(resultBytes, mode: FileMode.write);
+        debugPrint("[download]finish encode id3 info: ${song.name}");
+      }
     }
   }
 
@@ -350,8 +451,8 @@ class DownloadManager extends BaseChangeNotifier {
   }
 
   /// 是否存在已经下载好的歌曲
-  bool existDownloadedSong(int songId) {
-    String savePath = _generateSongSavePath(songId);
+  bool existDownloadedSong(int songId, String? songName) {
+    String savePath = _generateSongSavePath(songId, songName);
     return existFile(savePath);
   }
 
@@ -362,10 +463,10 @@ class DownloadManager extends BaseChangeNotifier {
   }
 
   /// 获取下载歌曲的大小
-  int getSongFileSize(int songId) {
-    final exist = existDownloadedSong(songId);
+  int getSongFileSize(int songId, String? songName) {
+    final exist = existDownloadedSong(songId, songName);
     if (!exist) return 0;
-    final file = File(_generateSongSavePath(songId));
+    final file = File(_generateSongSavePath(songId, songName));
     return file.lengthSync();
   }
 }
