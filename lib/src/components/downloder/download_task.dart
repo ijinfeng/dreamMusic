@@ -23,24 +23,6 @@ abstract class DownloadTask {
   final String savePath;
   DownloadTaskModel? task;
   ProgressCallback? onReceiveProgress;
-
-  // factory DownloadTask.loadFrom(String savePath) {
-  //   final type = FileSystemEntity.typeSync(savePath);
-  //   if (type == FileSystemEntityType.file) {
-  //     final file = File(savePath);
-  //     String name = file.uri.pathSegments.last;
-  //     name = name.split(".").first;
-  //     name = name.split('_').last;
-  //     final id = int.tryParse(name);
-  //     if (id != null && id > 0) {
-  //       // TODO:jifeng
-  //       final task = SongDownloadTask(song: SingleSongModel(track: SonglistDetailModelTracks()), savePath: file.path);
-  //       task._status = DownloadStatus.downloaded;
-  //       return task;
-  //     }
-  //   } 
-  //   return ErrorDownloadTask(savePath);
-  // }
  
   void start() async {
     final res = await neRequest.download(
@@ -99,7 +81,7 @@ class ErrorDownloadTask extends DownloadTask {
 class SongDownloadTask extends DownloadTask {
   SongDownloadTask({
     required this.song,
-    required String savePath
+    required String savePath,
   }) : super(_generateDownloadUrl(song.songId), savePath);
 
   final SingleSongModel song;

@@ -7,6 +7,7 @@ import 'package:dream_music/src/components/downloder/download_task.dart';
 import 'package:dream_music/src/components/finder/show_in_finder.dart';
 import 'package:dream_music/src/components/util/utils.dart';
 import 'package:dream_music/src/pages/song_detail/model/single_song_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:id3_codec/encode_metadata.dart';
 import 'package:id3_codec/id3_codec.dart';
