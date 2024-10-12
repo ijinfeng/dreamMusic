@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/effect/gradient_effect_widget.dart';
@@ -24,9 +25,10 @@ class MyLikeHeaderView extends StatelessWidget with EasyInterface {
       decoration: BoxDecoration(
         image: state.songlist?.coverImgUrl != null
             ? DecorationImage(
-                image: NetworkImage(
-                  state.songlist!.coverImgUrl!,
-                ),
+              image: ImageView.getNetworkImageProvider(state.songlist!.coverImgUrl!),
+                // image: NetworkImage(
+                //   state.songlist!.coverImgUrl!,
+                // ),
                 fit: BoxFit.cover)
             : null,
       ),
