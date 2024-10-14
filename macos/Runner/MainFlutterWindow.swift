@@ -14,7 +14,7 @@ class MainFlutterWindow: BitsdojoWindow {
     super.awakeFromNib()
   }
 
-  override func bitsdojo_window_configure() -> UInt {
-    return BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP
-  }
+    override func bitsdojo_window_configure() -> UInt {
+      return BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP
+    }
 }

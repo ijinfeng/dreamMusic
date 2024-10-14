@@ -22,7 +22,8 @@ class LoginRequest {
   static Future<ResponseModel<LoginModel>> codeLogin(
       String phone, String code) {
     final res = neRequest.get('/login/cellphone',
-        queryParameters: {"phone": phone, "captcha": code}, builder: (json) {
+        queryParameters: {"phone": phone, "captcha": code},
+        builder: (json) {
       return LoginModel.fromJson(json);
     });
     return res;
