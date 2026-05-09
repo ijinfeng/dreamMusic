@@ -54,6 +54,7 @@
 ## API接口文档
 
 本项目的数据来源于开源项目[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)。
+上面的接口文档挂了可以看这里：[文档2](https://pansida.cn/2024/07/17/%E7%BD%91%E6%98%93%E4%BA%91api%E6%8E%A5%E5%8F%A3/)
 
 ## 如何运行调试
 

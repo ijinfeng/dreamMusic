@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dream_music/src/components/util/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -77,19 +78,31 @@ class ImageView extends StatelessWidget {
       final nonullSrc = src!;
       Widget eximage;
       if (loadType == ImageLoadType.network) {
-        eximage = Image.network(
-          nonullSrc,
+        final headers = <String, String>{};
+        headers["access-control-allow-origin"] = "*";
+        headers["user-agent"] = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36";
+        eximage = CachedNetworkImage(
+          imageUrl: nonullSrc,
+          httpHeaders: headers,
           width: width,
           height: height,
           fit: fit,
           color: color,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-               return child;
-            }
-            return loadingProgress.cumulativeBytesLoaded < (loadingProgress.expectedTotalBytes ?? 0) ? defaultPlaceholderImage : child;
-          },
         );
+
+        // eximage = Image.network(
+        //   nonullSrc,
+        //   width: width,
+        //   height: height,
+        //   fit: fit,
+        //   color: color,
+        //   loadingBuilder: (context, child, loadingProgress) {
+        //     if (loadingProgress == null) {
+        //        return child;
+        //     }
+        //     return loadingProgress.cumulativeBytesLoaded < (loadingProgress.expectedTotalBytes ?? 0) ? defaultPlaceholderImage : child;
+        //   },
+        // );
       } else if (loadType == ImageLoadType.asset) {
         eximage = Image.asset(
           Utils.fillAssetImagePath(nonullSrc),
@@ -148,5 +161,13 @@ class ImageView extends StatelessWidget {
         );
       }
     return image;
+  }
+
+  static CachedNetworkImageProvider getNetworkImageProvider(String url)
+  {
+    final headers = <String, String>{};
+        headers["access-control-allow-origin"] = "*";
+        headers["user-agent"] = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36";
+    return CachedNetworkImageProvider(url, headers: headers);
   }
 }

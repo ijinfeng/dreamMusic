@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dream_music/src/components/basic/mixin_easy_interface.dart';
 import 'package:dream_music/src/components/button/main_button.dart';
 import 'package:dream_music/src/components/image/image_view.dart';
@@ -234,7 +235,8 @@ class DailySongAnimationCoverState extends State<DailySongAnimationCover> {
       }
       final nextSong = songs[nextIndex];
       if (nextSong?.al?.picUrl != null) {
-        precacheImage(NetworkImage(nextSong!.al!.picUrl!), context);
+        // precacheImage(NetworkImage(nextSong!.al!.picUrl!), context);
+        precacheImage(ImageView.getNetworkImageProvider(nextSong!.al!.picUrl!), context);
       }
     } else {
       currentSong = null;

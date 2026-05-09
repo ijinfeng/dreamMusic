@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dream_music/src/components/basic/common_material_app.dart';
 import 'package:dream_music/src/components/downloder/download_manager.dart';
 import 'package:dream_music/src/components/network/network_env_route.dart';
@@ -25,6 +26,25 @@ void main() async {
     appWindow.show();
   });
 }
+
+// class TestMyApp extends StatelessWidget {
+//   const TestMyApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final headers = Map<String, String>();
+//     headers["access-control-allow-origin"] = "*";
+//     headers["user-agent"] = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36";
+//     return MaterialApp(
+//       home: Center(
+//         // child: Image.network("http://p1.music.126.net/jSH_ikeooxveWl0BTc3Xkg==/109951166786983190.jpg"),
+//         child: CachedNetworkImage(imageUrl: "http://p1.music.126.net/jSH_ikeooxveWl0BTc3Xkg==/109951166786983190.jpg",
+//         httpHeaders: headers,
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
